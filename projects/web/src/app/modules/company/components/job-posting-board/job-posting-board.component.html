@@ -1,0 +1,1036 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="page-title mb-0"><i class="fas fa-sitemap"></i> Job Posting Board</h6>
+<!--  <div>-->
+<!--    <a href="javascript:" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> Search CV Bank</a>-->
+<!--  </div>-->
+</div>
+
+<div class="card custom-card mb-0" style="background: #E8F5E9">
+  <div class="card-body">
+    <label class="h6 mb-0 mr-2" *ngIf="jobTitle">{{jobTitle}}</label>
+
+    <small class="float-right" *ngIf="languageId"><i class="fas fa-info-circle"></i>
+      As you have selected {{languageId === 1 ? 'English' : 'বাংলা'}} - All contents need to be in
+      {{languageId === 1 ? 'English' : 'বাংলা'}} language
+    </small>
+
+    <div class="d-flex align-items-center justify-content-center"
+         *ngIf="actionType === 'create' && selectedStep === 'primary_job_info'">
+      <label class="h5 mb-0 mr-2">Select a language to post the job:</label>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="english" name="languageCustomRadio" class="custom-control-input" [value]="1"
+               [formControl]="languageControl">
+        <label class="custom-control-label" style="font-size: 17px" for="english">English</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="bangla" name="languageCustomRadio" class="custom-control-input" [value]="2"
+               [formControl]="languageControl">
+        <label class="custom-control-label" style="font-size: 17px" for="bangla">বাংলা</label>
+      </div>
+      <!--      <div class="custom-control custom-radio custom-control-inline">-->
+      <!--        <input type="radio" id="both" name="languageCustomRadio" class="custom-control-input">-->
+      <!--        <label class="custom-control-label" style="font-size: 17px" for="both">Both</label>-->
+      <!--      </div>-->
+
+    </div>
+  </div>
+</div>
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="container-wrapper">
+      <div class="wizard-card">
+        <div class="wizard-navigation">
+          <ul class="nav nav-pills">
+            <li style="width: 12.5%;" *ngFor="let item of stepProcess"
+                [class.active]="item.is_completed || item.is_selected"
+                (click)="onChangeStep(item.key)">
+              <div [class.process-done]="item.is_completed"></div>
+              <a href="javascript:">
+                <div class="icon-circle">
+                  <i class="{{item.icon}}"></i>
+                </div>
+                <span class="status-title">{{item.title}}</span>
+              </a>
+            </li>
+            <!--            <li style="width: 12.5%;" [class.active]="selectedStep === 'more_job_info'" (click)="onChangeStep('more_job_info')">-->
+            <!--              <div class="process-done d-none"></div>-->
+            <!--              <a href="javascript:">-->
+            <!--                <div class="icon-circle">-->
+            <!--                  <i class="fas fa-business-time"></i>-->
+            <!--                </div>-->
+            <!--                <span class="status-title">More Job Information</span>-->
+            <!--              </a>-->
+            <!--            </li>-->
+            <!--            <li style="width: 12.5%;">-->
+            <!--              <div class="process-done d-none"></div>-->
+            <!--              <a href="javascript:">-->
+            <!--                <div class="icon-circle">-->
+            <!--                  <i class="fas fa-glasses"></i>-->
+            <!--                </div>-->
+            <!--                <span class="status-title">Candidate Requirements</span>-->
+            <!--              </a>-->
+            <!--            </li>-->
+            <!--            <li style="width: 12.5%;">-->
+            <!--              <div class="process-done d-none"></div>-->
+            <!--              <a href="javascript:">-->
+            <!--                <div class="icon-circle">-->
+            <!--                  <i class="fas fa-universal-access"></i>-->
+            <!--                </div>-->
+            <!--                <span class="status-title">Company Info Visibility</span>-->
+            <!--              </a>-->
+            <!--            </li>-->
+            <!--            <li style="width: 12.5%;">-->
+            <!--              <div class="process-done d-none"></div>-->
+            <!--              <a href="javascript:">-->
+            <!--                <div class="icon-circle">-->
+            <!--                  <i class="fab fa-slideshare"></i>-->
+            <!--                </div>-->
+            <!--                <span class="status-title">Matching Criteria</span>-->
+            <!--              </a>-->
+            <!--            </li>-->
+            <!--            <li style="width: 12.5%;">-->
+            <!--              <div class="process-done d-none"></div>-->
+            <!--              <a href="javascript:">-->
+            <!--                <div class="icon-circle">-->
+            <!--                  <i class="fas fa-podcast"></i>-->
+            <!--                </div>-->
+            <!--                <span class="status-title">Set Video Interview</span>-->
+            <!--              </a>-->
+            <!--            </li>-->
+            <!--            <li style="width: 12.5%;">-->
+            <!--              <div class="process-done d-none"></div>-->
+            <!--              <a href="javascript:">-->
+            <!--                <div class="icon-circle">-->
+            <!--                  <i class="fas fa-mosque"></i>-->
+            <!--                </div>-->
+            <!--                <span class="status-title">Preview</span>-->
+            <!--              </a>-->
+            <!--            </li>-->
+            <!--            <li style="width: 12.5%;">-->
+            <!--              <div class="process-done process-done-last d-none"></div>-->
+            <!--              <a href="javascript:">-->
+            <!--                <div class="icon-circle">-->
+            <!--                  <i class="fas fa-mug-hot"></i>-->
+            <!--                </div>-->
+            <!--                <span class="status-title">Complete</span>-->
+            <!--              </a>-->
+            <!--            </li>-->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4" [hidden]="viewForm['active']" *ngIf="selectedStep === 'primary_job_info' && !isLoading">
+      <h5 class="my-4 sub-color">Primary Job Information</h5>
+      <form [formGroup]="primaryJobInfoForm" #primaryJobForm="ngForm">
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Service Type *</label>
+          <div class="col-sm-9">
+            <div class="custom-control custom-radio custom-control-inline"
+                 *ngFor="let item of initialData.service_types">
+              <input type="radio" id="job_type{{item.id}}" class="custom-control-input"
+                     formControlName="service_type_id"
+                     [value]="item.id">
+              <label class="custom-control-label" style="font-size: 17px"
+                     for="job_type{{item.id}}">{{item.title}}</label>
+            </div>
+            <div appInvalidMessage="service_type_id">
+              <small class="text-danger" *appInvalidType="'required'">Service type is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="JobTitle" class="col-sm-3 col-form-label">Job Title *</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="JobTitle" placeholder="Write Job Title" formControlName="title">
+            <div appInvalidMessage="title">
+              <small class="text-danger" *appInvalidType="'required'">Title is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="NoOfVacancies" class="col-sm-3 col-form-label">No. of Vacancies *</label>
+          <div class="col-sm-4">
+            <input type="number" class="form-control" id="NoOfVacancies" placeholder="Enter Vacancy Number"
+                   formControlName="no_of_vacancy" #noVacancy>
+            <div appInvalidMessage="no_of_vacancy">
+              <small class="text-danger" *appInvalidType="'required'">No. of vacancy is required</small>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="checkbox" id="na" [checked]="!noVacancy.value"
+                     (change)="updateVacancyValidation($event)">
+              <label class="form-check-label" for="na">NA</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Job Category *</label>
+          <div class="col-sm-9">
+            <div class="custom-control custom-radio custom-control-inline"
+                 *ngFor="let item of initialData.category_types">
+              <input type="radio" id="cat_type{{item.id}}" class="custom-control-input" formControlName="category_type"
+                     [value]="item.id">
+              <label class="custom-control-label" style="font-size: 17px"
+                     for="cat_type{{item.id}}">{{item.title_en}}</label>
+            </div>
+
+            <div appInvalidMessage="category_type">
+              <small class="text-danger" *appInvalidType="'required'">Category type is required</small>
+            </div>
+
+            <div style="margin-top: 15px;border: 1px solid #ddd;padding: 15px 20px;max-height: 160px;overflow: auto;">
+              <div class="custom-control custom-radio" *ngFor="let item of filteredCategories">
+                <input type="radio" id="fun_cat{{item.id}}" class="custom-control-input" [value]="item.id"
+                       formControlName="category_id">
+                <label class="custom-control-label" for="fun_cat{{item.id}}">{{item.title_en}}</label>
+              </div>
+            </div>
+            <div appInvalidMessage="category_id">
+              <small class="text-danger" *appInvalidType="'required'">Category is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Employment Status *</label>
+          <div class="col-sm-9">
+            <ng-container *ngFor="let item of initialData.employment_status">
+              <input type="checkbox" class="btn btn-outline-primary ml-2 mr-2" value="{{item.id}}"
+                     id="e_status{{item.id}}"
+                     [checked]="postNatureIds.value.includes(item.id)"
+                     (change)="onChangeEmploymentStatus($event)">
+              <label for="e_status{{item.id}}">{{item.title}}</label>
+            </ng-container>
+            <p><small class="text-danger" *ngIf="postNatureIds.errors?.required && primaryJobForm.submitted">
+              Employment status is required</small></p>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Application Deadline *</label>
+          <div class="col-sm-4">
+            <input type="date" class="form-control" formControlName="deadline">
+            <div appInvalidMessage="deadline">
+              <small class="text-danger" *appInvalidType="'required'">Application deadline is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Resume Receiving Option *</label>
+          <div class="col-sm-9">
+            <div class="row container-wrapper">
+              <div class="form-check" *ngFor="let item of initialData.resume_receive_options.option_1">
+                <input class="form-check-input" type="checkbox" id="apply_online" formControlName="is_apply_online"
+                       [value]="true">
+                <label class="form-check-label" for="apply_online">{{item.title}}</label>
+              </div>
+
+              <hr class="ml-0 mr-0" style="width:25px; transform:rotate(90deg);">
+
+              <div>
+                <div class="custom-control custom-radio custom-control-inline"
+                     *ngFor="let item of initialData.resume_receive_options.option_2">
+                  <input type="radio" id="{{item.value}}" class="custom-control-input"
+                         [value]="item.value" formControlName="resume_receiving_option"
+                         (click)="primaryJobInfoForm.get('resume_receiving_details')?.setValue(null)">
+                  <label class="custom-control-label" style="font-size: 17px"
+                         for="{{item.value}}">{{item.title}}</label>
+                </div>
+              </div>
+
+              <div class="col-md-9">
+                <div *ngIf="primaryJobInfoForm.get('resume_receiving_option')?.value === 'email'">
+                  <input type="text" class="form-control" placeholder="Email"
+                         formControlName="resume_receiving_details">
+                </div>
+
+                <div *ngIf="primaryJobInfoForm.get('resume_receiving_option')?.value === 'hard_copy'">
+                  <textarea class="form-control" rows="4" placeholder="Write information for hard copy"
+                            formControlName="resume_receiving_details"></textarea>
+                </div>
+
+                <div *ngIf="primaryJobInfoForm.get('resume_receiving_option')?.value === 'walk_in_interview'">
+                  <textarea class="form-control" rows="4" placeholder="Write information for walk in interview"
+                            formControlName="resume_receiving_details"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Special Instruction for Job Seekers</label>
+          <div class="col-sm-9">
+            <textarea class="form-control" id="exampleFormControlTextarea1"
+                      placeholder="Write Special Instruction for Job Seekers" rows="4"
+                      formControlName="special_instruction"></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Photograph (Enclose with resume)</label>
+          <div class="col-sm-9">
+            <div class="custom-control custom-switch mt-3">
+              <input type="checkbox" class="custom-control-input" id="customSwitch1" formControlName="is_profile_image"
+                     value="1">
+              <label class="custom-control-label"
+                     for="customSwitch1">{{primaryJobInfoForm.get('is_profile_image')?.value ? 'Yes' : 'No'}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group text-right">
+          <button type="submit" class="btn btn-success mr-2"
+                  [disabled]="submitAttempt"
+                  (click)="onSubmit('primary_job_info', 'more_job_info', 'save_option1_btn_spinner')">
+            <i class="fas fa-save"></i> Save
+          </button>
+          <button type="submit" class="btn btn-primary"
+                  [disabled]="submitAttempt"
+                  (click)="onSubmit('primary_job_info', 'more_job_info', 'save_option2_btn_spinner')">
+            Continue <i class="fas fa-angle-right"></i></button>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-4" [hidden]="viewForm['active']" *ngIf="selectedStep === 'more_job_info' && !isLoading">
+      <h5 class="my-4 sub-color">More Job Information</h5>
+      <form [formGroup]="moreJobInfoForm" #moreJobForm="ngForm">
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Job Level *</label>
+          <div class="col-sm-9">
+            <ng-container *ngFor="let item of initialData.job_levels">
+              <input type="checkbox" class="btn btn-outline-primary mr-2 ml-2" value="{{item.id}}"
+                     id="job_livel_{{item.id}}"
+                     [checked]="jobLevelIds.value.includes(item.id)"
+                     (change)="onChangeJobLevels($event)">
+              <label for="job_livel_{{item.id}}">{{item.title}}</label>
+            </ng-container>
+            <p><small class="text-danger" *ngIf="jobLevelIds.errors?.required && moreJobForm.submitted">
+              Job level is required</small></p>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Job Context</label>
+          <div class="col-sm-9">
+            <textarea class="form-control" placeholder="Write Job Context" rows="4"
+                      formControlName="job_context"></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Job Responsibilities *</label>
+          <div class="col-sm-9">
+            <textarea class="form-control" placeholder="Write Job Responsibilities" rows="8"
+                      formControlName="responsibilities"></textarea>
+            <div appInvalidMessage="responsibilities">
+              <small class="text-danger" *appInvalidType="'required'">Responsibilities is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Workplace</label>
+          <div class="col-sm-9">
+            <div class="custom-control custom-checkbox custom-control-inline"
+                 *ngFor="let item of initialData.workspaces">
+              <input type="checkbox" id="workplace{{item.id}}" class="custom-control-input" value="{{item.id}}"
+                     [checked]="workspaceIds.value.includes(item.id)"
+                     (change)="onChangeWorkspace($event)">
+              <label class="custom-control-label" style="font-size: 17px"
+                     for="workplace{{item.id}}">{{item.title}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Job Location *</label>
+          <div class="col-sm-9">
+
+            <div class="form-group">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="inside_bd" class="custom-control-input" value="inside_bd"
+                       formControlName="job_location" (change)="onChangeJobLocation()">
+                <label class="custom-control-label" style="font-size: 17px" for="inside_bd">Inside Bangladesh</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="outside_bd" class="custom-control-input" value="outside_bd"
+                       formControlName="job_location" (change)="onChangeJobLocation()">
+                <label class="custom-control-label" style="font-size: 17px" for="outside_bd">Outside Bangladesh</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <ng-multiselect-dropdown
+                formControlName="job_location_areas"
+                [placeholder]="'Select Job Locations'"
+                [settings]="dropdownSettings"
+                [data]="jobLocations"
+                (click)="onChangeJobLocationAreas()"
+              >
+              </ng-multiselect-dropdown>
+            </div>
+
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Salary *</label>
+          <div class="col-sm-9">
+            <div class="form-inline">
+              <input type="text" class="form-control mb-2 mr-sm-2" style="width: 144px" placeholder="Minimum Salary"
+                     formControlName="salary_min" #salaryMin>
+              <div appInvalidMessage="salary_min">
+                <small class="text-danger" *appInvalidType="'required'">Salary(min) is required</small>
+              </div>
+
+              <input type="text" class="form-control mb-2 mr-sm-2" style="width: 146px" placeholder="Maximum Salary"
+                     formControlName="salary_max" #salaryMax>
+              <div appInvalidMessage="salary_max">
+                <small class="text-danger" *appInvalidType="'required'">Salary(max) is required</small>
+              </div>
+
+              <select class="custom-select mb-2 mr-sm-2" formControlName="salary_type">
+                <option *ngFor="let item of initialData.salary_types" [value]="item.id">{{item.title}}</option>
+              </select>
+              <div class="custom-control custom-checkbox mb-2 mr-sm-2">
+                <input type="checkbox" class="custom-control-input" id="Negotiable" formControlName="is_negotiable"
+                       [checked]="!salaryMin.value && !salaryMax.value"
+                       (change)="updateSalaryValidation($event)">
+                <label class="custom-control-label" for="Negotiable">Negotiable</label>
+              </div>
+            </div>
+            <small class="d-block"><i class="fas fa-info-circle"></i> Salary range helps to match properly but you can
+              hide it from candidates below.</small>
+            <div class="custom-control custom-checkbox mb-2 mr-sm-2">
+              <input type="checkbox" class="custom-control-input" id="doNotDisplaySalary"
+                     formControlName="is_display_salary">
+              <label class="custom-control-label" for="doNotDisplaySalary">Do not display in salary details but use for
+                matching</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Additional Salary Info.</label>
+          <div class="col-sm-9">
+            <textarea class="form-control" placeholder="Write Additional Salary Information" rows="4"
+                      formControlName="additional_salary_info"></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Compensation & other benefits</label>
+
+          <div class="col-sm-9">
+            <div class="d-flex">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="nil" value="nil" class="custom-control-input"
+                       formControlName="other_benefit_type">
+                <label class="custom-control-label" style="font-size: 17px" for="nil">NA</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="select_option" value="select_option" class="custom-control-input"
+                       formControlName="other_benefit_type">
+                <label class="custom-control-label" style="font-size: 17px" for="select_option">Select Option</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <ng-multiselect-dropdown
+                formControlName="benefits"
+                [placeholder]="'Select Benefits'"
+                [settings]="dropdownSettings"
+                [data]="initialData.benefits?.benefit_options"
+                [disabled]="moreJobInfoForm.get('other_benefit_type')?.value === 'nil'"
+              >
+              </ng-multiselect-dropdown>
+            </div>
+
+            <div class="form-group">
+              <strong>Lunch Facilities</strong><br>
+              <div class="custom-control custom-radio custom-control-inline"
+                   *ngFor="let item of initialData.benefits?.lunch_facility_options">
+                <input type="radio" id="lunch{{item.id}}" [value]="item.id" class="custom-control-input"
+                       formControlName="lunch_facility"
+                       [attr.disabled]="moreJobInfoForm.get('other_benefit_type')?.value === 'nil' ? true : null">
+                <label class="custom-control-label" style="font-size: 17px"
+                       for="lunch{{item.id}}">{{item.title}}</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <strong>Salary Review</strong><br>
+              <div class="custom-control custom-radio custom-control-inline"
+                   *ngFor="let item of initialData.benefits?.salary_review_options">
+                <input type="radio" id="salary{{item.id}}" [value]="item.id" class="custom-control-input"
+                       formControlName="salary_review"
+                       [attr.disabled]="moreJobInfoForm.get('other_benefit_type')?.value === 'nil' ? true : null">
+                <label class="custom-control-label" style="font-size: 17px"
+                       for="salary{{item.id}}">{{item.title}}</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="FestivalBonus">Festival Bonus</label>
+              <select class="form-control" id="FestivalBonus" formControlName="festival_bonus"
+                      [disabled]="moreJobInfoForm.get('other_benefit_type')?.value === 'nil'">
+                <option value="">Select number of festival bonus</option>
+                <option *ngFor="let item of initialData.benefits?.festival_bonus_options"
+                        [value]="item.id">{{item.title}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Others</label>
+              <textarea class="form-control" rows="4" formControlName="others"
+                        [readonly]="moreJobInfoForm.get('other_benefit_type')?.value === 'nil'">
+                </textarea>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+          <button type="button" class="btn btn-light" (click)="onChangeStep('primary_job_info')">
+            <i class="fas fa-angle-left"></i> Back
+          </button>
+          <div>
+            <button type="submit" class="btn btn-success mr-2"
+                    [disabled]="submitAttempt"
+                    (click)="onSubmit('more_job_info', 'candidate_requirements', 'save_option1_btn_spinner')">
+              <i class="fas fa-save"></i> Save
+            </button>
+            <button type="submit" class="btn btn-primary"
+                    [disabled]="submitAttempt"
+                    (click)="onSubmit('more_job_info', 'candidate_requirements', 'save_option2_btn_spinner')">
+              Continue <i class="fas fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-4" [hidden]="viewForm['active']" *ngIf="selectedStep === 'candidate_requirements' && !isLoading">
+      <h5 class="my-4 sub-color">Candidates requirements</h5>
+      <form [formGroup]="candidateRequirementForm" #candidatesRequirement="ngForm">
+        <h6>Educational Qualification</h6>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Degree</label>
+          <div class="col-sm-9">
+            <div class="form-inline" formArrayName="degrees"
+                 *ngFor="let item of degreeFormArray.controls; let i = index">
+              <ng-container [formGroupName]="i">
+                <div class="form-group mb-2" style="width: 33.33%">
+                  <select class="form-control w-100 mr-sm-2" formControlName="education_level_id" #degreeRef
+                          (change)="onChangeEducationLevel(i, degreeRef.value)">
+                    <option value="">Select Degree Level</option>
+                    <option *ngFor="let item of initialData.education_levels" [value]="item.id">{{item.title}}</option>
+                  </select>
+
+                  <p
+                    *ngIf="degreeFormArray['controls'][i].get('education_level_id')?.errors && candidatesRequirement.submitted">
+                    <small class="text-danger">This field is required</small>
+                  </p>
+                </div>
+
+                <div class="form-group mb-2" style="width: 33.33%">
+                  <select class="form-control w-100 mr-sm-2" formControlName="degree_id">
+                    <option value="">Select degree name</option>
+                    <option *ngFor="let item of filteredDegrees[i]" [value]="item.id">{{item.title}}</option>
+                  </select>
+                  <p
+                    *ngIf="degreeFormArray['controls'][i].get('degree_id')?.errors && candidatesRequirement.submitted">
+                    <small class="text-danger">This field is required</small>
+                  </p>
+                </div>
+
+                <div class="form-group mb-2" style="width: 25%">
+                  <input type="text" class="form-control w-100" placeholder="Concentration/ Major"
+                         formControlName="major">
+                </div>
+
+                <a href="javascript:void(0)" class="text-danger ml-3" *ngIf="i > 0"
+                   (click)="removeDegree(i)">
+                  <i class="fas fa-trash-alt"></i></a>
+              </ng-container>
+            </div>
+            <div>
+              <button type="button" class="btn btn-sm btn-light" (click)="addDegree()">
+                <i class="fas fa-plus"></i> Add More
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Preferred Educational Institution</label>
+          <div class="col-sm-9">
+            <ng-multiselect-dropdown
+              formControlName="institutes"
+              [placeholder]="'Select Preferred Education Institute'"
+              [settings]="dropdownSettings"
+              [data]="initialData.institutes"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Other Educational Qualification</label>
+          <div class="col-sm-9">
+            <textarea class="form-control" placeholder="Other Educational Qualification" rows="6"
+                      formControlName="other_qualification"></textarea>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Training/ Trade Course</label>
+          <div class="col-sm-9">
+            <div class="form-inline" formArrayName="trainings"
+                 *ngFor="let item of trainingFormArray.controls; let i = index">
+              <ng-container [formGroupName]="i">
+                <input type="text" class="form-control mb-2" placeholder="Write Training/ Trade Course"
+                       style="width: 90%" formControlName="title">
+
+                <a href="javascript:void(0)" class="text-danger ml-3" *ngIf="i > 0" (click)="removeTraining(i)">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </ng-container>
+            </div>
+            <button type="button" class="btn btn-sm btn-light" (click)="addTraining()">
+              <i class="fas fa-plus"></i> Add More
+            </button>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Professional Certification</label>
+          <div class="col-sm-9">
+            <div class="form-inline" formArrayName="certificates"
+                 *ngFor="let item of certificateFormArray.controls; let i = index">
+              <ng-container [formGroupName]="i">
+                <input type="text" class="form-control mb-2" placeholder="Write Professional Certification"
+                       style="width: 90%" formControlName="title">
+
+                <a href="javascript:void(0)" class="text-danger ml-3" *ngIf="i > 0" (click)="removeCertificate(i)">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </ng-container>
+            </div>
+            <button type="button" class="btn btn-sm btn-light" (click)="addCertificate()">
+              <i class="fas fa-plus"></i> Add More
+            </button>
+          </div>
+        </div>
+
+        <h6>Experience and Business Area</h6>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Experience</label>
+          <div class="col-sm-9">
+            <div class="form-group">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="no_exp" class="custom-control-input" [value]="0"
+                       formControlName="is_experience_require" (change)="onChangeExpOption()">
+                <label class="custom-control-label" style="font-size: 17px" for="no_exp">No Experience Required</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="exp" class="custom-control-input" [value]="1"
+                       formControlName="is_experience_require" (change)="onChangeExpOption()">
+                <label class="custom-control-label" style="font-size: 17px" for="exp">Experience Required</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <div>
+                    <label class="mb-2">Minimum year of experience</label>
+                    <select class="form-control w-100" formControlName="experience_min">
+                      <option [value]="null">Any</option>
+                      <option *ngFor="let item of experienceOptions" [value]="item">{{item}}</option>
+                    </select>
+                    <small>
+                      <i class="fas fa-question-circle"></i> Use both fields for range or use only one field.
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <div>
+                    <label class="mb-2">Maximum year of experience</label>
+                    <select class="form-control w-100" formControlName="experience_max">
+                      <option [value]="null">Any</option>
+                      <option *ngFor="let item of filteredMaxAgeRange" [value]="item">{{item}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="Freshers" formControlName="is_fresher_allowed">
+                <label class="custom-control-label" for="Freshers">Freshers are also encouraged to apply</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Area of experience</label>
+              <ng-multiselect-dropdown
+                formControlName="area_experiences"
+                [placeholder]="'Select Area of experience'"
+                [settings]="dropdownSettings"
+                [data]="initialData.skills"
+                [disabled]="isExpRequired.value === 0"
+              >
+              </ng-multiselect-dropdown>
+            </div>
+            <!--            <div class="form-group">-->
+            <!--              <label>Area of business</label> (static)-->
+            <!--              <ng-multiselect-dropdown-->
+            <!--                formControlName="industry_types"-->
+            <!--                [placeholder]="'Select Area of business'"-->
+            <!--                [settings]="{-->
+            <!--                  singleSelection: false,-->
+            <!--                  idField: 'id',-->
+            <!--                  textField: 'title_en',-->
+            <!--                  selectAllText: 'Select All',-->
+            <!--                  unSelectAllText: 'UnSelect All',-->
+            <!--                  itemsShowLimit: 3,-->
+            <!--                  allowSearchFilter: true-->
+            <!--                }"-->
+            <!--                [data]="initialData.industry_types"-->
+            <!--                [disabled]="isExpRequired.value === 0"-->
+            <!--              >-->
+            <!--              </ng-multiselect-dropdown>-->
+            <!--            </div>-->
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Skills</label>
+          <div class="col-sm-9">
+            <ng-multiselect-dropdown
+              formControlName="skills"
+              [placeholder]="'Select Skills'"
+              [settings]="dropdownSettings"
+              [data]="initialData.skills">
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Additional Requirements</label>
+          <div class="col-sm-9">
+            <textarea class="form-control" placeholder="Write Additional Requirements" rows="6"
+                      formControlName="additional_requirements"></textarea>
+          </div>
+        </div>
+
+        <h6>Personal Information</h6>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Gender</label>
+          <div class="col-sm-9">
+            <ng-multiselect-dropdown
+              formControlName="genders"
+              [placeholder]="'Select Genders'"
+              [settings]="dropdownSettings"
+              [data]="initialData.genders"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Age</label>
+          <div class="col-sm-9">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <div>
+                    <label class="mb-2">Min</label>
+                    <select class="form-control w-100" formControlName="age_min">
+                      <option [value]="null">Any</option>
+                      <option *ngFor="let item of ageOptions" [value]="item">{{item}}</option>
+                    </select>
+                    <small>
+                      <i class="fas fa-question-circle"></i> Use both fields for range or use only one field.
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <div>
+                    <label class="mb-2">Max</label>
+                    <select class="form-control w-100" formControlName="age_max">
+                      <option [value]="null">Any</option>
+                      <option *ngFor="let item of ageOptions" [value]="item">{{item}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Person with disability can apply</label>
+          <div class="col-sm-9">
+            <div class="custom-control custom-switch mt-3">
+              <input type="checkbox" class="custom-control-input" id="Person" formControlName="is_disability_allowed">
+              <label class="custom-control-label"
+                     for="Person">{{candidateRequirementForm.get('is_disability_allowed')?.value ? 'Yes' : 'No'}}</label>
+            </div>
+          </div>
+        </div>
+        <!--        <div class="form-group row">-->
+        <!--          <label class="col-sm-3 col-form-label">Preferred Retired Army Officer</label>-->
+        <!--          <div class="col-sm-9">-->
+        <!--            <div class="custom-control custom-switch mt-3">-->
+        <!--              <input type="checkbox" class="custom-control-input" id="Preferred">-->
+        <!--              <label class="custom-control-label" for="Preferred">No</label>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <div class="d-flex align-items-center justify-content-between">
+          <button type="button" class="btn btn-light" (click)="onChangeStep('more_job_info')">
+            <i class="fas fa-angle-left"></i>Back
+          </button>
+          <div>
+            <button type="submit" class="btn btn-success mr-2"
+                    [disabled]="submitAttempt"
+                    (click)="onSubmit('candidate_requirements', 'company_info', 'save_option1_btn_spinner')">
+              <i class="fas fa-save"></i>Save
+            </button>
+            <button type="submit" class="btn btn-primary"
+                    [disabled]="submitAttempt"
+                    (click)="onSubmit('candidate_requirements', 'company_info', 'save_option2_btn_spinner')">
+              Continue <i class="fas fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-4" [hidden]="viewForm['active']" *ngIf="selectedStep === 'company_info' && !isLoading">
+      <h5 class="my-4 sub-color">Company Information</h5>
+      <form [formGroup]="companyInfoForm">
+        <h6>Information Visibility</h6>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Company Name</label>
+          <div class="col-sm-9">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="CompanyName"
+                     formControlName="is_visible_company_name">
+              <label class="custom-control-label" for="CompanyName">Hide</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Company Address</label>
+          <div class="col-sm-9">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="CompanyAddress"
+                     formControlName="is_visible_address">
+              <label class="custom-control-label" for="CompanyAddress">Hide</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Company Industry Type</label>
+          <div class="col-sm-9">
+            <div class="form-group">
+              <ng-multiselect-dropdown
+                formControlName="industry_types"
+                [placeholder]="'Select Option'"
+                [settings]="{
+                  singleSelection: true,
+                  idField: 'id',
+                  textField: 'title_en',
+                  selectAllText: 'Select All',
+                  unSelectAllText: 'UnSelect All',
+                  itemsShowLimit: 3,
+                  allowSearchFilter: true
+                }"
+                [data]="initialData.industry_types"
+              >
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Company Business</label>
+          <div class="col-sm-9">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="CompanyBusiness"
+                     formControlName="is_visible_about">
+              <label class="custom-control-label" for="CompanyBusiness">Hide</label>
+            </div>
+            <small><i class="fas fa-question-circle"></i> SHIN`N GLOW a site conducted and operated under Sarjeel Group
+              of Companies. Sarjeel Group`` who has
+              been serving yours with utmost fidelity since the 2016.</small>
+          </div>
+        </div>
+
+        <h6>Billing Information</h6>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Billing Information *</label>
+          <div class="col-sm-9">
+            <div class="form-group">
+              <select class="form-control" formControlName="contact_id">
+                <option [value]="null">Select</option>
+                <option *ngFor="let item of initialData.contact_persons" [value]="item.id">{{item.name}}</option>
+              </select>
+            </div>
+            <div appInvalidMessage="contact_id">
+              <small class="text-danger" *appInvalidType="'required'">This field is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+          <button type="button" class="btn btn-light" (click)="onChangeStep('candidate_requirements')">
+            <i class="fas fa-angle-left"></i> Back
+          </button>
+          <div>
+            <button type="submit" class="btn btn-success mr-2"
+                    [disabled]="submitAttempt"
+                    (click)="onSubmit('company_info', 'matching_criteria', 'save_option1_btn_spinner')">
+              <i class="fas fa-save"></i> Save
+            </button>
+            <button type="submit" class="btn btn-primary"
+                    [disabled]="submitAttempt"
+                    (click)="onSubmit('company_info', 'matching_criteria', 'save_option2_btn_spinner')">
+              Continue <i class="fas fa-angle-right"></i></button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-4" [hidden]="viewForm['active']" *ngIf="selectedStep === 'matching_criteria' && !isLoading">
+      <h5 class="my-4 sub-color">
+        Matching Criteria
+        <small><a href="javascript:" class="sub-color float-right"><i class="fas fa-question-circle"></i> How to
+          minimize Irrelevant Applications?</a></small>
+      </h5>
+      <div style="border: 1px solid #ddd;padding: 15px 15px 20px;margin-bottom: 20px;border-radius: 5px">
+        <p class="mb-0">Matching Strength</p>
+        <small class="mb-2 d-block">Suggestion: To get the relevant candidates, matching strength will be increased if
+          you add job
+          requirements from the following items.</small>
+        <div class="progress">
+          <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+               aria-valuemax="100"></div>
+        </div>
+      </div>
+      <form [formGroup]="matchingCriteriaForm">
+        <div class="row">
+          <div class="col-sm-6">
+            <p class="text-right sub-color">Set Mandatory</p>
+
+            <div class="form-group row" formArrayName="matching_criteria"
+                 *ngFor="let item of getMatchingCriteria(); let i = index">
+
+              <ng-container [formGroupName]="i">
+                <label class="col-sm-7 col-form-label">
+                  {{item.get('title').value}}
+                  <small class="d-block">
+                    {{item.get('sub_title').value ? item.get('sub_title').value : 'Value not provided'}}
+                    <a href="javascript:"
+                       (click)="onChangeStep(getStepKeyByMatchingCriteria(+item.value.matching_criteria_id))">
+                      {{item.get('sub_title').value ? 'Edit' : 'Add'}}
+                    </a>
+                  </small>
+                </label>
+
+                <div class="col-sm-3">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="selected_criteria{{i}}"
+                           formControlName="is_selected" (change)="onChangeRadio(item)">
+                    <label class="custom-control-label" for="selected_criteria{{i}}">No</label>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="mandatory_{{i}}"
+                           formControlName="is_mandatory">
+                    <label class="custom-control-label" for="mandatory_{{i}}"></label>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <!--          <div class="col-sm-6">-->
+          <!--            <p class="text-right sub-color">Set Mandatory</p>-->
+          <!--            <div class="form-group row" formArrayName="matching_criteria_right"-->
+          <!--                 *ngFor="let item of getMatchingCriteria('right'); let i = index">-->
+
+          <!--              <ng-container [formGroupName]="i">-->
+          <!--                <label class="col-sm-7 col-form-label">-->
+          <!--                  {{item.get('title').value}}-->
+          <!--                  <small class="d-block">-->
+          <!--                    {{item.get('sub_title').value ? item.get('sub_title').value : 'Value not provided'}}-->
+          <!--                    <a href="javascript:">{{item.get('sub_title').value ? 'Edit' : 'Add'}}</a>-->
+          <!--                  </small>-->
+          <!--                </label>-->
+
+          <!--                <div class="col-sm-3">-->
+          <!--                  <div class="custom-control custom-switch">-->
+          <!--                    <input type="checkbox" class="custom-control-input" id="selected_criteria_right{{i}}"-->
+          <!--                           formControlName="is_selected" (change)="onChangeRadio(item)">-->
+          <!--                    <label class="custom-control-label" for="selected_criteria_right{{i}}">No</label>-->
+          <!--                  </div>-->
+          <!--                </div>-->
+          <!--                <div class="col-sm-2">-->
+          <!--                  <div class="custom-control custom-checkbox">-->
+          <!--                    <input type="checkbox" class="custom-control-input" id="mandatory_right{{i}}"-->
+          <!--                           formControlName="is_mandatory">-->
+          <!--                    <label class="custom-control-label" for="mandatory_right{{i}}"></label>-->
+          <!--                  </div>-->
+          <!--                </div>-->
+          <!--              </ng-container>-->
+          <!--            </div>-->
+          <!--          </div>-->
+        </div>
+        <div
+          style="border: 1px solid #ddd;padding: 15px 15px 20px;margin-bottom: 20px;border-radius: 5px;background: #eee;color: #2D6DEE">
+          <p class="mb-0"><b>[N.B. Mandatory criteria will be activated under your concern. We suggested that it is
+            better
+            not to check mandatory options. Otherwise you may lose better candidates.]</b></p>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+          <button type="button" class="btn btn-light" (click)="onChangeStep('company_info')"><i
+            class="fas fa-angle-left"></i> Back
+          </button>
+          <div>
+            <button type="submit" class="btn btn-success mr-2"
+                    [disabled]="submitAttempt"
+                    (click)="onSubmit('matching_criteria', 'preview', 'save_option1_btn_spinner')">
+              <i class="fas fa-save"></i> Save
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="submitAttempt"
+                    (click)="onSubmit('matching_criteria', 'preview', 'save_option2_btn_spinner')">
+              Continue <i class="fas fa-angle-right"></i></button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-4" [hidden]="viewForm['active']" *ngIf="selectedStep === 'preview' && !isLoading">
+      <app-job-preview [data]="initialData.post"></app-job-preview>
+
+      <hr>
+
+      <div class="d-flex align-items-center justify-content-between">
+        <button type="button" class="btn btn-light" (click)="onChangeStep('matching_criteria')">
+          <i class="fas fa-angle-left"></i> Back
+        </button>
+
+        <div>
+          <button type="submit" class="btn btn-success mr-2" *ngIf="initialData.post.status.id === 0"
+                  [disabled]="submitAttempt"
+                  (click)="onFinalSubmit('publish_later', 'save_option1_btn_spinner')">
+            <app-spinner [name]="'save_option1_btn_spinner'" [type]="'btn'"></app-spinner>
+            <i class="fas fa-save"></i> Publish Later
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="submitAttempt"
+                  (click)="onFinalSubmit('ready_to_process', 'save_option2_btn_spinner')">
+            <app-spinner [name]="'save_option2_btn_spinner'" [type]="'btn'"></app-spinner>
+            Ready to Process <i class="fas fa-angle-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4" *ngIf="selectedStep === 'complete' && !isLoading">
+      <ngb-alert [type]="'success'">
+        This post is under review. It will be live after review.
+      </ngb-alert>
+
+      <p class="text-center">
+        <a href="javascript:void(0)" routerLink="/company/home" [queryParams]="{status:'posted'}">Go To List</a>
+      </p>
+    </div>
+  </div>
+
+  <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+</div>

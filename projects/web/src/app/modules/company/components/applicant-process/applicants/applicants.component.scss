@@ -1,0 +1,11 @@
+.active, .btn:hover {
+  background-color: #666;
+  color: white;
+}
+
+.text-muted {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}

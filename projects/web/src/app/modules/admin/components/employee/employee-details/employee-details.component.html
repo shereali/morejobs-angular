@@ -1,0 +1,142 @@
+<div class="" [hidden]="employeeDetailSpinner['active']" *ngIf="!isLoading">
+  <div class="modal-header">
+    <h6 class="mb-0">Employee Details</h6>
+  </div>
+
+  <div class="modal-body">
+    <div class="card custom-card">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="container-fluid">
+            <div class="row" style="position: relative;padding: 32px 0;">
+              <div class="col-sm-6 col-md-4 sidebar">
+                <div class="img-fram-wrapper">
+                  <img src="{{ resumeDetail.image ? apiUrl + resumeDetail.image : 'assets/images/avatar.png'}}"
+                       alt="">
+                </div>
+                <h2 class="name-plate"><span>{{resumeDetail.first_name}}</span> {{resumeDetail.last_name}}</h2>
+                <h3 class="designation"
+                    *ngIf="resumeDetail.job_experiences.length > 0">{{resumeDetail.job_experiences[0].designation}}</h3>
+
+                <p style="margin-bottom: 0;">{{convertedArrayToString(resumeDetail.contact_mobiles, 'title')}}</p>
+                <p style="margin-bottom: 0;">{{convertedArrayToString(resumeDetail.contact_emails, 'title')}}</p>
+                <p style="margin-bottom: 0;">{{resumeDetail.profile?.permanent_address}}</p>
+
+
+                <hr class="sidebar-hr">
+                <div class="profile-wrapper">
+                  <h4><i class="fa fa-user" aria-hidden="true"></i> Personal Information</h4>
+                  <p>
+                    <label>Father's Name</label><br>
+                    <strong>{{resumeDetail.profile?.father_name}}</strong>
+                  </p>
+                  <p>
+                    <label>Mother's Name</label><br>
+                    <strong>{{resumeDetail.profile?.mother_name}}</strong>
+                  </p>
+                  <p>
+                    <label>Gender</label><br>
+                    <strong>{{resumeDetail.profile?.gender.title}}</strong>
+                  </p>
+                  <p>
+                    <label>Date of Birth</label><br>
+                    <strong>{{resumeDetail.profile?.dob | date: 'mediumDate'}}</strong>
+                  </p>
+                  <p>
+                    <label>Nationality</label><br>
+                    <strong>{{resumeDetail.profile?.nationality}}</strong>
+                  </p>
+                  <p>
+                    <label>Permanent Address</label><br>
+                    <strong>{{resumeDetail.profile?.permanent_area?.title_en}}</strong>
+                  </p>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-8 main-container">
+                <div class="academic-wrapper">
+                  <h2><i class="fa fa-briefcase" aria-hidden="true"></i> Employment History</h2>
+                  <div class="academic-item" *ngFor="let item of resumeDetail.job_experiences">
+                    <div class="academic-title">
+                      <h3>{{item.designation}}</h3>
+                      <span><i>{{item.from}}
+                        - {{item.is_current ? 'Continuing' : (item.to | date:'mediumDate')}}</i></span>
+                    </div>
+                    <div class="academic-inside">
+                      <p><b>{{item.company_name}}</b></p>
+                      <p><i>{{item.address}}</i></p>
+                      <p><i>Department : {{item.department}}</i></p>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="master-hr">
+                <div class="academic-wrapper">
+                  <h2><i class="fa fa-laptop" aria-hidden="true"></i> Profesional skills</h2>
+                  <div class="academic-item">
+                    <ul class="computer-skill">
+                      <li *ngFor="let item of resumeDetail.specializations">
+                        <p>{{item.title}}</p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <hr class="master-hr">
+                <div class="academic-wrapper">
+                  <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i> Training Summary</h2>
+                  <div class="academic-item" *ngFor="let item of resumeDetail.trainings">
+                    <div class="academic-title">
+                      <h3>{{item.title}}</h3>
+                      <span><i>{{item.passing_year}}</i></span>
+                    </div>
+                    <div class="academic-inside">
+                      <p><label>Topic: </label> <b>{{item.topic}}</b></p>
+                      <p><label>Institute: </label> <b>{{item.institute_name}}</b></p>
+                      <p class="certificate-detail">Duration - {{item.duration}}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="master-hr">
+                <div class="academic-wrapper">
+                  <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i> Academic Qualification</h2>
+                  <div class="academic-item" *ngFor="let item of resumeDetail.educations">
+                    <div class="academic-title">
+                      <h3>{{item.education_level.title}}</h3>
+                      <span><i>{{item.passing_year}}</i></span>
+                    </div>
+                    <div class="academic-inside">
+                      <p><b>- {{item.degree.title}}</b></p>
+                      <p><i>{{item.institute_name}}</i></p>
+                    </div>
+                  </div>
+                </div>
+                <hr class="master-hr">
+                <div class="academic-wrapper">
+                  <h2><i class="fa fa-flag" aria-hidden="true"></i> Certificate & Awards</h2>
+                  <div class="academic-item" *ngFor="let item of resumeDetail.certifications">
+                    <div class="academic-title">
+                      <h3>{{item.title}} <span
+                        class="certificate-date"><i>/ {{item.from | date: 'medium'}}
+                        - {{item.to | date: 'medium'}}</i></span></h3>
+                    </div>
+                    <div class="academic-inside">
+                      <p class="certificate-detail">- {{item.institute_name}}</p>
+                      <p><i>{{item.address}}</i></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-light" (click)="closeModal()">Close</a>
+</div>
+<app-spinner [name]="'details_modal_spinner'" #employeeDetailSpinner></app-spinner>

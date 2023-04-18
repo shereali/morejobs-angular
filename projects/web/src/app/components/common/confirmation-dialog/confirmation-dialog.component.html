@@ -1,0 +1,18 @@
+<div class="modal-alert">
+  <div class="modal-alert-header">
+    <h4>{{title}}</h4>
+  </div>
+  <p *ngIf="!confirmMessage">
+    <b class="text-danger">Warning - </b>{{confirmMessage}} Are you sure ?
+  </p>
+  <p *ngIf="confirmMessage">
+    <b class="text-danger">Warning - </b>{{confirmMessage}}
+  </p>
+  <div class="action-button">
+    <button type="button" class="btn btn-secondary navy-blue-bg radius"
+            (click)="dialogRef.close(true)">{{confirmTitle}}</button>
+    <button type="button" *ngIf="isCancel" class="btn btn-light radius ml-3"
+            (click)="dialogRef.close(false)">{{cancelTitle}}</button>
+  </div>
+</div>
+

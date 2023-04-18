@@ -1,0 +1,10 @@
+.overflow_3dots {
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content:hover {
+  background-color: #f5f5f5 !important;
+}

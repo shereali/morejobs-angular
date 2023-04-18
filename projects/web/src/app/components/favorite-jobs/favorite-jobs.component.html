@@ -1,0 +1,108 @@
+<h6 class="page-title"><i class="fas fa-star"></i> Favorite Jobs</h6>
+<div class="card custom-card">
+  <div class="card-body">
+    <p class="notice-content mb-3">Here you can view the list of jobs you applied.</p>
+    <ul class="mb-4">
+      <li>To view job details click on the particular "Job Title".</li>
+      <li>In the list you can view Expected Salary and edit it until the employer views your resume.</li>
+      <li>You can see which employer Viewed (by Employer) your resume and Employer's interaction too.</li>
+      <li>In the search option you can search applied jobs using date, company name and status.</li>
+      <li>To cancel your application from any post then click on the icon (beside the expected salary).</li>
+    </ul>
+    <div class="upload-resume-wrapper">
+      <div class="filter-wrapper">
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="fromDate">From Date</label>
+              <input type="date" class="form-control form-control-sm" id="fromDate" [formControl]="fromDate">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="toDate">To Date</label>
+              <input type="date" class="form-control form-control-sm" id="toDate" [formControl]="toDate">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="companyName">Company Name</label>
+              <input type="text" class="form-control form-control-sm" id="companyName" placeholder="Type company name"
+                     [formControl]="companyName">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group text-right">
+              <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>
+              <a *ngIf="showSearchClearButton" (click)="reset()" href="javascript:" class="ml-3">Clear</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="table-top">
+            <h6>Total Job Found : <span class="badge badge-success">{{totalRecord || 0}}</span></h6>
+          </div>
+          <div class="table-responsive">
+            <table class="table online-app-table">
+              <thead>
+              <tr [class.disabled]="applicationTableSpinner['active']">
+                <th>#</th>
+                <th>Company</th>
+                <th>Job Title</th>
+                <th class="text-center">Deadline</th>
+                <th class="text-center">
+                  <button class="btn btn-sm btn-danger" style="padding: 2px 5px; font-size: 12px"
+                          [disabled]="selectedIds.length === 0 || deleteActionSubmitted" (click)="deleteJobs()">
+                    <i class="fas fa-trash-alt"></i> Delete
+                  </button>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of favJobs; let i=index">
+                <td>{{i + 1}}</td>
+                <td>
+                  <a href="javascript:void(0)" (click)="show(item.post.company)">{{item.post.company.title_en}}</a>
+                </td>
+                <td>
+                  <a target="_blank" href="{{apiUrl + '/job-list/'+ item.post_id +'/details'}}">{{item.post.title}}</a>
+                </td>
+                <td class="text-center">{{item.post.deadline | date: 'mediumDate'}}</td>
+                <td class="text-center">
+                  <input type="checkbox" [value]="item.id" (change)="onChange($event)">
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <app-spinner [name]="'fav_job_table_spinner'" #applicationTableSpinner></app-spinner>
+          </div>
+          <div class="pagination-wrapper">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true">
+            </ngb-pagination>
+
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

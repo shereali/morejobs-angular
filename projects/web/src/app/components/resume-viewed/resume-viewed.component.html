@@ -1,0 +1,69 @@
+<h6 class="page-title"><i class="fas fa-file-signature"></i> Companies Viewed Resume - Last 80 month(s)</h6>
+<div class="card custom-card">
+  <div class="card-body">
+    <p class="notice-content mb-3">In this part you will get the list of employers who viewed your resume along with
+      Company Name, Summary View and Viewed on.</p>
+    <ul class="mb-2">
+      <li><p class="mb-0"><b>Summary View:</b> Employer viewed summary of the resume. <a
+        routerLink="/home/resume-summary">My resume in summary view</a></p></li>
+      <li><p class="mb-0"><b>Detail Viewed on:</b> Employer viewed details resume on the given date. <a
+        routerLink="/home/view-resume">My detail resume</a></p></li>
+    </ul>
+    <div class="upload-resume-wrapper">
+      <div class="row">
+        <div class="col">
+          <div class="table-top mt-3">
+            <h6>Total : <span class="badge badge-success">{{totalRecord}}</span></h6>
+          </div>
+          <div class="table-responsive">
+            <table class="table online-app-table">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Company Name</th>
+                <th class="text-center">Summary View</th>
+                <th>Viewed on</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of resumeViewed; let i=index;">
+                <td>{{i + 1}}</td>
+                <td>{{item.company.title_en}}</td>
+                <td class="text-center">
+                  <i class="far fa-check-circle text-success" style="font-size: 20px "
+                     *ngIf="item.is_viewed; else notViewedBlock"></i>
+                  <ng-template #notViewedBlock><i class="far fa-times-circle text-danger" style="font-size: 20px "></i>
+                  </ng-template>
+                </td>
+                <td><i class="far fa-calendar-check"></i> {{item.viewed_at | date: 'mediumDate'}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-wrapper">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true">
+            </ngb-pagination>
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

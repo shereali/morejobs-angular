@@ -1,0 +1,173 @@
+<div class="" [hidden]="modalRef['active']" *ngIf="!isLoading">
+  <div class="modal-header">
+    <h6 class="mb-0">{{mode == 'create' ? 'Add New' : 'Update'}} Training</h6>
+  </div>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()" #myNgForm='ngForm'>
+    <div class="modal-body" style="overflow: auto; max-height: 500px">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="companyName">Title*</label>
+                <input type="text" class="form-control" id="companyName" placeholder="Type Training Name"
+                       formControlName="title">
+                <div appInvalidMessage="title">
+                  <small class="text-danger" *appInvalidType="'required'">Training title is required</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="training_type_id">Training Type*</label>
+                <select class="form-control" formControlName="training_type_id" id="training_type_id">
+                  <option [value]="null">Select Option</option>
+                  <option *ngFor="let item of initialData.training_types" [value]="item.id">{{item.title}}</option>
+                </select>
+                <div appInvalidMessage="training_type_id">
+                  <small class="text-danger" *appInvalidType="'required'">Training type is required</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Select Duration (Year)</label>
+                <select class="form-control" formControlName="duration_year">
+                  <option [value]="null">Select Option</option>
+                  <option *ngFor="let item of yearRange" [value]="item">{{item}}</option>
+                </select>
+                <!--                <div appInvalidMessage="district_id">-->
+                <!--                  <small class="text-danger" *appInvalidType="'required'">District is required</small>-->
+                <!--                </div>-->
+              </div>
+              <div class="form-group col-md-6">
+                <label>Select Duration (Month)</label>
+                <select class="form-control" formControlName="duration_month">
+                  <option [value]="null">Select Option</option>
+                  <option *ngFor="let item of monthRange" [value]="item.id">{{item.title}}</option>
+                </select>
+                <!--                <div appInvalidMessage="thana_id">-->
+                <!--                  <small class="text-danger" *appInvalidType="'required'">Than is required</small>-->
+                <!--                </div>-->
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Select Duration (Day)</label>
+                <select class="form-control" formControlName="duration_day">
+                  <option [value]="null">Select Option</option>
+                  <option *ngFor="let item of dayRange" [value]="item">{{item}}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Select Duration (Hour)</label>
+                <select class="form-control" formControlName="duration_hour">
+                  <option [value]="null">Select Option</option>
+                  <option *ngFor="let item of hourRange" [value]="item">{{item}}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="start_date">Start Date</label>
+                <input type="date" class="form-control form-control-sm" id="start_date" formControlName="start_date">
+                <div appInvalidMessage="start_date">
+                  <small class="text-danger" *appInvalidType="'required'">Start date is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="end_date">End Date</label>
+                <input type="date" class="form-control form-control-sm" id="end_date" formControlName="end_date">
+                <div appInvalidMessage="end_date">
+                  <small class="text-danger" *appInvalidType="'required'">End date is required</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="class_schedule">Class Schedule</label>
+                <input type="text" class="form-control form-control-sm" id="class_schedule"
+                       formControlName="class_schedule">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="class_timetable">Class Timetable</label>
+                <input type="text" class="form-control form-control-sm" id="class_timetable"
+                       formControlName="class_timetable">
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="no_of_sessions">No of Sessions</label>
+                <input type="text" class="form-control form-control-sm" id="no_of_sessions"
+                       formControlName="no_of_sessions">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="venue">Venue</label>
+                <input type="text" class="form-control form-control-sm" id="venue" formControlName="venue">
+                <div appInvalidMessage="venue">
+                  <small class="text-danger" *appInvalidType="'required'">Venue is required</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="price">Price</label>
+                <input type="number" class="form-control form-control-sm" id="price" formControlName="price">
+                <div appInvalidMessage="price">
+                  <small class="text-danger" *appInvalidType="'required'">Price is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="deadline">Deadline</label>
+                <input type="date" class="form-control form-control-sm" id="deadline" formControlName="deadline">
+                <div appInvalidMessage="deadline">
+                  <small class="text-danger" *appInvalidType="'required'">Deadline is required</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <textarea class="form-control" rows="3" placeholder="Write who can attend"
+                          formControlName="who_can_attend"></textarea>
+                <!--                <div appInvalidMessage="address_en">-->
+                <!--                  <small class="text-danger" *appInvalidType="'required'">Address is required</small>-->
+                <!--                </div>-->
+              </div>
+              <div class="form-group col-md-6">
+                <textarea class="form-control" rows="3" placeholder="Training Details"
+                          formControlName="details"></textarea>
+              </div>
+
+
+              <div class="form-group col-md-6">
+                <label for="trainer_id">Trainer*</label>
+                <select class="form-control" formControlName="trainer_id" id="trainer_id">
+                  <option [value]="null">Select Option</option>
+                  <option *ngFor="let item of initialData.trainers"
+                          [value]="item.id">{{item.first_name}} {{item.last_name}}</option>
+                </select>
+                <div appInvalidMessage="trainer_id">
+                  <small class="text-danger" *appInvalidType="'required'">Training is required</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Training Categories*</label>
+                <ng-multiselect-dropdown
+                  formControlName="training_categories"
+                  [placeholder]="'Select Option'"
+                  [settings]="dropdownSettings"
+                  [data]="this.initialData.training_categories">
+                </ng-multiselect-dropdown>
+                <div appInvalidMessage="training_categories">
+                  <small class="text-danger" *appInvalidType="'required'">Training category is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success">
+        <app-spinner [name]="'training_save_btn_spinner'" [type]="'btn'"></app-spinner>
+        {{mode == 'create' ? 'Create' : 'Update'}}
+      </button>
+      <a class="btn btn-light" (click)="closeModal()">Close</a>
+    </div>
+  </form>
+</div>
+<app-spinner [name]="'create_training_spinner'" #modalRef></app-spinner>

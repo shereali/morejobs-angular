@@ -1,0 +1,109 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="page-title mb-0"><i class="fas fa-cogs"></i> {{blogType | titlecase}} ({{totalRecord}})</h6>
+  <div>
+    <a href="javascript:void(0)" class="btn btn-success btn-sm" (click)="openCreateModal()">
+      <i class="fas fa-plus"></i> New  {{blogType | titlecase}}</a>
+  </div>
+</div>
+
+<div class="card custom-card">
+  <div class="card-body">
+    <!--    <div class="filter-wrapper">-->
+    <!--      <div class="row">-->
+    <!--        <div class="col-sm-3">-->
+    <!--          <div class="form-group">-->
+    <!--            <label for="title">Title</label>-->
+    <!--            <input type="text" class="form-control form-control-sm" id="title" [formControl]="titleControl">-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--        <div class="col-sm-3">-->
+    <!--          <div class="form-group">-->
+    <!--            <label for="cat_type_id">Category Type</label>-->
+    <!--            <select class="form-control form-control-sm" id="cat_type_id" [formControl]="categoryTypeIdControl">-->
+    <!--              <option value="">All</option>-->
+    <!--              <option *ngFor="let item of filters.category_types" [value]="item.id">{{item.title_en}}</option>-->
+    <!--            </select>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--        <div class="col-sm-3">-->
+    <!--          <div class="form-group mt-4">-->
+    <!--            <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>-->
+    <!--            <a *ngIf="showSearchClearButton" (click)="reset()" href="javascript:" class="ml-3">Clear</a>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+    <div class="row">
+      <div class="col">
+        <div class="table-responsive mb-0">
+          <table class="table employer-table">
+            <thead [class.disabled]="blogTableSpinner['active']">
+            <tr>
+              <th class="text-left">Image</th>
+              <th class="text-left">Title</th>
+              <th class="text-left">Status</th>
+              <th class="text-left">Created At</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of records">
+              <td>
+                <img src="{{item.cover_image ? item.cover_image : '../../../../assets/images/cv-icon-0.png'}}"
+                     width="50" height="50" alt="">
+              </td>
+              <td>
+                <strong>{{item.title}}</strong> <br>
+                <label>{{item.subtitle}}</label>
+              </td>
+              <td>{{item.status.title}}</td>
+              <td>{{item.created_at | date: 'mediumDate'}}</td>
+              <td class="text-center">
+                <app-spinner [name]="'action_spinner_'+ item.id" [type]="'btn'"></app-spinner>
+                <div ngbDropdown container="body" display="dynamic" placement="bottom-right">
+                  <a tabindex="0" ngbDropdownToggle id="action" class="btn btn-sm btn-light" role="button">
+                    Action
+                  </a>
+                  <div ngbDropdownMenu aria-labelledby="action" class="dropdown-menu">
+                    <a href="Javascript:" ngbDropdownItem (click)="openCreateModal(item)">
+                      <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="javascript:" ngbDropdownItem (click)="deleteItem(item)">
+                      <i class="fas fa-share" style="width: 18px;height: 18px"></i> Delete</a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <app-spinner [name]="'blog_table_spinner'" #blogTableSpinner></app-spinner>
+        </div>
+
+        <div class="pagination-wrapper">
+          <ngb-pagination
+            [rotate]="true"
+            [collectionSize]="pagination.total"
+            [(page)]="pagination.current_page"
+            (pageChange)="changePage($event)"
+            [pageSize]="pagination.per_page"
+            [maxSize]="5"
+            [boundaryLinks]="true">
+          </ngb-pagination>
+
+          <div class="form-inline ml-auto mbl-hidden">
+            <div class="filter-item">
+              <app-select
+                [value]="filterParams.value.per_page"
+                (whenSelect)="setPerPage($event)"
+                [options]="perPageOptions"
+                [title]="'Items per page'">
+              </app-select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

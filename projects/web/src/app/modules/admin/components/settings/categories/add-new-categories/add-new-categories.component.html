@@ -1,0 +1,65 @@
+<div class="" [hidden]="categoryCreateSpinner['active']" *ngIf="!isLoading">
+  <div class="modal-header">
+    <h6 class="mb-0">{{mode == 'create' ? 'Add New' : 'Update'}} Category</h6>
+  </div>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="title_en">Categories Name(en)*</label>
+                <input type="text" class="form-control" id="title_en" placeholder="Category in english"
+                       formControlName="title_en">
+                <div appInvalidMessage="title_en">
+                  <small class="text-danger" *appInvalidType="'required'">Title(en) is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="title_bn">ক্যাটাগরি নাম (বাংলায়)</label>
+                <input type="text" class="form-control" id="title_bn" placeholder="ক্যাটাগরি নাম বাংলায় লিখুন"
+                       formControlName="title_bn">
+                <div appInvalidMessage="title_bn">
+                  <small class="text-danger" *appInvalidType="'required'">Title(bn) is required</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label for="cat_type_id">Category Type</label>
+                <select class="form-control form-control-sm" id="cat_type_id" formControlName="category_type_id">
+                  <option value="">Select Option</option>
+                  <option *ngFor="let item of initialData.category_types" [value]="item.id">{{item.title_en}}</option>
+                </select>
+                <div appInvalidMessage="category_type_id">
+                  <small class="text-danger" *appInvalidType="'required'">Category type is required</small>
+                </div>
+              </div>
+              <div class="form-group col-6">
+                <label for="tag_id">Tag</label>
+                <select class="form-control form-control-sm" id="tag_id" formControlName="tag_id">
+                  <option value="">Select Option</option>
+                  <option *ngFor="let item of initialData.tags" [value]="item.id">{{item.title_en}}</option>
+                </select>
+                <div appInvalidMessage="tag_id">
+                  <small class="text-danger" *appInvalidType="'required'">Tag is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success" [disabled]="submitAttempt">
+        <app-spinner [name]="'category_save_btn_spinner'" [type]="'btn'"></app-spinner>
+        {{mode == 'create' ? 'Create' : 'Update'}}
+      </button>
+      <a class="btn btn-light" (click)="closeModal()">Close</a>
+    </div>
+  </form>
+</div>
+<app-spinner [name]="'category_modal_spinner'" #categoryCreateSpinner></app-spinner>

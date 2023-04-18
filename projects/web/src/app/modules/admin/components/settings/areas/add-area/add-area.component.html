@@ -1,0 +1,79 @@
+<div class="">
+  <div class="modal-header">
+    <h6
+      class="mb-0"> {{mode == 'add_sub_area' ? 'Add Sub Area' : (mode === 'create' ? 'Add New Division' : 'Update Area')}}</h6>
+  </div>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card-body" *ngIf="mode === 'create'; else elseBlock">
+            <div class="form-row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="edu_level">Countries</label>
+                  <select class="form-control form-control-sm" id="edu_level" formControlName="country_id">
+                    <option value="">Select Option</option>
+                    <option *ngFor="let item of data.countries" [value]="item.id">{{item.title}}</option>
+                  </select>
+                  <div appInvalidMessage="country_id">
+                    <small class="text-danger" *appInvalidType="'required'">Country is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="d_title_en">Title(en)</label>
+                <input type="text" class="form-control" id="d_title_en" placeholder="Type title in english"
+                       formControlName="title_en">
+                <div appInvalidMessage="title_en">
+                  <small class="text-danger" *appInvalidType="'required'">Title(en) is required</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="d_title_bn">Title(bn)</label>
+                <input type="text" class="form-control" id="d_title_bn" placeholder="Type title in bangla"
+                       formControlName="title_bn">
+                <div appInvalidMessage="title_bn">
+                  <small class="text-danger" *appInvalidType="'required'">Title(bn) is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #elseBlock>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="title_en">Title(en)</label>
+                  <input type="text" class="form-control" id="title_en" placeholder="Type title in english"
+                         formControlName="title_en">
+                  <div appInvalidMessage="title_en">
+                    <small class="text-danger" *appInvalidType="'required'">Title(en) is required</small>
+                  </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="title_bn">Title(bn)</label>
+                  <input type="text" class="form-control" id="title_bn" placeholder="Type title in bangla"
+                         formControlName="title_bn">
+                  <div appInvalidMessage="title_bn">
+                    <small class="text-danger" *appInvalidType="'required'">Title(bn) is required</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success" [disabled]="submitAttempt">
+        <app-spinner [name]="'area_save_btn_spinner'" [type]="'btn'"></app-spinner>
+        {{mode == 'add_sub_area' || mode === 'create' ? 'Create' : 'Update'}}
+      </button>
+      <a class="btn btn-light" (click)="closeModal()">Close</a>
+    </div>
+  </form>
+</div>

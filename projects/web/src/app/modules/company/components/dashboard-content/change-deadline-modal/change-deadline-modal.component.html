@@ -1,0 +1,22 @@
+<div class="">
+  <div class="modal-header">Change Deadline</div>
+
+  <form [formGroup]="myForm" (ngSubmit)="updateDeadline()">
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label for="deadline">Deadline</label>
+        <input type="date" class="form-control form-control-sm" id="deadline" [formControl]="deadline">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-sm btn-secondary radius mr-3" [disabled]="isFormSubmitted">
+        <app-spinner [name]="'change_deadline_btn_spinner'" [type]="'btn'"></app-spinner>
+        Save
+      </button>
+      <button class="btn btn-sm btn-info" (click)="closeModal()">Close</button>
+    </div>
+  </form>
+
+</div>

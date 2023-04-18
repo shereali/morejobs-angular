@@ -1,0 +1,242 @@
+.view-resume {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar, .main-container, .academic-wrapper {
+  overflow: hidden;
+}
+.sidebar-hr {
+  border-color: #777576
+}
+.master-hr {
+  margin: 20px 40px 20px 30px;
+  border-color: #cecaca
+}
+
+.sidebar {
+  margin: 0 auto;
+  padding: 0 20px;
+  background: #f5f5f5;
+  text-align: center;
+}
+.img-fram-wrapper {
+  padding: 20px 15px 0;
+}
+.img-fram-wrapper img {
+  width: 126px;
+  display: inline-block;
+  border-radius: 50%;
+}
+.name-plate {
+  margin: 15px 0 5px;
+  color: #444444;
+  font-size: 19px;
+}
+.name-plate span {
+  color: #444444;
+}
+.designation {
+  color: #666666;
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+.profile-wrapper h4, .profesional-skill h4 {
+  //color: #dddddd;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: left;
+}
+.profile-wrapper i, .address-bar i, .profesional-skill i {
+  color: #1d8cc1;
+}
+.profile-wrapper p {
+  margin-left: 20px;
+  //color: #cecdcb;
+  font-size: 14px;
+  text-align: left;
+}
+.address-bar {
+  margin-bottom: 15px;
+}
+.address-bar i {
+  font-size: 36px;
+}
+.address-bar p, .address-bar p a {
+  color: #cecdcb;
+}
+.address-bar p a:hover,
+.academic-inside.references-inside a:hover {
+  text-decoration: underline;
+}
+.profesional-skill {
+  text-align: left;
+}
+.skill-wrapper {
+  overflow: hidden;
+  margin-left: 25px;
+}
+.skill-wrapper p {
+  margin-bottom: 5px;
+  float: left;
+  color: #ddd;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+.skill-point {
+  float: right;
+}
+.skill-point i {
+  color: #2a90d2;
+}
+.skill-point i.dot-less {
+  color: #faf2ef;
+}
+.language-wrapper {
+  margin-bottom: 35px
+}
+
+.main-container {
+  background: #ffffff;
+}
+
+.academic-wrapper {
+  margin: 20px;
+}
+.academic-wrapper h2 {
+  margin: 0;
+  color: #1d8cc1;
+  font-size: 16px;
+  font-weight: 700;
+}
+.academic-item {
+  margin: 20px 0 0;
+}
+.academic-item h3 {
+  margin: 0;
+  display: inline-block;
+  color: #282828;
+  font-size: 16px;
+  font-weight: 700;
+}
+.academic-item span {
+  float: right;
+  margin-right: 20px;
+  color: #868686;
+}
+.academic-inside {
+  margin-top: 5px;
+}
+.academic-inside p {
+  margin: 0;
+  color: #666666;
+  font-size: 13px;
+}
+.academic-inside p:nth-child(2),
+.academic-inside p:nth-child(3) {
+  //margin-left: 10px;
+  color: #666666;
+  font-size: 13px;
+}
+.certificate-detail {
+  width: 345px
+}
+.academic-item .certificate-date {
+  float: none;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+.academic-item .computer-skill {
+  list-style-image: url(../../../assets/images/arrow-right.png);
+}
+.academic-item .computer-skill,
+.academic-item .project-skill {
+  margin: 0;
+  //padding: 0;
+}
+.academic-item .project-skill {
+  list-style: none;
+}
+.academic-item .computer-skill li a,
+.academic-item .project-skill li a {
+  cursor: pointer;
+}
+.academic-item.references-item {
+  margin: 0;
+  padding: 20px 0 20px 60px;
+}
+.academic-title.references h3 {
+  display: block;
+}
+.academic-title.references .references-type {
+  float: none;
+  font-size: 12px;
+}
+.academic-inside.references-inside a,
+.academic-inside.references-inside p:nth-child(2),
+.academic-inside.references-inside p:nth-child(3),
+.academic-inside.references-inside p:nth-child(4) {
+  margin-left: 0;
+  color: #a7a5a5;
+}
+
+//.view-btn-active {
+//  &:active, &:focus {
+//    color: #fff;
+//    background-color: #0069d9;
+//    border-color: #0062cc;
+//  }
+//}
+
+
+
+
+
+// Responsive Design
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+  .view-resume {
+    flex-direction: column;
+
+    .view-2 {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .master-hr {
+    margin: 20px 0;
+  }
+
+  .academic-wrapper {
+    margin: 20px 0;
+  }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) {
+
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) and (max-width: 1199.98px) {
+
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+
+}

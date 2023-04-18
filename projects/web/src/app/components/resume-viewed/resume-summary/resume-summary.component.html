@@ -1,0 +1,34 @@
+<h6 class="page-title"><i class="fas fa-binoculars"></i> CV Summary View</h6>
+<div class="card custom-card" *ngIf="!isLoading">
+  <div class="card-body">
+    <div class="upload-resume-wrapper">
+      <div class="row">
+        <div class="col-sm-2 text-center">
+          <img src="{{ cvSummary.user.image ? apiUrl + cvSummary.user.image : 'assets/images/avatar.png'}}"
+               class="rounded-circle" width="100" alt="">
+        </div>
+        <div class="col-sm-5">
+          <h6>
+            <a routerLink="/home/view-resume">{{cvSummary.user.first_name}} {{cvSummary.user.last_name}}</a>
+            <small
+              style="float: right;border: 1px solid #ddd;padding: 2px 6px;border-radius: 6px;">Age: {{cvSummary.other.total_age}}</small>
+          </h6>
+          <p class="mb-2" *ngIf="cvSummary.education">{{cvSummary.education.institute_name}}</p>
+          <p><i class="fas fa-mobile-alt" *ngIf="cvSummary.mobile"></i> {{cvSummary.mobile?.title}}</p>
+        </div>
+        <div class="col-sm-5">
+          <h6 class="mb-0">
+            <small style="float: right;border: 1px solid #ddd;padding: 2px 6px;border-radius: 6px;"><i
+              class="fas fa-business-time"></i> {{cvSummary.other.total_exp.years}}
+              Years {{cvSummary.other.total_exp.months}} months+</small>
+          </h6>
+
+          <ng-container *ngFor="let item of cvSummary.job_experiences">
+            <h6 class="mb-0">{{item.company_name}}</h6>
+            <p class="mb-2 sub-color">{{item.designation}}({{item.exp_duration}})</p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

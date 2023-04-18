@@ -1,0 +1,512 @@
+<div class="top-bar d-none d-lg-block">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+        <div class="top-bar-left">
+          <ul>
+            <li><a href="{{apiUrl + '/'}}">Jobs</a></li>
+            <li class="active"><a href="javascript:void(0)">My Jobs</a></li>
+            <li><a routerLink="company-list" routerLinkActive="active">Employers</a></li>
+            <li><a href="javascript:void(0)">Training</a></li>
+            <li><a href="javascript:void(0)">Tender/EOI</a></li>
+            <li><a href="javascript:void(0)">Admission</a></li>
+            <li><a href="javascript:void(0)">Event/Fair</a></li>
+            <li><a href="javascript:void(0)">Tutor</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-4">
+        <div class="top-bar-right float-right">
+          <ul>
+            <li><a href=""><i class="fab fa-facebook-f"></i></a></li>
+            <li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
+            <li><a href=""><i class="fab fa-youtube"></i></a></li>
+            <li><a href=""><i class="fas fa-phone-alt"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div><!-- end row -->
+  </div><!-- end container -->
+</div><!-- Top Bar close -->
+
+<div class="header-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <nav class="navbar navbar-expand-lg">
+          <a class="navbar-brand" href="{{apiUrl + '/'}}">
+            <img src="assets/images/logo.png" width="96" alt="" loading="lazy">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar"
+                  aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-1">
+  <div class="d-flex d-inline">
+    <a href="{{apiUrl+'/employer-services'}}" class="col-6 btn btn-primary">Services for Employers</a>
+    <a routerLink="/login" class="col-6 btn btn-primary">Login</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row" *ngIf="!isLoading">
+    <div class="col-sm-12">
+      <div class="card my-3">
+        <div class="card-body">
+          <h5 class="text-primary text-center mb-3">Employer Registration Form</h5>
+          <form [formGroup]="myForm" (ngSubmit)="onSubmit()" #myNgForm='ngForm'>
+            <h6 class="text-secondary">Account Information</h6>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="userName">Email/Mobile *</label>
+                <input type="text" class="form-control" id="userName" placeholder="Type Email/Mobile"
+                       formControlName="username">
+                <div appInvalidMessage="username">
+                  <small class="text-danger" *appInvalidType="'required'">Email/Mobile is required</small>
+                </div>
+                <small class="text-danger"
+                       *ngIf="serverSideValidations.hasOwnProperty('username') && serverSideValidations.username.invalid">{{serverSideValidations.username.message}}</small>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="password">Password*</label>
+                <input type="password" class="form-control" id="password" placeholder="Use maximum 8 characters"
+                       formControlName="password">
+                <div appInvalidMessage="password">
+                  <small class="text-danger" *appInvalidType="'required'">Password is required</small>
+                  <small class="text-danger" *appInvalidType="'minlength'">Password must be at least 6 char</small>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="confirmPassword">Confirm Password*</label>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="Retype password"
+                       formControlName="confirm_password">
+                <div appInvalidMessage="confirm_password">
+                  <small class="text-danger" *appInvalidType="'required'">Confirm password is required</small>
+                  <small class="text-danger" *appInvalidType="'minlength'">Confirm password must be at least 6
+                    char</small>
+                  <small class="text-danger" *appInvalidType="'confirmedValidator'">Password and Confirm Password must
+                    be match.</small>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <h6 class="text-secondary mt-4">Company Details Information</h6>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="companyName">Company Name*</label>
+                <input type="text" class="form-control" id="companyName" placeholder="Type Company Name"
+                       formControlName="title_en">
+                <div appInvalidMessage="title_en">
+                  <small class="text-danger" *appInvalidType="'required'">Company name is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="companyNameBL">কোম্পানির নাম (বাংলায়)</label>
+                <input type="text" class="form-control" id="companyNameBL" placeholder="কোম্পানির নাম বাংলায় লিখুন"
+                       formControlName="title_bn">
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="year_of_establishment">Year of Establishment</label>
+                <input type="text" class="form-control" id="year_of_establishment"
+                       placeholder="Company's Establishment Year, e.g. 2003"
+                       formControlName="year_establishment">
+                <div appInvalidMessage="year_establishment">
+                  <small class="text-danger" *appInvalidType="'minlength'">Please enter a valid year</small><br>
+                  <small class="text-danger" *appInvalidType="'pattern'">Please enter numeric value</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="company_size">Company Size</label>
+                <select class="form-control" id="company_size" formControlName="company_size">
+                  <option value="">Select Option</option>
+                  <option *ngFor="let item of employeeSizes" value="{{item.id}}">{{item.title}}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-12">
+                <label for="companyAddress">Company Address*</label>
+                <select class="form-control" id="companyAddress" formControlName="country_id"
+                        (change)="resetAreaValidation()">
+                  <option value="">Select Country</option>
+                  <option *ngFor="let item of initialData.countries" [value]="item.id">{{item.title}}</option>
+                </select>
+                <div appInvalidMessage="country_id">
+                  <small class="text-danger" *appInvalidType="'required'">Country is required</small>
+                </div>
+              </div>
+
+              <ng-container *ngIf="+countryIdControl.value === 1">
+                <div class="form-group col-md-6">
+                  <select class="form-control" formControlName="district_id">
+                    <option value="">Select District</option>
+                    <option *ngFor="let item of bdDistricts" [value]="item.id">{{item.title_en}}</option>
+                  </select>
+                  <div appInvalidMessage="district_id">
+                    <small class="text-danger" *appInvalidType="'required'">District is required</small>
+                  </div>
+                </div>
+                <div class="form-group col-md-6">
+                  <select class="form-control" formControlName="thana_id">
+                    <option value="">Select Thana</option>
+                    <option *ngFor="let item of bdThanas" [value]="item.id">{{item.title_en}}</option>
+                  </select>
+                  <div appInvalidMessage="thana_id">
+                    <small class="text-danger" *appInvalidType="'required'">Than is required</small>
+                  </div>
+                </div>
+              </ng-container>
+
+              <div class="form-group col-md-6">
+                <textarea class="form-control" rows="3" placeholder="Write Company Address"
+                          formControlName="address_en"></textarea>
+                <div appInvalidMessage="address_en">
+                  <small class="text-danger" *appInvalidType="'required'">Address is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <textarea class="form-control" rows="3" placeholder="কোম্পানীর ঠিকানা বাংলায় লিখুন"
+                          formControlName="address_bn"></textarea>
+              </div>
+              <div class="col-md-12">
+                <label>Industry Type*</label>
+              </div>
+              <div class="form-group col-md-6">
+                <select class="form-control" formControlName="industry_type_id">
+                  <option value="">Select Option</option>
+                  <option *ngFor="let item of initialData.industry_types" [value]="item.id">{{item.title_en}}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <input type="text" class="form-control" placeholder="Search IndustryType">
+              </div>
+
+              <div class="form-group col-md-12">
+                <div class="row m-0 py-3 px-2" style="border: 2px solid #ddd;height: 180px;overflow: auto;">
+                  <div class="col-sm-4" *ngFor="let item of filteredIndustryTypes()">
+                    <div class="custom-control custom-checkbox mb-2">
+                      <input type="checkbox" class="custom-control-input" id="i_type_{{item.id}}"
+                             [checked]="isChecked(item)"
+                             (change)="onChangeIndustryType(item, $event)">
+                      <label class="custom-control-label" for="i_type_{{item.id}}">{{item.title_en}}</label>
+                    </div>
+                  </div>
+                </div>
+
+                <p *ngIf="myNgForm.submitted">
+                  <small class="text-danger" *ngIf="selectedIndustryTypes.length === 0">Please select at least one
+                    industry type</small>
+                </p>
+
+                <div class="d-inline d-flex mt-3">
+                  <a href="Javascript:void(0)" class="badge badge badge-pill badge-info p-2 mr-2"
+                     *ngFor="let item of selectedIndustryTypes; let i = index">
+                    {{item.title_en}} <i class="fa fa-times ml-2" (click)="removeItem(i)"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="form-group col-md-12">
+                <label for="businessDescription">Business Description</label>
+                <textarea class="form-control" id="businessDescription" rows="3"
+                          placeholder="Write Business Description" formControlName="about">
+                </textarea>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="businessTradeLicense">Business / Trade License No</label>
+                <input type="text" class="form-control" id="businessTradeLicense"
+                       placeholder="Business / Trade License No" formControlName="trade_licence_no">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="RLNoRecruitingAgency">RL No (Only for Recruiting Agency)</label>
+                <div class="input-group mb-2 mr-sm-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text px-2 py-0">RL -</div>
+                  </div>
+                  <input type="text" class="form-control" id="RLNoRecruitingAgency" placeholder="Enter Number Only"
+                         formControlName="rl_no">
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="websiteURL">Website URL</label>
+                <input type="text" class="form-control" id="websiteURL" placeholder="Type Website URL"
+                       formControlName="website">
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="org_type">Organization Type*</label>
+                <select class="form-control" id="org_type" formControlName="organization_type_id">
+                  <option value="">Select Organization</option>
+                  <option *ngFor="let item of initialData.organization_types"
+                          [value]="item.id">{{item.title_en}}</option>
+                </select>
+                <div appInvalidMessage="organization_type_id">
+                  <small class="text-danger" *appInvalidType="'required'">Organization type is required</small>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+
+            <h6 class="text-secondary mt-4">Contact <small>(Primary Contact)</small></h6>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="contactPersonName">Contact Person's Name*</label>
+                <input type="text" class="form-control" id="contactPersonName" placeholder="Type contact Person's Name"
+                       formControlName="name">
+                <div appInvalidMessage="name">
+                  <small class="text-danger" *appInvalidType="'required'">Contact person name is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="contactPersonDesignation">Contact Person's Designation*</label>
+                <input type="text" class="form-control" id="contactPersonDesignation"
+                       placeholder="Type contact Person's Designation*" formControlName="designation">
+                <div appInvalidMessage="designation">
+                  <small class="text-danger" *appInvalidType="'required'">Designation is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="contactPersonEmail">Contact Person's Email*</label>
+                <input type="email" class="form-control" id="contactPersonEmail"
+                       placeholder="Type contact Person's Email*" formControlName="email">
+                <div appInvalidMessage="email">
+                  <small class="text-danger" *appInvalidType="'required'">Email is required</small>
+                  <small class="text-danger" *appInvalidType="'email'">Must be a valid e-mail</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="contactPersonMobile">Contact Person's Mobile</label>
+                <input type="tel" class="form-control" id="contactPersonMobile" placeholder="017XXXXXXXX"
+                       formControlName="mobile_no">
+              </div>
+            </div>
+
+            <!--            <hr>-->
+
+            <!--            <h6 class="text-secondary mt-4 mb-3">Accessibility Profile for inclusion of Persons with Disabilities as-->
+            <!--              Employees</h6>-->
+            <!--            <div class="form-row">-->
+            <!--              <div class="form-group col-md-12">-->
+            <!--                <div class="custom-control custom-checkbox mb-2">-->
+            <!--                  <input type="checkbox" class="custom-control-input" id="Facilities" checked>-->
+            <!--                  <label class="custom-control-label text-dark font-weight-bold" for="Facilities">Facilities for Person-->
+            <!--                    with Disabilities</label>-->
+            <!--                </div>-->
+            <!--              </div>-->
+
+            <!--              <div class="form-group col-md-12">-->
+            <!--                <div class="form-group col-md-12">-->
+            <!--                  <p class="mb-2 font-weight-bold">Do you have Disability Inclusion Policy</p>-->
+            <!--                  <div class="custom-control custom-radio custom-control-inline">-->
+            <!--                    <input type="radio" id="inclusionPolicy1" name="inclusionPolicy" class="custom-control-input">-->
+            <!--                    <label class="custom-control-label" for="inclusionPolicy1">Yes</label>-->
+            <!--                  </div>-->
+            <!--                  <div class="custom-control custom-radio custom-control-inline">-->
+            <!--                    <input type="radio" id="inclusionPolicy2" name="inclusionPolicy" class="custom-control-input">-->
+            <!--                    <label class="custom-control-label" for="inclusionPolicy2">No</label>-->
+            <!--                  </div>-->
+            <!--                </div>-->
+            <!--                <div class="form-group col-md-12">-->
+            <!--                  <p class="mb-2 font-weight-bold">Do you provide Disability Inclusion Training for your Employees</p>-->
+            <!--                  <div class="custom-control custom-radio custom-control-inline">-->
+            <!--                    <input type="radio" id="inclusionTraining1" name="inclusionTraining" class="custom-control-input">-->
+            <!--                    <label class="custom-control-label" for="inclusionTraining1">Yes</label>-->
+            <!--                  </div>-->
+            <!--                  <div class="custom-control custom-radio custom-control-inline">-->
+            <!--                    <input type="radio" id="inclusionTraining2" name="inclusionTraining" class="custom-control-input">-->
+            <!--                    <label class="custom-control-label" for="inclusionTraining2">No</label>-->
+            <!--                  </div>-->
+            <!--                </div>-->
+
+            <!--                <div class="form-group col-md-12">-->
+            <!--                  <p class="mb-2 font-weight-bold">As part of Disability Inclusion, what do your company have</p>-->
+            <!--                </div>-->
+            <!--                <div class="form-group col-md-12">-->
+            <!--                  <div class="row m-0 py-3 px-2" style="border: 2px solid #ddd;height: 180px;overflow: auto;">-->
+            <!--                    <div class="col-sm-4">-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                    </div>-->
+            <!--                    <div class="col-sm-4">-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                    </div>-->
+            <!--                    <div class="col-sm-4">-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                      <div class="custom-control custom-checkbox mb-2">-->
+            <!--                        <input type="checkbox" class="custom-control-input" id="customCheck1">-->
+            <!--                        <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>-->
+            <!--                      </div>-->
+            <!--                    </div>-->
+            <!--                  </div>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+
+            <hr>
+
+            <div class="form-row">
+              <!--              <div class="form-group col-md-12">-->
+              <!--                <label class="d-block mb-3">Verification Code</label>-->
+              <!--                <p style="border: 1px solid #444;-->
+              <!--                  display: inline-block;-->
+              <!--                  padding: 0px 20px;-->
+              <!--                  font-weight: 900;-->
+              <!--                  color: red;-->
+              <!--                  font-size: 21px;-->
+              <!--                  margin-bottom: 0;-->
+              <!--                  height: 35px;-->
+              <!--                  margin-right: 40px;">874P2F</p>-->
+              <!--                <input type="tel" class="form-control d-inline-block" id="" style="width: 300px"-->
+              <!--                       placeholder="Type the verification code">-->
+              <!--                <a href="javascript:" class="ml-3"><i class="fas fa-redo-alt"></i> Refresh</a>-->
+              <!--              </div>-->
+
+              <div class="form-group col-md-12 mt-3">
+                <label class="h6 text-dark">Pricing Policy of Morejobs's recruitment services</label>
+                <div class="custom-control custom-checkbox mb-2">
+                  <input type="checkbox" class="custom-control-input" id="pricingPolicy"
+                         formControlName="is_checked_policy">
+                  <label class="custom-control-label" for="pricingPolicy">I Have Read Pricing Policy And Accepted
+                    It</label>
+                </div>
+              </div>
+
+              <div class="form-group col-md-12 text-right">
+                <button type="submit" class="btn btn-success btn-lg" [disabled]="checkedPolicy.value === false">
+                  <app-spinner [name]="'register_btn_spinner'" [type]="'btn'"></app-spinner>
+                  Sign up <i class="fas fa-angle-right"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer [footerSalesPerson]="false"></app-footer>

@@ -1,0 +1,148 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="page-title mb-0"><i class="fas fa-people-arrows"></i> Training List</h6>
+  <div>
+    <a href="javascript:void(0)" class="btn btn-success btn-sm" (click)="openCreateModal()">
+      <i class="fas fa-plus"></i> New Training</a>
+  </div>
+</div>
+
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="upload-resume-wrapper">
+      <!--      <div class="filter-wrapper">-->
+      <!--        <div class="row">-->
+      <!--          <div class="col-sm-3">-->
+      <!--            <div class="form-group">-->
+      <!--              <label for="company_name">Company Name</label>-->
+      <!--              <input type="text" class="form-control form-control-sm" id="company_name"-->
+      <!--                     [formControl]="companyNameControl">-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class="col-sm-3">-->
+      <!--            <div class="form-group">-->
+      <!--              <label for="organization_type_id">Organization Types</label>-->
+      <!--              <select class="form-control form-control-sm" id="organization_type_id"-->
+      <!--                      [formControl]="organizationTypeIdControl">-->
+      <!--                <option value="">All Organization</option>-->
+      <!--                <option *ngFor="let item of initialData.organization_types" [value]="item.id">{{item.title_en}}</option>-->
+      <!--              </select>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class="col-sm-3">-->
+      <!--            <div class="form-group mt-4">-->
+      <!--              <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>-->
+
+      <!--              <a *ngIf="showSearchClearButton" (click)="reset()" href="javascript:" class="ml-3">Clear</a>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <div class="row">
+        <div class="col">
+          <nav ngbNav #nav="ngbNav" class="nav-tabs mt-4">
+            <ng-container ngbNavItem>
+              <a ngbNavLink (click)="onChangeStatusFilter('approved')"
+                 [class.active]="statusControl.value === 'approved'">Approved
+                ({{summary.approved}})</a>
+              <a ngbNavLink (click)="onChangeStatusFilter('pending')"
+                 [class.active]="statusControl.value === 'pending'">Pending
+                ({{summary.pending}})</a>
+              <a ngbNavLink (click)="onChangeStatusFilter('inactive')"
+                 [class.active]="statusControl.value === 'inactive'">Inactive/Banned
+                ({{summary.inactive}})</a>
+              <ng-template ngbNavContent>
+                <div class="table-responsive mb-0" style="padding: 3px">
+                  <table class="table text-center employer-table">
+                    <thead>
+                    <tr [class.disabled]="trainingTableSpinner['active']">
+                      <th>Course Title</th>
+                      <th class="text-left">Trainer</th>
+                      <th class="text-left">Training Type</th>
+                      <th class="text-left">Status</th>
+                      <th>Created At</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of trainings; let i=index;">
+                      <td>
+                        {{item.title}}
+                      </td>
+                      <td>
+                        {{item.trainer.first_name}} {{item.trainer.last_name}}
+                      </td>
+                      <td class="text-left">{{item.training_type.title}}</td>
+                      <td class="text-left">
+                        <!--                        <app-spinner [name]="'company_status_change_spinner'+ item.id" [type]="'btn'"></app-spinner>-->
+                        <!--                        <select class="form-control form-control-sm" (change)="onChangeStatus(item, $event)">-->
+                        <!--                          <option value="0" [selected]="item.status.id === 0"-->
+                        <!--                                  [disabled]="statusControl.value === 'pending'">Pending-->
+                        <!--                          </option>-->
+                        <!--                          <option value="1" [selected]="item.status.id === 1"-->
+                        <!--                                  [disabled]="statusControl.value === 'approved'">Approved-->
+                        <!--                          </option>-->
+                        <!--                          <option value="2" [selected]="item.status.id === 2"-->
+                        <!--                                  [disabled]="statusControl.value === 'inactive'">Inactive/Banned-->
+                        <!--                          </option>-->
+                        <!--                        </select>-->
+                      </td>
+                      <td>{{item.created_at | date: 'mediumDate'}}</td>
+
+                      <td class="text-center">
+                        <app-spinner [name]="'action_spinner_'+ item.id" [type]="'btn'"></app-spinner>
+                        <div ngbDropdown container="body" display="dynamic" placement="bottom-right">
+                          <a tabindex="0" ngbDropdownToggle id="action" class="btn btn-sm btn-light" role="button">
+                            Action
+                          </a>
+                          <div ngbDropdownMenu aria-labelledby="action" class="dropdown-menu">
+                            <a href="Javascript:void(0)" (click)="openCreateModal(item)" ngbDropdownItem>
+                              <i class="fas fa-edit"></i> Edit
+                            </a>
+
+                            <a href="javascript:" ngbDropdownItem (click)="deleteItem(item)">
+                              <i class="fas fa-trash text-danger" style="width: 18px;height: 18px"></i> Delete</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="totalRecord === 0">
+                      <td colspan="5">No trainings found!</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <app-spinner [name]="'training_table_spinner'" #trainingTableSpinner></app-spinner>
+                </div>
+              </ng-template>
+            </ng-container>
+          </nav>
+          <div [ngbNavOutlet]="nav"></div>
+
+          <div class="pagination-wrapper" *ngIf="totalRecord > 0">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true">
+            </ngb-pagination>
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

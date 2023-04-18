@@ -1,0 +1,318 @@
+<app-header [isPublic]="true"></app-header>
+
+<div class="page-content">
+  <div class="form-v4-content">
+    <div class="form-left">
+      <h5 class="text-primary">Create your free Morejobs account now (অ্যাকাউন্ট তৈরী)</h5>
+      <p style="margin-bottom: 30px">There are 3 type of categories: General Category, স্পেশাল স্কিল্‌ড ক্যাটাগরি,
+        প্রতিবন্ধী ক্যাটাগরি। Create your
+        morejobs account by select any of the categories. <br>
+        (সিভি তৈরীর জন্য ৩ ধরনের ক্যাটাগরি রয়েছেঃ জেনারেল ক্যাটাগরি, স্পেশাল স্কিল্‌ড ক্যাটাগরি, প্রতিবন্ধী ক্যাটাগরি।
+        আপনি যেকোনো একটি ক্যাটাগরি সিলেক্ট করে আপনার অ্যাকাউন্ট তৈরী করুন।) <br>
+        You can change/add categories if you want after creating an account (অ্যাকাউন্ট তৈরী করার পরও আপনি চাইলে
+        ক্যাটাগরি পরিবর্তন/সংযোজন করতে পারবেন।)</p>
+      <p class="remainder-wrapper">
+        <i class="fas fa-bell"></i>
+        <span>Get instant Notification about New job Posting, Match Jobs and More.</span>
+      </p>
+      <p class="remainder-wrapper">
+        <i class="fas fa-mobile"></i>
+        <span>Your world of Jobs on the go. Search, View, Apply to any jobs from anywhere.</span>
+      </p>
+      <p class="remainder-wrapper">
+        <i class="fas fa-envelope"></i>
+        <span>Receive Messages from Employers and Increase your Possibility.</span>
+      </p>
+      <p class="remainder-wrapper">
+        <i class="fas fa-business-time"></i>
+        <span>Join 10,000+ Companies who have posted more than 1,50,000+ Jobs!</span>
+      </p>
+      <div class="form-left-last">
+        <h6 class="mb-4">Already Registered?</h6>
+        <a routerLink="/login" class="account">Have An Account</a>
+      </div>
+    </div>
+    <div class="reg-wrapper" *ngIf="registerMode=== ''; else regForm">
+      <div class="card mb-3">
+        <div class="card-header"><h6 class="mb-0">General Category</h6></div>
+        <div class="card-body">
+          <p class="card-text">Accountant, Project Manager, Engineer, Lecturer, Merchandiser</p>
+          <a href="javascript:void(0)" class="btn btn-sm btn-login mb-2" (click)="onChangeRegMode('general')">Create
+            Account</a>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-header"><h6 class="mb-0">স্পেশাল স্কিল্‌ড ক্যাটাগরি</h6></div>
+        <div class="card-body">
+          <p class="card-text">ড্রাইভার, মেকানিক, ইলেকট্রিশিয়ান, নার্স, সিকিউরিটি গার্ড, শেফ/বাবুর্চী, পিয়ন</p>
+          <a href="javascript:void(0)" class="btn btn-sm btn-login mb-2" (click)="onChangeRegMode('special')">অ্যাকাউন্ট
+            তৈরী</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0">প্রতিবন্ধী ক্যাটাগরি</h6></div>
+        <div class="card-body">
+          <p class="card-text">অ্যাকাউন্ট্যান্ট, ড্রাইভার, মেকানিক, ইলেকট্রিশিয়ান, নার্স, সিকিউরিটি গার্ড,
+            শেফ/বাবুর্চী</p>
+          <a href="javascript:void(0)" class="btn btn-sm btn-login mb-2" (click)="onChangeRegMode('disabled')">অ্যাকাউন্ট
+            তৈরী</a>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #regForm>
+      <div *ngIf="registerMode === 'general'" class="reg-wrapper">
+        <form [formGroup]="generalRegForm">
+          <a href="javascript:" class="d-block mb-3 text-dark" (click)="onChangeRegMode('')">
+            <i class="fas fa-arrow-left"></i> Back
+          </a>
+          <h5 class="mb-3">Create Account</h5>
+          <div class="form-group">
+            <label for="g-name">Name *</label>
+            <input type="text" class="form-control" id="g-name" placeholder="Your Name" formControlName="name">
+            <div appInvalidMessage="name">
+              <small class="text-danger" *appInvalidType="'required'">Name is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="g-skill">Select your skill from following list *</label>
+            <select class="form-control" id="g-skill" formControlName="category_id">
+              <option value="">select</option>
+              <option *ngFor="let item of categories" [value]="item.id">{{item.title_en}}</option>
+            </select>
+            <div appInvalidMessage="category_id">
+              <small class="text-danger" *appInvalidType="'required'">Category is required</small>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="g-email">Email Address *</label>
+              <input type="email" class="form-control" id="g-email" placeholder="Email Address" formControlName="email">
+              <div appInvalidMessage="email">
+                <small class="text-danger" *appInvalidType="'required'">Email is required</small>
+              </div>
+            </div>
+            <div class="form-group col">
+              <label for="g-mobile">Mobile Number *</label>
+              <input type="tel" class="form-control" id="g-mobile" placeholder="Mobile Number"
+                     formControlName="mobile_no">
+              <div appInvalidMessage="mobile_no">
+                <small class="text-danger" *appInvalidType="'required'">Mobile is required</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <p style="font-size: 13px;font-weight: 400;margin-bottom: 0"><b>Set Username As *</b></p>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="u-username" class="custom-control-input" [value]="'email'"
+                     formControlName="set_username_as">
+              <label class="custom-control-label" for="u-username">Email</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="u-mobile" class="custom-control-input" [value]="'mobile_no'"
+                     formControlName="set_username_as">
+              <label class="custom-control-label" for="u-mobile">Mobile No</label>
+            </div>
+            <div appInvalidMessage="set_username_as">
+              <small class="text-danger" *appInvalidType="'required'">This field is required</small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="g-password">Password *</label>
+              <input type="password" class="form-control" id="g-password" placeholder="Password"
+                     formControlName="password">
+              <div appInvalidMessage="password">
+                <small class="text-danger" *appInvalidType="'required'">Password is required</small>
+                <small class="text-danger" *appInvalidType="'minlength'">Password must be at least 6 char</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <p style="font-size: 13px;font-weight: 400;margin-bottom: 0"><b>Gender *</b></p>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="g-male" class="custom-control-input" [value]="1" formControlName="gender_id">
+              <label class="custom-control-label" for="g-male">Male</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="g-female" class="custom-control-input" [value]="2" formControlName="gender_id">
+              <label class="custom-control-label" for="g-female">Female</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="g-Others" class="custom-control-input" [value]="3" formControlName="gender_id">
+              <label class="custom-control-label" for="g-Others">Others</label>
+            </div>
+            <div appInvalidMessage="gender_id">
+              <small class="text-danger" *appInvalidType="'required'">Gender is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="g-agree" formControlName="agreed_term_condition">
+              <label class="custom-control-label" for="g-agree">I agree to the morejobs's Terms of use. <a
+                href="#">Terms & Conditions</a></label>
+            </div>
+            <div appInvalidMessage="agreed_term_condition">
+              <small class="text-danger" *appInvalidType="'required'">This field is required</small>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="g-subscribe">
+              <label class="custom-control-label" for="g-subscribe">Subscribe to Morejobs Newsletter.</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success"
+                    [disabled]="submitAttempt"
+                    (click)="onSubmit()">
+              <app-spinner [name]="'register_btn_spinner'" [type]="'btn'"></app-spinner>
+              Create Account
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="registerMode==='special'" class="reg-wrapper">
+        <form [formGroup]="specialRegForm">
+          <a href="javascript:" class="d-block mb-3 text-dark" (click)="onChangeRegMode('')">
+            <i class="fas fa-arrow-left"></i> <b> পূর্বের
+            পাতা</b>
+          </a>
+          <h5 class="mb-3">অ্যাকাউন্ট তৈরী করুন</h5>
+          <div class="form-group">
+            <label for="s-name">নাম (required)</label>
+            <input type="text" class="form-control" id="s-name" placeholder="আপনার নাম" formControlName="name">
+            <div appInvalidMessage="name">
+              <small class="text-danger" *appInvalidType="'required'">Name is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="s-skill">নিচের লিস্ট থেকে দক্ষতা নির্বাচন করুন (required)</label>
+            <select class="form-control" id="s-skill" formControlName="category_id">
+              <option value="">select</option>
+              <option *ngFor="let item of categories" [value]="item.id">{{item.title_en}}</option>
+            </select>
+            <div appInvalidMessage="category_id">
+              <small class="text-danger" *appInvalidType="'required'">Category is required</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="s-mobile">মোবাইল নম্বর (required)</label>
+            <input type="tel" class="form-control" id="s-mobile" placeholder="আপনার মোবাইল নম্বর"
+                   formControlName="mobile_no">
+            <div appInvalidMessage="mobile_no">
+              <small class="text-danger" *appInvalidType="'required'">Mobile no is required</small>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="s-password">Password *</label>
+              <input type="password" class="form-control" id="s-password" placeholder="Password"
+                     formControlName="password">
+              <div appInvalidMessage="password">
+                <small class="text-danger" *appInvalidType="'required'">Password is required</small>
+                <small class="text-danger" *appInvalidType="'minlength'">Password must be at least 6 char</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <p style="font-size: 13px;font-weight: 400;margin-bottom: 0"><b>লিঙ্গ (required)</b></p>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="s-male" class="custom-control-input" [value]="1" formControlName="gender_id">
+              <label class="custom-control-label" for="s-male">Male</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="s-female" class="custom-control-input" [value]="2" formControlName="gender_id">
+              <label class="custom-control-label" for="s-female">Female</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="s-Others" class="custom-control-input" [value]="3" formControlName="gender_id">
+              <label class="custom-control-label" for="s-Others">Others</label>
+            </div>
+            <div appInvalidMessage="gender_id">
+              <small class="text-danger" *appInvalidType="'required'">Gender is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success" [disabled]="submitAttempt" (click)="onSubmit()">
+              <app-spinner [name]="'register_btn_spinner'" [type]="'btn'"></app-spinner>
+              অ্যাকাউন্ট তৈরি
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="registerMode === 'disabled'" class="reg-wrapper">
+        <form [formGroup]="disabledRegForm">
+          <a href="javascript:" class="d-block mb-3 text-dark" (click)="onChangeRegMode('')">
+            <i class="fas fa-arrow-left"></i> <b> পূর্বের পাতা</b>
+          </a>
+          <h5 class="mb-3">অ্যাকাউন্ট তৈরী করুন</h5>
+          <div class="form-group">
+            <label for="o-name">নাম (required)</label>
+            <input type="text" class="form-control" id="o-name" placeholder="আপনার নাম" formControlName="name">
+            <div appInvalidMessage="name">
+              <small class="text-danger" *appInvalidType="'required'">Name is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="d-skill">নিচের লিস্ট থেকে দক্ষতা নির্বাচন করুন (required)</label>
+            <select class="form-control" id="d-skill" formControlName="category_id">
+              <option value="">select</option>
+              <option *ngFor="let item of categories" [value]="item.id">{{item.title_en}}</option>
+            </select>
+            <div appInvalidMessage="category_id">
+              <small class="text-danger" *appInvalidType="'required'">Category is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="o-mobile">মোবাইল নম্বর (required)</label>
+            <input type="tel" class="form-control" id="o-mobile" placeholder="আপনার মোবাইল নম্বর"
+                   formControlName="mobile_no">
+            <div appInvalidMessage="mobile_no">
+              <small class="text-danger" *appInvalidType="'required'">Mobile no is required</small>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="d-password">Password *</label>
+              <input type="password" class="form-control" id="d-password" placeholder="Password"
+                     formControlName="password">
+              <div appInvalidMessage="password">
+                <small class="text-danger" *appInvalidType="'required'">Password is required</small>
+                <small class="text-danger" *appInvalidType="'minlength'">Password must be at least 6 char</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <p style="font-size: 13px;font-weight: 400;margin-bottom: 0"><b>লিঙ্গ (required)</b></p>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="o-male" class="custom-control-input" [value]="1" formControlName="gender_id">
+              <label class="custom-control-label" for="o-male">Male</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="o-female" class="custom-control-input" [value]="2" formControlName="gender_id">
+              <label class="custom-control-label" for="o-female">Female</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input type="radio" id="o-Others" class="custom-control-input" [value]="3" formControlName="gender_id">
+              <label class="custom-control-label" for="o-Others">Others</label>
+            </div>
+            <div appInvalidMessage="gender_id">
+              <small class="text-danger" *appInvalidType="'required'">Gender is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success" [disabled]="submitAttempt" (click)="onSubmit()">
+              <app-spinner [name]="'register_btn_spinner'" [type]="'btn'"></app-spinner>
+              অ্যাকাউন্ট তৈরি
+            </button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<app-footer [footerSalesPerson]="false"></app-footer>

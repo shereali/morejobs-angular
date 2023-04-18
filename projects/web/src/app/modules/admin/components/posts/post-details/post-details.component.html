@@ -1,0 +1,28 @@
+<div class="" [hidden]="modalRef['active']">
+  <!--  <div class="modal-header">-->
+  <!--    <h6 class="mb-0"> Job Details</h6>-->
+  <!--  </div>-->
+
+  <div class="modal-body" style="overflow: auto; max-height: 500px" *ngIf="!isLoading">
+    <app-job-preview [data]="post" *ngIf="post.job_listing_type_id === 1; else otherTypeJob"></app-job-preview>
+
+    <ng-template #otherTypeJob>
+      <div class="row">
+        <div class="col-6">
+          <p>{{post.title}}</p>
+          <h6 class="text-success">{{post.company.title_en}}</h6>
+        </div>
+        <div class="col-6">
+          <div class="text-right"><b>Source :</b> {{post.source}}({{post.publish_date | date:'mediumDate'}})</div>
+        </div>
+      </div>
+
+      <img src="{{post?.image}}" class="responsive">
+    </ng-template>
+  </div>
+
+  <div class="modal-footer">
+    <a class="btn btn-light" (click)="closeModal()">Close</a>
+  </div>
+</div>
+<app-spinner [name]="'post_details_spinner'" #modalRef></app-spinner>

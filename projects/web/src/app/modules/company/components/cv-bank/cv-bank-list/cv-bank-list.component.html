@@ -1,0 +1,412 @@
+<div class="applicants-wrapper">
+  <div class="show-down">
+    <div class="row" *ngIf="!isLoading">
+      <div class="col-2">
+        <span class="badge badge-pill badge-success">{{pagination.total}}</span> CV
+      </div>
+
+      <div class="col-9">
+        <div class="row">
+          <span class="mr-2 mb-1 badge badge-info p-2" style="white-space: break-spaces"
+                *ngFor="let filter of formattedFiltered | keyvalue">{{filter.value}}
+            <i class="fa fa-times text-danger" aria-hidden="true" (click)="removeFilter(filter.key)"
+               style="cursor: pointer;"
+               onMouseOver="this.style.color='red'"
+               onMouseOut="this.style.color='inherit'"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="col-1 text-right pr-0" *ngIf="showSearchClearButton">
+        <a href="javascript:" class="badge badge-dark" (click)="reset()">
+          <span><i class="fa fa-times text-danger"></i> Clear All</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="applicant-list-wrapper">
+    <div class="row">
+      <div class="col-2">
+        <ul class="list-group text-center" *ngIf="!isLoading">
+          <li class="list-group-item">
+            <div ngbDropdown placement="right-top">
+              <a href="javascript:" id="quickFilters" ngbDropdownToggle>
+                <i class="fas fa-filter"></i>
+                <p class="mb-0 mt-1">Quick Filters</p>
+              </a>
+              <div class="applicant-sidebar-dropdown" ngbDropdownMenu aria-labelledby="quickFilters">
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label for="applicantName">Applicant Name</label>
+                    <input type="text" class="form-control" id="applicantName" placeholder="Applicant name"
+                           [formControl]="applicantNameControl">
+                  </div>
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Age Range</label>
+                    <div class="form-row">
+                      <div class="form-group mb-0 col">
+                        <select class="form-control" [formControl]="ageFormControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.age_range_from"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-0 col">
+                        <select class="form-control" [formControl]="ageToControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.age_range_to"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <!--                    <label>Location: </label>-->
+
+                    <!--                    <div class="custom-control custom-radio custom-control-inline ml-3">-->
+                    <!--                      <input type="radio" id="inside_bd" class="custom-control-input" [value]="'inside_bd'"-->
+                    <!--                             [formControl]="locationTypeControl">-->
+                    <!--                      <label class="custom-control-label" for="inside_bd">Inside BD</label>-->
+                    <!--                    </div>-->
+
+                    <!--                    <div class="custom-control custom-radio custom-control-inline">-->
+                    <!--                      <input type="radio" id="outside_bd" class="custom-control-input" [value]="'outside_bd'"-->
+                    <!--                             [formControl]="locationTypeControl">-->
+                    <!--                      <label class="custom-control-label" for="outside_bd">Outside BD</label>-->
+                    <!--                    </div>-->
+
+                    <!--                    <ng-multiselect-dropdown-->
+                    <!--                      [formControl]="areaControl"-->
+                    <!--                      [placeholder]="'Any'"-->
+                    <!--                      [settings]="{-->
+                    <!--                                    singleSelection: false,-->
+                    <!--                                    idField: 'id',-->
+                    <!--                                    textField: 'title_en',-->
+                    <!--                                    selectAllText: 'Select All',-->
+                    <!--                                    unSelectAllText: 'UnSelect All',-->
+                    <!--                                    itemsShowLimit: 3,-->
+                    <!--                                    allowSearchFilter: true-->
+                    <!--                                }"-->
+                    <!--                      [data]="filteredAreas">-->
+                    <!--                    </ng-multiselect-dropdown>-->
+
+                    <!--                    <div class="form-check mr-2 d-inline-block">-->
+                    <!--                      <input class="form-check-input" style="margin-top: 7px;" type="checkbox" id="currentLocation"-->
+                    <!--                             [formControl]="presentAddressControl">-->
+                    <!--                      <label class="form-check-label" for="currentLocation">Present Location</label>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="form-check d-inline-block">-->
+                    <!--                      <input class="form-check-input" style="margin-top: 7px;" type="checkbox" id="permanentLocation"-->
+                    <!--                             [formControl]="permanentAddressControl">-->
+                    <!--                      <label class="form-check-label" for="permanentLocation">Permanent Location</label>-->
+                    <!--                    </div>-->
+
+                    <label class="d-block">Salary Range</label>
+                    <div class="form-row">
+                      <div class="form-group mb-0 col">
+                        <select class="form-control" [formControl]="salaryFromControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.salary_range_from"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-0 col">
+                        <select class="form-control" [formControl]="salaryToControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.salary_range_to"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group mb-2 col-md-6">
+                    <label class="d-block mt-2">Gender</label>
+                    <div class="form-check form-check-inline" *ngFor="let item of filterInitialData.genders">
+                      <input class="form-check-input" type="checkbox"
+                             [checked]="genderControl.value ? genderControl.value.includes(item.id): false"
+                             [value]="item.id" id="gender_{{item.id}}" (change)="updateGenderArr($event)">
+                      <label class="form-check-label" for="gender_{{item.id}}">{{item.title}}</label>
+                    </div>
+
+                    <label class="d-block mt-3">Job Level</label>
+                    <div class="form-check form-check-inline" *ngFor="let item of filterInitialData.job_levels">
+                      <input class="form-check-input" type="checkbox"
+                             [checked]="jobLevelControl.value ? jobLevelControl.value.includes(item.id) : false"
+                             [value]="item.id" id="j_level{{item.id}}" (change)="updateJobLevelArr($event)">
+                      <label class="form-check-label" for="j_level{{item.id}}">{{item.title}}</label>
+                    </div>
+
+                    <!--                    <div class="form-check form-check-inline">-->
+                    <!--                      <input class="form-check-input" type="checkbox" id="invitedApplicants" disabled>-->
+                    <!--                      <label class="form-check-label" for="invitedApplicants">Invited Applicants Only</label>-->
+                    <!--                    </div>-->
+                  </div>
+                </div>
+
+                <button class="btn btn-sm btn-success float-right" (click)="search()">Search</button>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div ngbDropdown placement="right">
+              <a href="javascript:" id="academic" ngbDropdownToggle>
+                <i class="fab fa-user-graduate"></i>
+                <p class="mb-0 mt-1">Academic</p>
+              </a>
+              <div class="applicant-sidebar-dropdown" ngbDropdownMenu aria-labelledby="academic">
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label for="degree_level">Degree level</label>
+                    <select class="form-control" id="degree_level" [formControl]="degreeLevelControl">
+                      <option value="">Any</option>
+                      <option *ngFor="let item of filterInitialData.degree_levels"
+                              [value]="item.id">{{item.title}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Degree name</label>
+                    <select class="form-control" [formControl]="degreeControl">
+                      <option value="">Any</option>
+                      <option *ngFor="let item of filteredDegrees" [value]="item.id">{{item.title}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label for="major">Major</label>
+                    <input type="text" class="form-control form-control-sm" id="major" [formControl]="majorControl">
+                  </div>
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Result</label>
+                    <select class="form-control" [formControl]="resultTypeControl">
+                      <option value="">Any</option>
+                      <option *ngFor="let item of filterInitialData.result_types"
+                              [value]="item.id">{{item.title}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Institutes</label>
+                    <ng-multiselect-dropdown
+                      [formControl]="institutesControl"
+                      [placeholder]="'Any'"
+                      [settings]="dropdownSettings"
+                      [data]="filterInitialData.institutes">
+                    </ng-multiselect-dropdown>
+                  </div>
+                </div>
+
+                <button class="btn btn-sm btn-success float-right mt-2" (click)="search()">Search</button>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div ngbDropdown placement="right">
+              <a href="javascript:" id="experience" ngbDropdownToggle>
+                <i class="fas fa-briefcase"></i>
+                <p class="mb-0 mt-1">Experience</p>
+              </a>
+              <div class="applicant-sidebar-dropdown" ngbDropdownMenu aria-labelledby="experience">
+                <div class="row">
+                  <div class="col-xl-6 col-md-6 col-sm-6">
+                    <label for="experience_at_least">Experience</label>
+
+                    <div class="form-row">
+                      <div class="form-group mb-2 col-md-6">
+                        <select class="form-control" id="experience_at_least" [formControl]="experienceFromControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.experience_at_least"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-2 col-md-6">
+                        <select class="form-control" [formControl]="experienceToControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.experience_at_most"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-6 col-md-6 col-sm-6">
+                    <div class="">
+                      <label for="business_organization">Business organization</label>
+                      <ng-multiselect-dropdown
+                        id="business_organization"
+                        [formControl]="businessOrganizationControl"
+                        [placeholder]="'Any'"
+                        [settings]="{
+                                    singleSelection: false,
+                                    idField: 'id',
+                                    textField: 'title_en',
+                                    selectAllText: 'Select All',
+                                    unSelectAllText: 'UnSelect All',
+                                    itemsShowLimit: 3,
+                                    allowSearchFilter: true
+                                }"
+                        [data]="filterInitialData.industry_types">
+                      </ng-multiselect-dropdown>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-success float-right mt-2" (click)="search()">Search</button>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div ngbDropdown placement="right">
+              <a href="javascript:" id="keywords" ngbDropdownToggle>
+                <i class="fab fa-keycdn"></i>
+                <p class="mb-0 mt-1">Keywords</p>
+              </a>
+              <div class="applicant-sidebar-dropdown" ngbDropdownMenu aria-labelledby="keywords">
+                <div class="form-row">
+                  <div class="form-group mb-0 col">
+                    <label for="keyword_search" class="sub-color">Search:</label>
+                    <input type="search" class="form-control" id="keyword_search" placeholder="Search name, mobile no"
+                           [formControl]="searchByControl">
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-success float-right mt-2" (click)="search()">Search</button>
+              </div>
+            </div>
+          </li>
+
+          <li class="list-group-item" *ngIf="showSearchClearButton">
+            <div class="btn-group dropright">
+              <a href="javascript:" class="dropdown-toggle p-2" (click)="reset()">
+                <span><i class="fa fa-times" style="font-size: 12px;"></i> Clear All</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-10">
+        <div class="row bg-white border-right" style="left: 0; width: 100%; position: absolute"
+             *ngIf="pagination.total > 0">
+          <div class="col-xl-6 col-md-6 col-sm-6">
+            <div class="form-group my-3">
+              <!--              <label class="sub-color">Download:</label>-->
+              <!--              <a href="javascript:" class="mx-2" style="font-size: 19px"><i class="fas fa-file-word"></i></a>-->
+              <!--              <a href="javascript:" style="font-size: 19px"><i class="fas fa-file-excel"></i></a>-->
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-md-6 col-sm-6 p-0">
+            <div class="d-flex my-3 justify-content-between">
+              <div class="">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+
+              <div class="">
+                <ngb-pagination
+                  [rotate]="true"
+                  [collectionSize]="pagination.total"
+                  [(page)]="pagination.current_page"
+                  (pageChange)="changePage($event)"
+                  [pageSize]="pagination.per_page"
+                  [maxSize]="5"
+                  [boundaryLinks]="true">
+                </ngb-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-xl-12 col-md-12 col-sm-12 p-0" style="padding: 3px; margin-top: 70px"></div>
+
+        <div class="table-responsive mb-0 candidate-list-wrapper" style="padding: 3px;">
+          <table class="table employer-table mt-3" *ngIf="!isLoading"
+                 [class.disabled]="applicantTableSpinner['active']">
+            <tbody>
+            <tr *ngFor="let item of cvBanks">
+              <td style="width: 40%;">
+                <div class="candidate-inner">
+                  <div class="candidate-img">
+                    <img [src]="item.image ? item.image : 'assets/images/avatar.png'" class="rounded-circle"
+                         style="width: 40px;height: 40px" alt="">
+                  </div>
+                  <div class="candidate-info">
+                    <h6 class="title">
+                      <a href="Javascript:void(0)"
+                         style="pointer-events: none">{{item.first_name}} {{item.last_name}}</a><br>
+                      <span class="badge badge-info" style="line-height: 1.5;margin-left: 4px">Age: {{item.age}}</span>
+                    </h6>
+                    <p>{{latestAcademicName(item.educations)}}</p>
+
+                    <p><i class="fas fa-phone-alt"></i> {{formattedData(item.contact_mobiles, 'title')}}</p>
+                  </div>
+                </div>
+              </td>
+              <td style="width: 40%">
+                <div class="career-inner">
+                  <div class="career-info" style="width: 55%;margin-right: 9px;">
+                    <ng-container *ngIf="latestJobs(item.job_experiences).length > 0; else noExp">
+                      <ng-container *ngFor="let item of latestJobs(item.job_experiences)">
+                        <p><b>{{item.company_name}}</b></p>
+                        <p>{{item.designation}} ({{item.months}}+ months)</p>
+                      </ng-container>
+                      <p>...</p>
+                    </ng-container>
+                    <ng-template #noExp><p>No job experience found</p></ng-template>
+                  </div>
+                  <div>
+                    <p title="Experience"><small><i class="fas fa-business-time"></i> {{totalExpPerUser(item)}}</small>
+                    </p>
+                    <p title="Expected salary"><b class="sub-color">৳ </b> <small>{{item.expected_salary}}</small></p>
+                  </div>
+                </div>
+              </td>
+              <td class="text-center">
+                <button href="javascript:void(0)" class="btn btn-sm btn-light" (click)="openResumeDetailsModal(item)">
+                  <app-spinner [name]="'resume_view_btn_spinner' + item.id" [type]="'btn'"></app-spinner>
+                  View Resume
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="pagination.total === 0">
+              <td colspan="3" class="text-center">No records found!</td>
+            </tr>
+            </tbody>
+          </table>
+          <app-spinner [name]="'cv_bank_table_spinner'" #applicantTableSpinner></app-spinner>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between py-3" *ngIf="pagination.total > 0">
+          <div class="text-left">
+            <app-select
+              [value]="filterParams.value.per_page"
+              (whenSelect)="setPerPage($event)"
+              [options]="perPageOptions"
+              [title]="'Items per page'">
+            </app-select>
+          </div>
+
+
+          <ngb-pagination
+            [rotate]="true"
+            [collectionSize]="pagination.total"
+            [(page)]="pagination.current_page"
+            (pageChange)="changePage($event)"
+            [pageSize]="pagination.per_page"
+            [maxSize]="5"
+            [boundaryLinks]="true">
+          </ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

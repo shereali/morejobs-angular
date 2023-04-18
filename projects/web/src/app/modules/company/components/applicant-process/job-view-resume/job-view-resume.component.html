@@ -1,0 +1,66 @@
+<div class="" style="overflow-x: hidden">
+  <div class="">
+    <div class="bg-dark text-white">
+      <div class="d-flex justify-content-between    p-2">
+        <div class="mr-3">
+          <div class="btn-group float-left">
+            Applied for: <b class="ml-1">{{data.post_title}}</b>
+          </div>
+        </div>
+        <div class="" style="cursor: pointer" (click)="closeModal()">x</div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mt-3">
+      <div ngbDropdown display="dynamic">
+        <a class="btn btn-outline-success btn-sm" tabindex="0" ngbDropdownToggle id="downloadAs" role="button">
+          <i class="fas fa-cloud-download-alt"></i> Download as
+        </a>
+        <div ngbDropdownMenu aria-labelledby="downloadAs" class="dropdown-menu">
+          <a ngbDropdownItem href="javascript:" (click)="downloadResume('pdf')"><i class="fas fa-file-pdf"></i> PDF</a>
+          <a ngbDropdownItem href="javascript:" (click)="downloadResume('docx')"><i class="fas fa-file-word"></i> MS Word</a>
+          <a ngbDropdownItem href="javascript:" (click)="print()"><i class="fas fa-print"></i> Print</a>
+        </div>
+      </div>
+
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-sm" [class.btn-secondary]="viewMode === 'details'"
+                (click)="switchViewMode('details')"><i class="fas fa-address-card"></i> Details View
+        </button>
+        <button type="button" class="btn  btn-sm" [class.btn-secondary]="viewMode === 'short'"
+                (click)="switchViewMode('short')"><i class="fas fa-id-badge"></i> Short View
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="modal-body">
+    <div class="card custom-card">
+      <div class="card-body">
+        <div class="view-resume-wrapper">
+          <app-shared-view-resume [id]="data.user.id" [viewMode]="viewMode"></app-shared-view-resume>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="float-right ml-2">
+    <a class="btn btn-sm btn-light" (click)="closeModal()">Close</a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

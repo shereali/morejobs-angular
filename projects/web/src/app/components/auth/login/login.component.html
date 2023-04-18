@@ -1,0 +1,68 @@
+<ng-container *ngIf="isLoaded">
+  <app-header [isPublic]="true"></app-header>
+
+  <div class="login-block">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 login-sec">
+          <h2 class="text-center">Sign into your account</h2>
+          <form class="login-form" [formGroup]="myForm">
+            <div class="form-group">
+              <label for="username" class="text-uppercase">Email/Mobile</label>
+              <input type="text" class="form-control" id="username" placeholder="" formControlName="username">
+              <div appInvalidMessage="username">
+                <small class="text-danger" *appInvalidType="'required'">Email/Mobile is required</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="password" class="text-uppercase">Password</label>
+              <input type="password" class="form-control" id="password" placeholder="" formControlName="password">
+              <div appInvalidMessage="password">
+                <small class="text-danger" *appInvalidType="'required'">Password is required</small>
+              </div>
+            </div>
+            <div class="form-check d-flex align-items-center justify-content-between mb-3">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input">
+                <small>Remember Me</small>
+              </label>
+              <a href="javascript:void(0)" routerLink="/forgot-password" class="d-block small">Forgot Password?</a>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-login" (keyup.enter)="save()" (click)="save()"
+                      [disabled]="submitAttempt">
+                <app-spinner [name]="'login_btn_spinner'" [type]="'btn'"></app-spinner>
+                Submit
+              </button>
+            </div>
+            <div
+              style="text-align: center; border: 1px dashed #eee;border-left: none;border-right: none; padding: 5px 0;">
+              <a routerLink="/registration">Join as Job seeker</a>
+              <a routerLink="/employer-registration"
+                 style="padding-left: 20px;">Join as Employer</a>
+
+            </div>
+
+          </form>
+          <div class="copy-text">Copyright &copy; 2020 <a href="javascript:">More Jobs</a> | All Rights Reserved</div>
+        </div>
+        <div class="col-md-8 banner-sec d-none d-sm-block">
+          <div
+            style="padding: 0 90px;display: flex;flex-direction: column;align-items: flex-start;height: 100%;justify-content: center;color: #fff;">
+            <h3 class="text-white mb-4">Employability Test</h3>
+            <p style="font-size: 17px">Step forward to an Employability Test and Stand out exceptionally among thousands
+              of jobseekers. It helps
+              to-</p>
+            <ul class="pl-3">
+              <li><p>Know the intellectual qualifications and hidden soft skills.</p></li>
+              <li><p>Secure the next step of recruitment process.</p></li>
+              <li><p>Increase the number of interview calls.</p></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer [footerSalesPerson]="false"></app-footer>
+</ng-container>

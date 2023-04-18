@@ -1,0 +1,154 @@
+<div class="job-description-wrapper" *ngIf="data">
+  <ng-container *ngIf="data.job_listing_type_id === 1; else otherTypeJob">
+    <div class="row">
+      <div class="col-sm-7">
+        <h5 class="job-title">{{data.title}}</h5>
+        <p><b>{{data.company.title_en}}</b></p>
+        <h6 class="sub-title mb-3">Vacancy: <b
+          class="text-dark">{{data.no_of_vacancy ? data.no_of_vacancy : 'Not specific'}}</b></h6>
+        <h6 class="sub-title">Job Context</h6>
+        <ul [innerHTML]="data.job_context"></ul>
+        <h6 class="sub-title">Job Responsibilities</h6>
+        <ul [innerHTML]="data.responsibilities"></ul>
+        <h6 class="sub-title">Employment Status</h6>
+        <p>{{formattedData(data.post_natures, 'title')}}</p>
+        <h6 class="sub-title">Educational Requirements</h6>
+        <ul>
+          <li *ngIf="data.post_degrees.length > 0">{{formattedData(data.post_degrees, 'title')}}</li>
+          <!--          <li>Skills Required: {{formattedData(data.post_area_experiences, 'title')}}</li>-->
+          <li *ngIf="data.post_institutes.length > 0">{{formattedData(data.post_institutes, 'title')}}</li>
+          <li *ngIf="data.post_skills.length > 0">Skills Required: {{formattedData(data.post_skills, 'title')}}</li>
+        </ul>
+        <h6 class="sub-title">Experience Requirements</h6>
+        <ul>
+          <li>{{data.experience_min}} to {{data.experience_max}} year(s)</li>
+          <li *ngIf="data.post_area_experiences.length > 0">
+            The applicants should have experience in the following area(s):
+            <ul>
+              <li> {{formattedData(data.post_area_experiences, 'title')}}</li>
+            </ul>
+          </li>
+          <li *ngIf="data.is_fresher_allowed">Freshers are also encouraged to apply</li>
+        </ul>
+        <h6 class="sub-title">Additional Requirements</h6>
+        <ul>
+          <li>Age {{data.age_min}} to {{data.age_max}} years</li>
+          <li *ngIf="data.post_genders.length>0">
+          <span *ngIf="data.post_genders.length > 1">
+            Both {{formattedData(data.post_genders, 'title')}} are allowed to apply
+          </span>
+            <span *ngIf="data.post_genders.length === 1">
+            Only {{formattedData(data.post_genders, 'title')}} is allowed to apply
+          </span>
+          </li>
+          <div *ngIf="data.additional_requirements" [innerHTML]="data.additional_requirements"></div>
+        </ul>
+        <h6 class="sub-title">Workplace</h6>
+        <ul>
+          <li>{{formattedData(data.post_workspaces, 'title')}}</li>
+        </ul>
+        <h6 class="sub-title">Job Location</h6>
+        <p>{{formattedData(data.post_areas, 'title')}}</p>
+        <h6 class="sub-title">Salary</h6>
+        <ul>
+          <li>
+            <div *ngIf="data.is_display_salary === 1; else showSalary"> Negotiable</div>
+            <ng-template #showSalary>
+            <span *ngIf="data.salary_min && data.salary_max">
+              TK.{{data.salary_min}} - {{data.salary_max}} ({{salaryTypeTitle(data)}})
+            </span>
+              <span *ngIf="data.is_negotiable">Negotiable</span>
+            </ng-template>
+          </li>
+          <li *ngIf="data.additional_salary_info">{{data.additional_salary_info}}</li>
+        </ul>
+        <h6 class="sub-title">Compensation & other benefits</h6>
+        <ul>
+          <li *ngFor="let item of data.other_benefit?.benefits">{{item.title}}</li>
+          <li *ngIf="data.other_benefit?.lunch_facility">Lunch
+            Facilities: {{data.other_benefit.lunch_facility === 1 ? 'Partially Subsidize' : 'Full Subsidize'}}</li>
+          <li *ngIf="data.other_benefit?.festival_bonus">Festival Bonus: {{data.other_benefit.festival_bonus}}</li>
+          <li *ngIf="data.other_benefit?.salary_review">Salary
+            Review: {{data.other_benefit.salary_review === 1 ? 'Half Yearly' : 'Yearly'}}</li>
+          <li *ngIf="data.other_benefit?.others">{{data.other_benefit?.others}}</li>
+        </ul>
+        <h6 class="sub-title">Job Source</h6>
+        <p>morejobsbd.net Online Job Posting</p>
+      </div>
+      <div class="col-sm-5">
+        <div class="text-right">
+          <p>Category: <b>{{data.category?.title_en}}</b></p>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h6 class="card-title text-uppercase text-success">Job Summary</h6>
+            <p class="card-text"><b>Posted on:</b> {{data.created_at | date: 'mediumDate'}}</p>
+            <p class="card-text"><b>Vacancy:</b> {{data.no_of_vacancy ? data.no_of_vacancy : 'Not specific'}}</p>
+            <p class="card-text"><b>Job Nature:</b> {{formattedData(data.post_natures, 'title')}}</p>
+            <p class="card-text"><b>Age:</b> Age {{data.age_min}} to {{data.age_max}} years</p>
+            <p class="card-text"><b>Experience:</b> {{data.experience_min}} to {{data.experience_max}} year(s)</p>
+            <p class="card-text"><b>Job Location:</b>
+              {{data.post_areas.length > 0 ? formattedData(data.post_areas, 'title_en') : 'Anywhere in Bangladesh'}}
+            </p>
+            <p class="card-text"><b>Salary:</b>
+              <span *ngIf="data.is_display_salary === 1; else showSalary"> Negotiable</span>
+              <ng-template #showSalary>
+            <span *ngIf="data.salary_min && data.salary_max">
+              TK.{{data.salary_min}} - {{data.salary_max}} ({{salaryTypeTitle(data)}})
+            </span>
+                <span *ngIf="data.is_negotiable">Negotiable</span>
+              </ng-template>
+            </p>
+            <p class="card-text"><b>Application Deadline:</b> {{data.deadline | date: 'mediumDate'}}</p>
+          </div>
+        </div>
+        <a href="javascript:" class="print-btn"><i class="fas fa-print"></i> Print this Preview</a>
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <p class="sub-color"><b><u>Read Before Apply</u></b></p>
+      <p *ngIf="data.special_instruction">{{data.special_instruction}}</p>
+      <p><b class="text-danger" *ngIf="data.is_profile_image">*Photograph</b> must be enclosed with the resume.</p>
+      <h6 class="mb-3">Apply Procedures</h6>
+      <button type="button" class="btn btn-success mb-3" *ngIf="data.resume_receiving_option?.is_apply_online">Apply
+        Online
+      </button>
+      <hr>
+      <ng-container *ngIf="data.resume_receiving_option?.resume_receiving_option === 'email'">
+        <p class="sub-title">Email</p>
+        <p>Send your CV to <b>{{data.resume_receiving_option?.resume_receiving_details}}</b> or to Email CV from <b>MY
+          MOREJOBS</b> account <a
+          href="javascript:">Click here</a></p>
+      </ng-container>
+      <p>Application Deadline: <b>{{data.deadline | date: 'mediumDate'}}</b></p>
+      <hr>
+      <div class="job-m-footer">
+        <p class="mb-1"><b>Publish On</b></p>
+        <p>{{data.updated_at | date: 'mediumDate'}}</p>
+
+        <p class="mb-1"><b>Company Information</b></p>
+        <p class="footer-text">{{data.company.title_en}}</p>
+        <p class="footer-text" *ngIf="data.company.address_en">Address : {{data.company.address_en}}</p>
+        <p class="footer-text" *ngIf="data.company.website"> Web :
+          <a href="{{data.company.website}}" target="_blank">{{data.company.website}}</a></p>
+        <p class="footer-text" *ngIf="data.company.about">About : {{data.company.about}}</p>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #otherTypeJob>
+    <div class="col-12">
+      <p class="float-right"><b>Source</b> : দৈনিক ইত্তেফাক(Wednesday, March 10, 2021) (static)</p>
+    </div>
+
+    <div class="col-12 mt-4">
+      {{data.title}}<br>
+      <span class="text-success">{{data.company.title_en}}</span>
+    </div>
+
+    <div class="col-12">
+      <img class="col-12 m-auto" src="{{data.image}}">
+      <p class="text-center mt-2"><a class="">News of all jobs of this organization</a></p>
+    </div>
+  </ng-template>
+</div>

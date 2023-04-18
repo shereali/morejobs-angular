@@ -1,0 +1,126 @@
+// Variables
+@import '../../../../styles/variables';
+
+.login-block {
+  background: #484B7E url("../../../../assets/images/login.png") no-repeat 50% 50% fixed;
+  //background: -webkit-linear-gradient(to bottom, #FFB88C, #DE6262);
+  //background: linear-gradient(to bottom, #FFB88C, #DE6262);
+  float: left;
+  width: 100%;
+  padding: 50px 0;
+  margin-bottom: 55px;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-sec {
+  padding: 0;
+  //background: url(https://static.pexels.com/photos/33972/pexels-photo.jpg) no-repeat left bottom;
+  //background-size: cover;
+  background: rgb(76 79 125 / 70%);
+  min-height: 500px;
+  border-radius: 0 10px 10px 0;
+}
+
+.container {
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 15px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+.carousel-inner {
+  border-radius: 0 10px 10px 0;
+}
+
+.carousel-caption {
+  text-align: left;
+  left: 5%;
+}
+
+.login-sec {
+  padding: 50px 30px;
+  position: relative;
+  background: #fff;
+}
+
+.login-sec .copy-text {
+  position: absolute;
+  width: 80%;
+  bottom: 20px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.login-sec .copy-text i {
+  color: #FEB58A;
+}
+
+.login-sec .copy-text a {
+  color: #E36262;
+}
+
+.login-sec h2 {
+  margin-bottom: 30px;
+  font-weight: 300;
+  font-size: 30px;
+  color: #222222;
+}
+
+.login-sec h2:after {
+  content: " ";
+  width: 100px;
+  height: 5px;
+  background: linear-gradient(45deg, #00dbde, #fc00ff);
+  display: block;
+  margin-top: 20px;
+  border-radius: 3px;
+  margin-left: auto;
+  margin-right: auto
+}
+
+.login-sec .form-control {
+  position: relative;
+  height: 35px;
+  font-size: 12px;
+  border-radius: 20px;
+}
+
+.btn-login {
+  background: linear-gradient(45deg, #00dbde, #fc00ff);
+  color: #fff;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  border: none;
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 25px 0;
+  border-radius: 20px;
+}
+
+.banner-text {
+  width: 70%;
+  position: absolute;
+  bottom: 40px;
+  padding-left: 20px;
+}
+
+.banner-text h2 {
+  color: #fff;
+  font-weight: 600;
+}
+
+.banner-text h2:after {
+  content: " ";
+  width: 100px;
+  height: 5px;
+  background: #FFF;
+  display: block;
+  margin-top: 20px;
+  border-radius: 3px;
+}
+
+.banner-text p {
+  color: #fff;
+}

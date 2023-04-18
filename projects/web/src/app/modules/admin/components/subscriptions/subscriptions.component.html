@@ -1,0 +1,145 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="page-title mb-0"><i class="fas fa-people-arrows"></i> Subscription List</h6>
+</div>
+
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="upload-resume-wrapper">
+      <div class="filter-wrapper">
+        <div class="row">
+          <!--          <div class="col-sm-3">-->
+          <!--            <div class="form-group">-->
+          <!--              <label for="company_name">Company Name</label>-->
+          <!--              <input type="text" class="form-control form-control-sm" id="company_name"-->
+          <!--                     [formControl]="companyNameControl">-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="company_id">Companies</label>
+              <select class="form-control form-control-sm" id="company_id" [formControl]="companyIdControl">
+                <option value="">All</option>
+                <option *ngFor="let item of initialData.companies" [value]="item.id">{{item.title_en}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group mt-4">
+              <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>
+
+              <a *ngIf="showSearchClearButton" (click)="reset()" href="javascript:" class="ml-3">Clear</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <nav ngbNav #nav="ngbNav" class="nav-tabs mt-4">
+            <ng-container ngbNavItem>
+              <a ngbNavLink (click)="onChangeStatusFilter('all')"
+                 [class.active]="statusControl.value === 'all'">All
+                ({{summary.total}})</a>
+              <a ngbNavLink (click)="onChangeStatusFilter('pending')"
+                 [class.active]="statusControl.value === 'pending'">Pending
+                ({{summary.pending}})</a>
+              <a ngbNavLink (click)="onChangeStatusFilter('approved')"
+                 [class.active]="statusControl.value === 'approved'">Approved
+                ({{summary.approved}})</a>
+              <!--              <a ngbNavLink (click)="onChangeStatusFilter('inactive')"-->
+              <!--                 [class.active]="statusControl.value === 'inactive'">Inactive/Banned-->
+              <!--                ({{summary.inactive}})</a>-->
+              <ng-template ngbNavContent>
+                <div class="table-responsive mb-0" style="padding: 3px">
+                  <table class="table text-center employer-table">
+                    <thead>
+                    <tr [class.disabled]="subscriptionSpinner['active']">
+                      <th class="text-left">Package Title</th>
+                      <th class="text-left">Company</th>
+                      <th class="text-left">Qty</th>
+                      <th class="text-left">Total</th>
+                      <th class="text-left">Paid</th>
+                      <th class="text-left">Status</th>
+                      <th class="text-left">Subscribe At</th>
+                      <th class="text-left">Expire At</th>
+                      <!--                      <th></th>-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of subscriptions; let i=index;">
+                      <td class="text-left" style="width: 15%">
+                        <h6 class="mb-2">
+                          <a>{{item.package.title}}</a>
+                        </h6>
+                      </td>
+                      <td class="text-left">{{item.company.title_en}}</td>
+                      <td class="text-left">{{item.quantity}}</td>
+                      <td class="text-left">{{item.total}}</td>
+                      <td class="text-left">{{item.paid}}</td>
+                      <td class="text-left">
+                        <app-spinner [name]="'subscription_status_change_spinner'+ item.id"
+                                     [type]="'btn'"></app-spinner>
+                        <select class="form-control form-control-sm" (change)="onChangeStatus(item, $event)">
+                          <option value="0" [selected]="item.status.id === 0"
+                                  [disabled]="statusControl.value === 'pending'">Pending
+                          </option>
+                          <option value="1" [selected]="item.status.id === 1"
+                                  [disabled]="statusControl.value === 'approved'">Approved
+                          </option>
+                        </select>
+                      </td>
+                      <td>{{item.subscribe_at | date: 'mediumDate'}}</td>
+                      <td>{{item.expire_at | date: 'mediumDate'}}</td>
+
+                      <!--                      <td class="text-center">-->
+                      <!--                        <div ngbDropdown container="body" display="dynamic" placement="bottom-right">-->
+                      <!--                          <a tabindex="0" ngbDropdownToggle id="action" class="btn btn-sm btn-light" role="button">-->
+                      <!--                            Action-->
+                      <!--                          </a>-->
+                      <!--                          <div ngbDropdownMenu aria-labelledby="action" class="dropdown-menu">-->
+                      <!--                            &lt;!&ndash;                            <a href="Javascript:void(0)" (click)="openCreateModal(item)" ngbDropdownItem>&ndash;&gt;-->
+                      <!--                            &lt;!&ndash;                              <i class="fas fa-edit"></i> Edit&ndash;&gt;-->
+                      <!--                            &lt;!&ndash;                            </a>&ndash;&gt;-->
+
+                      <!--                            &lt;!&ndash;                            <a href="javascript:" ngbDropdownItem>&ndash;&gt;-->
+                      <!--                            &lt;!&ndash;                              <i class="fas fa-share" style="width: 18px;height: 18px"></i> Repost</a>&ndash;&gt;-->
+                      <!--                          </div>-->
+                      <!--                        </div>-->
+                      <!--                      </td>-->
+                    </tr>
+                    </tbody>
+                  </table>
+                  <app-spinner [name]="'subscription_spinner'" #subscriptionSpinner></app-spinner>
+                </div>
+              </ng-template>
+            </ng-container>
+          </nav>
+          <div [ngbNavOutlet]="nav"></div>
+
+          <div class="pagination-wrapper">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true">
+            </ngb-pagination>
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

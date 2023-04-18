@@ -1,0 +1,31 @@
+<div class="">
+  <div class="modal-header">
+    <h6 class="mb-0"> {{mode == 'create' ? 'Add New' : 'Update'}} Skill</h6>
+  </div>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="companyName">Skills Title</label>
+                <input type="text" class="form-control" id="companyName" placeholder="Type Skills Title" formControlName="title">
+                <div appInvalidMessage="title">
+                  <small class="text-danger" *appInvalidType="'required'">Title is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success" [disabled]="submitAttempt">
+        <app-spinner [name]="'skill_save_btn_spinner'" [type]="'btn'"></app-spinner> {{mode == 'create' ? 'Create' : 'Update'}}
+      </button>
+      <a class="btn btn-light" (click)="closeModal()">Close</a>
+    </div>
+  </form>
+</div>

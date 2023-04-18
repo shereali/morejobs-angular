@@ -1,0 +1,31 @@
+.company-menu-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  box-shadow: 0 0 5px #ddd;
+
+  li {
+    a {
+      margin: 0 5px;
+      border-radius: 0;
+
+      &:before {
+        display: none;
+      }
+    }
+
+    .active {
+      color: #ffffff;
+      background: #4083f2;
+    }
+  }
+}
+
+.sidebar-wrapper ul li:active,
+.sidebar-wrapper ul li:focus,
+.sidebar-wrapper ul li .active {
+  &:before {
+    display: none;
+  }
+}

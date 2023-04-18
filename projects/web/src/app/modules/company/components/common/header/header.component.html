@@ -1,0 +1,75 @@
+<div class="top-bar d-none d-lg-block">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
+        <div class="top-bar-left">
+          <ul>
+            <li><a href="{{apiUrl + '/'}}">Jobs</a></li>
+            <li><a routerLink="/home" routerLinkActive="active">My Jobs</a></li>
+            <li><a routerLink="/login">Employers</a></li>
+            <li><a href="{{apiUrl + '/training-courses'}}">Training</a></li>
+            <li><a href="{{apiUrl + '/'}}">Tender/EOI</a></li>
+            <li><a href="{{apiUrl + '/admission'}}">Admission</a></li>
+            <li><a href="{{apiUrl + '/scholarship'}}">Scholarship</a></li>
+            <li><a href="{{apiUrl + '/events'}}">Event/Fair</a></li>
+            <li><a href="https://tutor.morejobsbd.net/">Tutor</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-2 col-md-4">
+        <div class="top-bar-right float-right">
+          <ul>
+            <li><a href="https://www.facebook.com/MOREJOBSBD"><i class="fab fa-facebook-f"></i></a></li>
+            <li><a href="https://twitter.com/MoreJobs2"><i class="fab fa-twitter"></i></a></li>
+            <li><a href="https://www.youtube.com/channel/UC6ngxk3UEw7DJGWQ8cfsBWA"><i class="fab fa-youtube"></i></a></li>
+            <li><a href="tel:+8801747305750"><i class="fas fa-phone-alt"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div><!-- end row -->
+  </div><!-- end container -->
+</div><!-- Top Bar close -->
+
+<div class="header-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <nav class="navbar navbar-expand-lg">
+          <a class="navbar-brand" href="{{apiUrl + '/'}}">
+            <img src="assets/images/logo.png" width="96" alt="" loading="lazy">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar"
+                  aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="main-navbar">
+            <ul class="nav navbar-nav mobile-menu-navbar">
+              <li class="nav-item" ngbDropdown display="dynamic" placement="bottom-right">
+                <a class="nav-link" tabindex="0" ngbDropdownToggle id="navbarDropdown3" role="button"
+                   style="border-left: 1px solid #ebebeb;padding-left: 15px;">
+                  <img [src]="avatarUrl" style="width: 32px;border-radius: 50%;" class="mr-1" alt="avatar"/>
+                  <span class="user-menu"> {{ user ? user.first_name : 'Welcome'}}</span>
+                </a>
+                <div ngbDropdownMenu aria-labelledby="navbarDropdown3" class="dropdown-menu">
+                  <!--<a ngbDropdownItem href="javascript:"><i class="fas fa-coins"></i> Payment Status</a>-->
+                  <a ngbDropdownItem routerLink="/company/subscribe"><i class="fab fa-redhat"></i> Subscribed
+                    Services</a>
+                  <a ngbDropdownItem routerLink="/company/edit-account"><i class="fas fa-edit"></i> Edit Account</a>
+<!--                  <a ngbDropdownItem href="javascript:"><i class="fas fa-question-circle"></i> Support</a>-->
+                  <div class="dropdown-divider"></div>
+                  <a ngbDropdownItem href="javascript:" routerLink="/change-password"><i class="fas fa-key"></i> Change
+                    Password</a>
+                  <!-- <a ngbDropdownItem href="javascript:"><i class="fas fa-user-cog"></i> User Management</a> -->
+                  <div class="dropdown-divider"></div>
+                  <a ngbDropdownItem (click)="logout()" href="javascript:"><i class="fas fa-sign-out-alt"></i> Log
+                    Out</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<span class="filter-label" *ngIf="title">{{title}} </span>
+<select
+  [id]="id"
+  [title]="title || 'Select'"
+  [formControl]="control"
+  (change)="onChange(control.value)"
+  class="form-control-sm">
+  <option
+    *ngFor="let item of options"
+    [selected]="isSelected(item)">
+    {{item.title}}
+  </option>
+</select>

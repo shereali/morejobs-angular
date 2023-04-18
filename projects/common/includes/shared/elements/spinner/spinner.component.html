@@ -1,0 +1,21 @@
+<ng-container *ngIf="active">
+  <div class="{{classes}} lds-spinner-container" [style.min-height]="(height || 0) + 'px'" *ngIf="type === 'page'">
+    <div class="lds-css ng-scope" style="display: inline-block">
+      <div class="lds-spinner" style="width: 100%; height:100%">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+  <i class="fa fa-spinner fa-pulse fa-fw" *ngIf="type === 'btn'"></i>
+</ng-container>

@@ -1,0 +1,171 @@
+<div class="" [hidden]="modalRef['active']" *ngIf="!isLoading">
+  <div class="modal-header">
+    <h6 class="mb-0">{{mode == 'create' ? 'Add New' : 'Update'}} Company</h6>
+  </div>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()" #myNgForm='ngForm'>
+    <div class="modal-body" style="overflow: auto; max-height: 500px">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card-body">
+            <h6 class="text-secondary">Company Details Information</h6>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="companyName">Company Name*</label>
+                <input type="text" class="form-control" id="companyName" placeholder="Type Company Name"
+                       formControlName="title_en">
+                <div appInvalidMessage="title_en">
+                  <small class="text-danger" *appInvalidType="'required'">Company name is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="companyNameBL">কোম্পানির নাম (বাংলায়)</label>
+                <input type="text" class="form-control" id="companyNameBL" placeholder="কোম্পানির নাম বাংলায় লিখুন"
+                       formControlName="title_bn">
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="year_of_establishment">Year of Establishment</label>
+                <input type="text" class="form-control" id="year_of_establishment"
+                       placeholder="Company's Establishment Year, e.g. 2003"
+                       formControlName="year_establishment">
+                <div appInvalidMessage="year_establishment">
+                  <small class="text-danger" *appInvalidType="'minlength'">Please enter a valid year</small><br>
+                  <small class="text-danger" *appInvalidType="'pattern'">Please enter numeric value</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="company_size">Company Size</label>
+                <select class="form-control" id="company_size" formControlName="company_size">
+                  <option value="">Select Option</option>
+                  <option *ngFor="let item of employeeSizes" value="{{item.id}}">{{item.title}}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-6">
+                <select class="form-control" formControlName="district_id">
+                  <option value="">Select District</option>
+                  <option *ngFor="let item of bdDistricts" [value]="item.id">{{item.title_en}}</option>
+                </select>
+                <div appInvalidMessage="district_id">
+                  <small class="text-danger" *appInvalidType="'required'">District is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <select class="form-control" formControlName="thana_id">
+                  <option value="">Select Thana</option>
+                  <option *ngFor="let item of bdThanas" [value]="item.id">{{item.title_en}}</option>
+                </select>
+                <div appInvalidMessage="thana_id">
+                  <small class="text-danger" *appInvalidType="'required'">Than is required</small>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <textarea class="form-control" rows="3" placeholder="Write Company Address"
+                          formControlName="address_en"></textarea>
+                <div appInvalidMessage="address_en">
+                  <small class="text-danger" *appInvalidType="'required'">Address is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <textarea class="form-control" rows="3" placeholder="কোম্পানীর ঠিকানা বাংলায় লিখুন"
+                          formControlName="address_bn"></textarea>
+              </div>
+              <div class="col-md-12">
+                <label>Industry Type*</label>
+              </div>
+              <div class="form-group col-md-6">
+                <select class="form-control" formControlName="industry_type_id">
+                  <option value="">Select Option</option>
+                  <option *ngFor="let item of initialData.industry_types" [value]="item.id">{{item.title_en}}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <input type="text" class="form-control" placeholder="Search IndustryType">
+              </div>
+
+              <div class="form-group col-md-12">
+                <div class="row m-0 py-3 px-2" style="border: 2px solid #ddd;height: 180px;overflow: auto;">
+                  <div class="col-sm-4" *ngFor="let item of filteredIndustryTypes()">
+                    <div class="custom-control custom-checkbox mb-2">
+                      <input type="checkbox" class="custom-control-input" id="i_type_{{item.id}}"
+                             [checked]="isChecked(item)"
+                             (change)="onChangeIndustryType(item, $event)">
+                      <label class="custom-control-label" for="i_type_{{item.id}}">{{item.title_en}}</label>
+                    </div>
+                  </div>
+                </div>
+
+                <p *ngIf="myNgForm.submitted">
+                  <small class="text-danger" *ngIf="selectedIndustryTypes.length === 0">Please select at least one
+                    industry type</small>
+                </p>
+
+                <div class="d-inline d-flex mt-3">
+                  <a href="Javascript:void(0)" class="badge badge badge-pill badge-info p-2 mr-2"
+                     *ngFor="let item of selectedIndustryTypes; let i = index">
+                    {{item.title_en}} <i class="fa fa-times ml-2" (click)="removeItem(i)"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="form-group col-md-12">
+                <label for="businessDescription">Business Description</label>
+                <textarea class="form-control" id="businessDescription" rows="3"
+                          placeholder="Write Business Description" formControlName="about">
+                </textarea>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="websiteURL">Website URL</label>
+                <input type="text" class="form-control" id="websiteURL" placeholder="Type Website URL"
+                       formControlName="website">
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="org_type">Organization Type*</label>
+                <select class="form-control" id="org_type" formControlName="organization_type_id">
+                  <option value="">Select Organization</option>
+                  <option *ngFor="let item of initialData.organization_types"
+                          [value]="item.id">{{item.title_en}}</option>
+                </select>
+                <div appInvalidMessage="organization_type_id">
+                  <small class="text-danger" *appInvalidType="'required'">Organization type is required</small>
+                </div>
+              </div>
+
+
+              <div class="form-group col-6">
+                <ng-container *ngIf="newImageTake; else elseBlock">
+                  <label for="file"><b>Company Logo</b></label>
+                  <input type="file" class="form-control form-control-sm" formControlName="file" id="file"
+                         (change)="onFileChange($event)">
+
+                  <div appInvalidMessage="file">
+                    <small class="text-danger" *appInvalidType="'required'">File is required</small>
+                    <small class="text-danger" *appInvalidType="'requiredFileType'">Type must be(jpg, png, jpeg)</small>
+                  </div>
+                </ng-container>
+                <ng-template #elseBlock>
+                  <img [src]="data.logo" width="100" height="100" alt="">
+                  <a href="Javascript:void(0)" class="text-danger ml-2" (click)="onClickImageChange()">
+                    <i class="fa fa-times"></i></a>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success">
+        <app-spinner [name]="'company_save_btn_spinner'" [type]="'btn'"></app-spinner>
+        {{mode == 'create' ? 'Create' : 'Update'}}
+      </button>
+      <a class="btn btn-light" (click)="closeModal()">Close</a>
+    </div>
+  </form>
+</div>
+<app-spinner [name]="'create_company_spinner'" #modalRef></app-spinner>

@@ -1,0 +1,610 @@
+<div class="applicants-wrapper">
+  <div class="col-xl-12 col-md-12 col-sm-12" style="background-color: #B32D7D; padding: 15px 20px 20px !important">
+    <div class="d-flex justify-content-between col-sm-12">
+      <div class="float-left">
+        <p class="text-white">All Applicants</p>
+        <div class="text-center bg-white text-black-50 d-flex justify-content-center"
+             style="width: 70px; height: 70px; border-radius: 50%; align-items: center;">
+          <b>{{summary.total}}</b>
+        </div>
+
+        <div class="m-auto" style="margin-top: 20px !important;">
+          <a class="btn btn-sm" [class.active]="status==='all'" (click)="filterByStatus('all')">All Applicants
+            <span class="badge badge-primary"> {{summary.total}}</span></a>
+          <a class="btn btn-sm" [class.active]="status==='viewed'" (click)="filterByStatus('viewed')">Viewed
+            <span class="badge badge-primary"> {{summary.total_viewed}}</span></a>
+          <a class="btn btn-sm" [class.active]="status==='not_viewed'" (click)="filterByStatus('not_viewed')">Not Viewed
+            <span class="badge badge-primary"> {{summary.total_not_viewed}}</span></a>
+          <a class="btn btn-sm" [class.active]="status==='short_list'" (click)="filterByStatus('short_list')">Shortlisted
+            <span class="badge badge-primary"> {{summary.total_shortlisted}}</span></a>
+          <a class="btn btn-sm" [class.active]="status==='interview_list'" (click)="filterByStatus('interview_list')">
+            Interview List <span class="badge badge-primary"> {{summary.total_interview_listed}}</span></a>
+          <a class="btn btn-sm" [class.active]="status==='final_list'" (click)="filterByStatus('final_list')">Final List
+            <span class="badge badge-primary"> {{summary.total_final_listed}}</span></a>
+          <a class="btn btn-sm" [class.active]="status==='rejected'" (click)="filterByStatus('rejected')">Rejected
+            <span class="badge badge-primary"> {{summary.total_rejected}}</span></a>
+        </div>
+      </div>
+      <div class="float-right">
+        <p class="text-white">Final Hiring List</p>
+        <div class="text-center bg-white text-black-50 d-flex justify-content-center"
+             style="width: 70px; height: 70px; border-radius: 50%; align-items: center;">
+          <b>{{summary.total_final_listed}}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="show-down">
+    <div class="row">
+      <div class="col-2">
+        <span class="badge badge-pill badge-success">{{summary.total}}</span> Candidates
+      </div>
+
+      <div class="col-9">
+        <div class="row">
+          <span class="mr-2 mb-1 badge badge-info p-2" style="white-space: break-spaces"
+                *ngFor="let filter of formattedFiltered | keyvalue">{{filter.value}}
+            <i class="fa fa-times text-danger" aria-hidden="true" (click)="removeFilter(filter.key)" style="cursor: pointer;"
+               onMouseOver="this.style.color='red'"
+               onMouseOut="this.style.color='inherit'"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="col-1 text-right pr-0" *ngIf="showSearchClearButton">
+        <a href="javascript:" class="badge badge-dark" (click)="reset()">
+          <span><i class="fa fa-times text-danger"></i> Clear All</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="applicant-list-wrapper">
+    <div class="row">
+      <div class="col-2">
+        <ul class="list-group text-center">
+          <li class="list-group-item">
+            <div ngbDropdown placement="right-top">
+              <a href="javascript:" id="quickFilters" ngbDropdownToggle>
+                <i class="fas fa-filter"></i>
+                <p class="mb-0 mt-1">Quick Filters</p>
+              </a>
+              <div class="applicant-sidebar-dropdown" ngbDropdownMenu aria-labelledby="quickFilters">
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label for="applicantName">Applicant Name</label>
+                    <input type="text" class="form-control" id="applicantName" placeholder="Applicant name"
+                           [formControl]="applicantNameControl">
+                  </div>
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Age Range</label>
+                    <div class="form-row">
+                      <div class="form-group mb-0 col">
+                        <select class="form-control" [formControl]="ageFormControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.age_range_from"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-0 col">
+                        <select class="form-control" [formControl]="ageToControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.age_range_to"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Location: </label>
+
+                    <div class="custom-control custom-radio custom-control-inline ml-3">
+                      <input type="radio" id="inside_bd" class="custom-control-input" [value]="'inside_bd'"
+                             [formControl]="locationTypeControl">
+                      <label class="custom-control-label" for="inside_bd">Inside BD</label>
+                    </div>
+
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="outside_bd" class="custom-control-input" [value]="'outside_bd'"
+                             [formControl]="locationTypeControl">
+                      <label class="custom-control-label" for="outside_bd">Outside BD</label>
+                    </div>
+
+                    <ng-multiselect-dropdown
+                      [formControl]="areaControl"
+                      [placeholder]="'Any'"
+                      [settings]="{
+                                    singleSelection: false,
+                                    idField: 'id',
+                                    textField: 'title_en',
+                                    selectAllText: 'Select All',
+                                    unSelectAllText: 'UnSelect All',
+                                    itemsShowLimit: 3,
+                                    allowSearchFilter: true
+                                }"
+                      [data]="filteredAreas">
+                    </ng-multiselect-dropdown>
+
+                    <div class="form-check mr-2 d-inline-block">
+                      <input class="form-check-input" style="margin-top: 7px;" type="checkbox" id="currentLocation"
+                             [formControl]="presentAddressControl">
+                      <label class="form-check-label" for="currentLocation">Present Location</label>
+                    </div>
+                    <div class="form-check d-inline-block">
+                      <input class="form-check-input" style="margin-top: 7px;" type="checkbox" id="permanentLocation"
+                             [formControl]="permanentAddressControl">
+                      <label class="form-check-label" for="permanentLocation">Permanent Location</label>
+                    </div>
+
+                    <label class="d-block mt-3">Salary Range</label>
+                    <div class="form-row">
+                      <div class="form-group mb-0 col">
+                        <select class="form-control" [formControl]="salaryFromControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.salary_range_from"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-0 col">
+                        <select class="form-control" [formControl]="salaryToControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.salary_range_to"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group mb-2 col-md-6">
+                    <label class="d-block mt-2">Gender</label>
+                    <div class="form-check form-check-inline" *ngFor="let item of filterInitialData.genders">
+                      <input class="form-check-input" type="checkbox"
+                             [checked]="genderControl.value ? genderControl.value.includes(item.id): false"
+                             [value]="item.id" id="gender_{{item.id}}" (change)="updateGenderArr($event)">
+                      <label class="form-check-label" for="gender_{{item.id}}">{{item.title}}</label>
+                    </div>
+
+                    <label class="d-block mt-3">Job Level</label>
+                    <div class="form-check form-check-inline" *ngFor="let item of filterInitialData.job_levels">
+                      <input class="form-check-input" type="checkbox"
+                             [checked]="jobLevelControl.value ? jobLevelControl.value.includes(item.id) : false"
+                             [value]="item.id" id="j_level{{item.id}}" (change)="updateJobLevelArr($event)">
+                      <label class="form-check-label" for="j_level{{item.id}}">{{item.title}}</label>
+                    </div>
+
+                    <!--                    <div class="form-check form-check-inline">-->
+                    <!--                      <input class="form-check-input" type="checkbox" id="invitedApplicants" disabled>-->
+                    <!--                      <label class="form-check-label" for="invitedApplicants">Invited Applicants Only</label>-->
+                    <!--                    </div>-->
+                  </div>
+                </div>
+
+                <button class="btn btn-sm btn-success float-right" (click)="search()">Search</button>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div ngbDropdown placement="right">
+              <a href="javascript:" id="academic" ngbDropdownToggle>
+                <i class="fab fa-user-graduate"></i>
+                <p class="mb-0 mt-1">Academic</p>
+              </a>
+              <div class="applicant-sidebar-dropdown" ngbDropdownMenu aria-labelledby="academic">
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label for="degree_level">Degree level</label>
+                    <select class="form-control" id="degree_level" [formControl]="degreeLevelControl">
+                      <option value="">Any</option>
+                      <option *ngFor="let item of filterInitialData.degree_levels"
+                              [value]="item.id">{{item.title}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Degree name</label>
+                    <select class="form-control" [formControl]="degreeControl">
+                      <option value="">Any</option>
+                      <option *ngFor="let item of filteredDegrees" [value]="item.id">{{item.title}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label for="major">Major</label>
+                    <input type="text" class="form-control form-control-sm" id="major" [formControl]="majorControl">
+                  </div>
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Result</label>
+                    <select class="form-control" [formControl]="resultTypeControl">
+                      <option value="">Any</option>
+                      <option *ngFor="let item of filterInitialData.result_types"
+                              [value]="item.id">{{item.title}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group mb-2 col-md-6">
+                    <label>Institutes</label>
+                    <ng-multiselect-dropdown
+                      [formControl]="institutesControl"
+                      [placeholder]="'Any'"
+                      [settings]="dropdownSettings"
+                      [data]="filterInitialData.institutes">
+                    </ng-multiselect-dropdown>
+                  </div>
+                </div>
+
+                <button class="btn btn-sm btn-success float-right mt-2" (click)="search()">Search</button>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div ngbDropdown placement="right">
+              <a href="javascript:" id="experience" ngbDropdownToggle>
+                <i class="fas fa-briefcase"></i>
+                <p class="mb-0 mt-1">Experience</p>
+              </a>
+              <div class="applicant-sidebar-dropdown" ngbDropdownMenu aria-labelledby="experience">
+                <div class="row">
+                  <div class="col-xl-6 col-md-6 col-sm-6">
+                    <label for="experience_at_least">Experience</label>
+
+                    <div class="form-row">
+                      <div class="form-group mb-2 col-md-6">
+                        <select class="form-control" id="experience_at_least" [formControl]="experienceFromControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.experience_at_least"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group mb-2 col-md-6">
+                        <select class="form-control" [formControl]="experienceToControl">
+                          <option value="">Any</option>
+                          <option *ngFor="let item of staticFilterInitialData.experience_at_most"
+                                  [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-6 col-md-6 col-sm-6">
+                    <div class="">
+                      <label for="business_organization">Business organization</label>
+                      <ng-multiselect-dropdown
+                        id="business_organization"
+                        [formControl]="businessOrganizationControl"
+                        [placeholder]="'Any'"
+                        [settings]="{
+                                    singleSelection: false,
+                                    idField: 'id',
+                                    textField: 'title_en',
+                                    selectAllText: 'Select All',
+                                    unSelectAllText: 'UnSelect All',
+                                    itemsShowLimit: 3,
+                                    allowSearchFilter: true
+                                }"
+                        [data]="filterInitialData.industry_types">
+                      </ng-multiselect-dropdown>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-success float-right mt-2" (click)="search()">Search</button>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div ngbDropdown placement="right">
+              <a href="javascript:" id="keywords" ngbDropdownToggle>
+                <i class="fab fa-keycdn"></i>
+                <p class="mb-0 mt-1">Keywords</p>
+              </a>
+              <div class="applicant-sidebar-dropdown" ngbDropdownMenu aria-labelledby="keywords">
+                <div class="form-row">
+                  <div class="form-group mb-0 col">
+                    <label for="keyword_search" class="sub-color">Search:</label>
+                    <input type="search" class="form-control" id="keyword_search" placeholder="Search name, mobile no"
+                           [formControl]="searchByControl">
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-success float-right mt-2" (click)="search()">Search</button>
+              </div>
+            </div>
+          </li>
+
+          <li class="list-group-item" *ngIf="showSearchClearButton">
+            <div class="btn-group dropright">
+              <a href="javascript:" class="dropdown-toggle p-2" (click)="reset()">
+                <span><i class="fa fa-times" style="font-size: 12px;"></i> Clear All</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-10">
+        <div class="row bg-white border-right" style="left: 0; width: 100%; position: absolute">
+          <!--          <div class="col-sm-4">-->
+          <!--            <div class="form-group my-3">-->
+          <!--              <label for="search" class="sub-color">Search:</label>-->
+          <!--              <input type="search" class="form-control" id="search" placeholder="Search name, mobile no, id">-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <!--          <div class="col-sm-3">-->
+          <!--            <div class="form-group my-3">-->
+          <!--              <label for="shortBy" class="sub-color">Short by:</label>-->
+          <!--              <select class="form-control d-inline-block p-0" id="shortBy">-->
+          <!--                <option>Latest applied date</option>-->
+          <!--                <option>Rows - 2</option>-->
+          <!--                <option>Rows - 3</option>-->
+          <!--                <option>Rows - 4</option>-->
+          <!--                <option>Rows - 5</option>-->
+          <!--              </select>-->
+          <!--            </div>-->
+          <!--          </div>-->
+
+          <div class="col-xl-6 col-md-6 col-sm-6">
+            <div class="form-group my-3">
+<!--              <label class="sub-color">Download:</label>-->
+<!--              <a href="javascript:" class="mx-2" style="font-size: 19px"><i class="fas fa-file-word"></i></a>-->
+<!--              <a href="javascript:" style="font-size: 19px"><i class="fas fa-file-excel"></i></a>-->
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-md-6 col-sm-6 p-0" *ngIf="pagination.total > 0">
+            <div class="d-flex my-3 justify-content-between">
+              <div class="">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+
+
+              <div class="">
+                <ngb-pagination
+                  [rotate]="true"
+                  [collectionSize]="pagination.total"
+                  [(page)]="pagination.current_page"
+                  (pageChange)="changePage($event)"
+                  [pageSize]="pagination.per_page"
+                  [maxSize]="5"
+                  [boundaryLinks]="true">
+                </ngb-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-12 col-md-12 col-sm-12 p-0" style="padding: 3px; margin-top: 70px">
+          <p class="mb-1" style="font-size: 12px">Show matching criteria</p>
+          <div class="applicants-matching-criteria-wrapper">
+            <ul class="list-group list-group-horizontal-xl " style="cursor: pointer">
+              <li class="list-group-item"
+                  [class.active]="(matchingCriteriaControl.value === '' || matchingCriteriaControl.value === 'all') && !isCustomMatchingCriteriaControl.value"
+                  (click)="updateMatchingCriteria('all')">All
+              </li>
+              <li class="list-group-item"
+                  [class.active]="matchingCriteriaControl.value === '100' && !isCustomMatchingCriteriaControl.value"
+                  (click)="updateMatchingCriteria('100')">100% Matched
+              </li>
+              <li class="list-group-item"
+                  [class.active]="matchingCriteriaControl.value === '75' && !isCustomMatchingCriteriaControl.value"
+                  (click)="updateMatchingCriteria('75')">75% + Matched
+              </li>
+              <li class="list-group-item"
+                  [class.active]="matchingCriteriaControl.value === '50' && !isCustomMatchingCriteriaControl.value"
+                  (click)="updateMatchingCriteria('50')"><a>50% + Matched</a></li>
+
+              <li ngbDropdown class="list-group-item d-inline-block" placement="bottom-right"
+                  [class.active]="isCustomMatchingCriteriaControl.value">
+                <a class="" id="dropdownBasic1" ngbDropdownToggle style="padding: 0; color: unset;">Custom</a>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="mt-2 ml-3">
+                  <div class="m-2">
+                    <p class="small font-weight-bold">Customize Matching</p>
+                    <div class="form-group d-flex">
+                      <input type="text" class="form-control form-control-sm"
+                             [value]="isCustomMatchingCriteriaControl.value ? matchingCriteriaControl.value : ''"
+                             #customMatchRef> %
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                      <button ngbDropdownItem class="btn btn-xs btn-success w-25"
+                              style="padding: 3px 10px; background-color: #28a745; color: white; font-size: 12px"
+                              (click)="updateMatchingCriteria(customMatchRef.value, true)">Set
+                      </button>
+                      <a ngbDropdownItem class="btn btn-xs btn-default w-50" style="padding: 3px 17px;font-size: 12px">Cancel</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+
+        <div class="table-responsive mb-0 candidate-list-wrapper" style="padding: 3px;">
+          <table class="table employer-table mt-3" *ngIf="!isLoading"
+                 [class.disabled]="applicantTableSpinner['active']">
+            <tbody>
+            <tr *ngFor="let item of applicants">
+              <td style="width: 40%;">
+                <div class="candidate-inner">
+                  <div class="candidate-img">
+                    <div class="mb-2">
+                      <input type="checkbox" id="gridCheck">
+                    </div>
+                    <img [src]="item.user.image ? item.user.image : 'assets/images/avatar.png'" class="rounded-circle"
+                         style="width: 40px;height: 40px" alt="">
+                  </div>
+                  <div class="candidate-info">
+                    <h6 class="title">
+                      <a href="Javascript:void(0)"
+                         (click)="openResumeDetailsModal(item)">{{item.user.first_name}} {{item.user.last_name}}</a><br>
+                      <span class="badge badge-info" style="line-height: 1.5;margin-left: 4px">Age: {{item.age}}</span>
+                    </h6>
+                    <p>{{latestAcademicName(item.user.educations)}}</p>
+                    <p>
+                      <ngb-progressbar type="success" textType="white" [value]="item.matched_percentage" height="10px" style="max-width: 200px"
+                                       [showValue]="true"></ngb-progressbar>
+                    </p>
+                    <p><i class="fas fa-phone-alt"></i> {{formattedData(item.user.contact_mobiles, 'title')}}</p>
+                    <p>Applied on: <b>{{item.created_at | date: 'mediumDate'}}</b></p>
+<!--                    <div class="form-group">-->
+<!--                      <select class="form-control"-->
+<!--                              style="width: 100px;height: calc(1.5em + 0.3rem + 0px);padding: 0;">-->
+<!--                        <option>Move to</option>-->
+<!--                        <option>2</option>-->
+<!--                        <option>3</option>-->
+<!--                        <option>4</option>-->
+<!--                        <option>5</option>-->
+<!--                      </select>-->
+<!--                    </div>-->
+                  </div>
+                </div>
+              </td>
+              <td style="width: 50%">
+                <div class="career-inner">
+                  <div class="career-info" style="width: 55%;margin-right: 9px;">
+                    <ng-container *ngIf="latestJobs(item.user.job_experiences).length > 0; else noExp">
+                      <ng-container *ngFor="let item of latestJobs(item.user.job_experiences)">
+                        <p><b>{{item.company_name}}</b></p>
+                        <p>{{item.designation}} ({{item.months}}+ months)</p>
+                      </ng-container>
+                      <p>...</p>
+                    </ng-container>
+                    <ng-template #noExp><p>No job experience found</p></ng-template>
+                  </div>
+                  <div>
+                    <p><small><i class="fas fa-business-time"></i> {{totalExpPerUser(item)}}</small></p>
+                    <p><b class="sub-color">৳ </b> <small>{{item.expected_salary}}</small></p>
+                    <p><small><i class="fas fa-history ml-0" style="font-size: 11px">
+                    </i> {{item.post_applies_count}} {{item.post_applies_count > 1 ? "Time's" : 'Time'}} Applied
+                    </small>
+                    </p>
+                    <p><small><i class="fas fa-eye-slash"></i> Not Viewed</small></p>
+                  </div>
+                </div>
+              </td>
+              <td class="text-center">
+                <div ngbDropdown container="body" display="dynamic">
+                  <a tabindex="0" ngbDropdownToggle id="action" class="btn btn-sm" role="button">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </a>
+                  <div ngbDropdownMenu aria-labelledby="action" class="dropdown-menu">
+                    <a href="javascript:" ngbDropdownItem
+                       (click)="onClickAction(item.status === 1 ? null : item, 1)"
+                       [ngClass]="item.status === 1 ? 'alert alert-success text-muted' : ''">
+                      <i class="fas fa-check" style="width: 18px;height: 18px"></i> Shortlist</a>
+                    <a href="javascript:" ngbDropdownItem
+                       (click)="onClickAction(item.status === 6 ? null : item, 6)"
+                       [ngClass]="item.status === 6 ? 'alert alert-danger text-muted' : ''">
+                      <i class="fas fa-times" style="width: 18px;height: 18px"></i> Reject</a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="pagination.total === 0">
+              <td colspan="3" class="text-center">No records found!</td>
+            </tr>
+            <!--                  <tr>-->
+            <!--                    <td>2</td>-->
+            <!--                    <td style="width: 40%;">-->
+            <!--                      <div class="candidate-inner">-->
+            <!--                        <div class="candidate-img">-->
+            <!--                          <div class="mb-2">-->
+            <!--                            <input type="checkbox" id="gridCheck">-->
+            <!--                          </div>-->
+            <!--                          <img src="assets/images/processed.jpeg" class="rounded-circle"-->
+            <!--                               style="width: 40px;height: 40px" alt="">-->
+            <!--                        </div>-->
+            <!--                        <div class="candidate-info">-->
+            <!--                          <h6 class="title">-->
+            <!--                            <a routerLink="applicant-process">Hasanul Rubel</a>-->
+            <!--                            <span class="badge badge-info" style="line-height: 1.5;margin-left: 4px">Age: 27.7</span>-->
+            <!--                          </h6>-->
+            <!--                          <p>Daffodil International University</p>-->
+            <!--                          <p>-->
+            <!--                            <ngb-progressbar type="success" textType="white" [value]="95" height="10px"-->
+            <!--                                             [showValue]="true"></ngb-progressbar>-->
+            <!--                          </p>-->
+            <!--                          <p><i class="fas fa-phone-alt"></i> 01717249225</p>-->
+            <!--                          <p>Applied on: <b>Jan 25, 2021</b></p>-->
+            <!--                          <div class="form-group">-->
+            <!--                            <select class="form-control"-->
+            <!--                                    style="width: 100px;height: calc(1.5em + 0.3rem + 0px);padding: 0;">-->
+            <!--                              <option>Move to</option>-->
+            <!--                              <option>2</option>-->
+            <!--                              <option>3</option>-->
+            <!--                              <option>4</option>-->
+            <!--                              <option>5</option>-->
+            <!--                            </select>-->
+            <!--                          </div>-->
+            <!--                        </div>-->
+            <!--                      </div>-->
+            <!--                    </td>-->
+            <!--                    <td style="width: 50%">-->
+            <!--                      <div class="career-inner">-->
+            <!--                        <div class="career-info" style="width: 55%;margin-right: 9px;">-->
+            <!--                          <p><b>BJIT Limited | Custom Software Development Company</b></p>-->
+            <!--                          <p>Software Engineer (11+ months)</p>-->
+            <!--                          <p><b>Tech Village</b></p>-->
+            <!--                          <p>Senior Software Engineer (2+ years)</p>-->
+            <!--                          <p>...</p>-->
+            <!--                        </div>-->
+            <!--                        <div style="width: 45%">-->
+            <!--                          <p><small><i class="fas fa-business-time"></i> 3+ Years</small></p>-->
+            <!--                          <p><b class="sub-color">৳ </b> <small>50,000</small></p>-->
+            <!--                          <p><a href="javascript:"><small><i class="fas fa-history ml-0" style="font-size: 11px"></i> 1-->
+            <!--                            Time Applied</small></a></p>-->
+            <!--                          <p><small><i class="fas fa-eye"></i> Not Viewed</small></p>-->
+            <!--                        </div>-->
+            <!--                      </div>-->
+            <!--                    </td>-->
+            <!--                    <td class="text-center">-->
+            <!--                      <div ngbDropdown container="body" display="dynamic">-->
+            <!--                        <a tabindex="0" ngbDropdownToggle id="action" class="btn btn-sm" role="button">-->
+            <!--                          <i class="fas fa-ellipsis-v"></i>-->
+            <!--                        </a>-->
+            <!--                        <div ngbDropdownMenu aria-labelledby="action" class="dropdown-menu">-->
+            <!--                          <a href="javascript:" ngbDropdownItem>-->
+            <!--                            <i class="fas fa-check" style="width: 18px;height: 18px"></i> Shortlist</a>-->
+            <!--                          <a href="javascript:" ngbDropdownItem>-->
+            <!--                            <i class="fas fa-times" style="width: 18px;height: 18px"></i> Reject</a>-->
+            <!--                        </div>-->
+            <!--                      </div>-->
+            <!--                    </td>-->
+            <!--                  </tr>-->
+            </tbody>
+          </table>
+          <app-spinner [name]="'applicant_table_spinner'" #applicantTableSpinner></app-spinner>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between py-3" *ngIf="pagination.total > 0">
+          <div class="text-left">
+            <app-select
+              [value]="filterParams.value.per_page"
+              (whenSelect)="setPerPage($event)"
+              [options]="perPageOptions"
+              [title]="'Items per page'">
+            </app-select>
+          </div>
+
+
+          <ngb-pagination
+            [rotate]="true"
+            [collectionSize]="pagination.total"
+            [(page)]="pagination.current_page"
+            (pageChange)="changePage($event)"
+            [pageSize]="pagination.per_page"
+            [maxSize]="5"
+            [boundaryLinks]="true">
+          </ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

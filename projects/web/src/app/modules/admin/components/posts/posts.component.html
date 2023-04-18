@@ -1,0 +1,145 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="page-title mb-0"><i class="fas fa-user-tie"></i> Post List</h6>
+
+  <a href="javascript:void(0)" class="btn btn-success btn-sm" (click)="openCreateModal()">
+    <i class="fas fa-plus"></i> New Post</a>
+</div>
+
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="upload-resume-wrapper">
+      <!--      <div class="filter-wrapper">-->
+      <!--        <div class="row">-->
+      <!--          <div class="col-sm-3">-->
+      <!--            <div class="form-group">-->
+      <!--              <label for="company_name">Company Name</label>-->
+      <!--              <input type="text" class="form-control form-control-sm" id="company_name"-->
+      <!--                     [formControl]="companyNameControl">-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class="col-sm-3">-->
+      <!--            <div class="form-group">-->
+      <!--              <label for="organization_type_id">Organization Types</label>-->
+      <!--              <select class="form-control form-control-sm" id="organization_type_id"-->
+      <!--                      [formControl]="organizationTypeIdControl">-->
+      <!--                <option value="">All Organization</option>-->
+      <!--                <option *ngFor="let item of initialData.organization_types" [value]="item.id">{{item.title_en}}</option>-->
+      <!--              </select>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class="col-sm-3">-->
+      <!--            <div class="form-group mt-4">-->
+      <!--              <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>-->
+
+      <!--              <a *ngIf="showSearchClearButton" (click)="reset()" href="javascript:" class="ml-3">Clear</a>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <div class="row">
+        <div class="col">
+          <nav ngbNav #nav="ngbNav" class="nav-tabs mt-4">
+            <ng-container ngbNavItem>
+              <a ngbNavLink (click)="onChangeStatusFilter('pending')"
+                 [class.active]="statusControl.value === 'pending'">Pending
+                ({{summary.pending}})</a>
+              <a ngbNavLink (click)="onChangeStatusFilter('published')"
+                 [class.active]="statusControl.value === 'published'">Published
+                ({{summary.published}})</a>
+              <a ngbNavLink (click)="onChangeStatusFilter('archived')"
+                 [class.active]="statusControl.value === 'archived'">Archived
+                ({{summary.archived}})</a>
+              <ng-template ngbNavContent>
+                <div class="table-responsive mb-0" style="padding: 3px">
+                  <table class="table text-center employer-table">
+                    <thead>
+                    <tr [class.disabled]="postTableSpinner['active']">
+                      <th class="text-left">Job Title</th>
+                      <th class="text-left">Organization</th>
+                      <th class="text-left">Status</th>
+                      <th>Created At</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of posts; let i=index;">
+                      <td class="text-left" style="width: 30%">
+                        <h6 class="mb-2">
+                          <a href="javascript:void(0)" (click)="openDetailModal(item)">{{item.title}}</a><br>
+                          <small>Category: {{item.category ? item.category.title_en : 'n/a'}}</small><br>
+                          <small>Deadline: {{ item.deadline ? (item.deadline | date: 'mediumDate' ): 'n/a'}}</small>
+                        </h6>
+                      </td>
+                      <td class="text-left">
+                        {{item.company.title_en}}<br>
+                        <small>{{item.company.organization_type.title_en}}</small>
+                      </td>
+                      <td class="text-left">
+                        <app-spinner [name]="'post_status_change_spinner'+ item.id" [type]="'btn'"></app-spinner>
+                        <select class="form-control form-control-sm" (change)="onChangeStatus(item, $event)">
+                          <option value="1" [selected]="item.status.id === 1"
+                                  [disabled]="statusControl.value === 'pending'">Pending
+                          </option>
+                          <option value="2" [selected]="item.status.id === 2"
+                                  [disabled]="statusControl.value === 'published'">Published
+                          </option>
+                          <option value="3" [selected]="item.status.id === 3"
+                                  [disabled]="statusControl.value === 'archived'">Archived
+                          </option>
+                        </select>
+                      </td>
+                      <td>{{item.created_at | date: 'mediumDate'}}</td>
+
+                      <td class="text-center">
+                        <div ngbDropdown container="body" display="dynamic" placement="bottom-right">
+                          <a tabindex="0" ngbDropdownToggle id="action" class="btn btn-sm btn-light" role="button">
+                            Action
+                          </a>
+                          <div ngbDropdownMenu aria-labelledby="action" class="dropdown-menu">
+                            <a href="Javascript:void(0)" (click)="openCreateModal(item)" ngbDropdownItem>
+                              <i class="fas fa-edit"></i> Edit
+                            </a>
+
+                            <!--                            <a href="javascript:" ngbDropdownItem>-->
+                            <!--                              <i class="fas fa-share" style="width: 18px;height: 18px"></i> Repost</a>-->
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <app-spinner [name]="'post_table_spinner'" #postTableSpinner></app-spinner>
+                </div>
+              </ng-template>
+            </ng-container>
+          </nav>
+          <div [ngbNavOutlet]="nav"></div>
+
+          <div class="pagination-wrapper">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true">
+            </ngb-pagination>
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

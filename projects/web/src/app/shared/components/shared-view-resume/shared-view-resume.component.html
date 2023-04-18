@@ -1,0 +1,439 @@
+<div id="resume_area" [hidden]="viewResume['active']" *ngIf="resumeDetail && !loading" #temRef>
+  <ng-container *ngIf="viewMode === 'details'; else shortView">
+    <div class="details-header d-flex align-items-center justify-content-between mt-4 mb-4">
+      <div class="details-item">
+        <p style="color: #1366ED; font-size: 20px">{{resumeDetail.first_name}} {{resumeDetail.last_name}}</p>
+        <p class="mb-1">Address: {{resumeDetail.profile?.present_address}}</p>
+        <p class="mb-1">Mobile No
+          : {{resumeDetail.contact_mobiles.length > 0 ? formattedData(resumeDetail.contact_mobiles, 'title') : 'n/a'}}</p>
+        <p class="mb-1">E-mail
+          : {{resumeDetail.contact_emails.length > 0 ? formattedData(resumeDetail.contact_emails, 'title') : 'n/a'}}</p>
+      </div>
+      <div class="details-item">
+        <img [src]="imageUrl" width="140" alt="">
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Career Objective:</p>
+      </div>
+      <div class="cover-body">
+        <p>{{resumeDetail.profile?.objective}}</p>
+      </div>
+    </div>
+
+    <div class="details-cover" *ngIf="resumeDetail.profile?.career_summary">
+      <div class="cover-header">
+        <p class="mb-0">Career Summary:</p>
+      </div>
+      <div class="cover-body">
+        <p>{{resumeDetail.profile?.career_summary}}</p>
+      </div>
+    </div>
+
+    <div class="details-cover" *ngIf="resumeDetail.profile?.specialization">
+      <div class="cover-header">
+        <p class="mb-0">Special Qualification:</p>
+      </div>
+      <div class="cover-body">
+        <p>{{resumeDetail.profile?.specialization}}</p>
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Employment History:</p>
+      </div>
+      <div class="cover-body">
+        <p><b>Total Year of Experience :</b> 6.5 Year(s)</p>
+        <ol class="employment-history">
+          <li *ngFor="let item of resumeDetail.job_experiences">
+            <p class="mb-1"><b>{{item.designation}} ( {{item.from | date: 'mediumDate'}} -
+              {{item.is_current ? 'Continuing' : item.to | date:'mediumDate'}})</b></p>
+            <p class="mb-1"><b>{{item.company_name}}</b></p>
+            <p class="mb-1">Company Location : {{item.address}}</p>
+            <p class="mb-1">Department: {{item.department}}</p>
+            <div class="mb-1">
+              <p>Duties/Responsibilities :</p>
+              <ul [innerHTML]="item.responsibilities" style="line-height: 1px"></ul>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Academic Qualification:</p>
+      </div>
+      <div class="cover-body">
+        <table class="table table-bordered table-sm">
+          <thead>
+          <tr>
+            <th width="20%">Exam Title</th>
+            <th width="20%">Concentration / Major</th>
+            <th width="20%">Institute</th>
+            <th width="13%">Result</th>
+            <th width="13%">Pas.Year</th>
+            <th width="13%">Duration</th>
+            <th width="13%">Achievement</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of resumeDetail.educations">
+            <td>{{item.degree.title}}</td>
+            <td>{{item.education_level.title}}</td>
+            <td>{{item.institute_name}}</td>
+            <td>{{item.cgpa}}</td>
+            <td>{{item.passing_year}}</td>
+            <td>{{item.duration}}</td>
+            <td>{{item.achievement ? item.achievement : '-' }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Training Summary:</p>
+      </div>
+      <div class="cover-body">
+        <table class="table table-bordered table-sm">
+          <thead>
+          <tr>
+            <th width="20%">Training Title</th>
+            <th width="20%">Topic</th>
+            <th width="20%">Institute</th>
+            <th width="10%">Country</th>
+            <th width="10%">Location</th>
+            <th width="10%">Year</th>
+            <th width="10%">Duration</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of resumeDetail.trainings">
+            <td>{{item.title}}</td>
+            <td>{{item.topic}}</td>
+            <td>{{item.institute_name}}</td>
+            <td>{{item.country.title}}</td>
+            <td>{{item.address}}</td>
+            <td>{{item.year}}</td>
+            <td>{{item.duration}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Career and Application Information:</p>
+      </div>
+      <div class="cover-body">
+        <table class="table table-borderless table-sm">
+          <tbody>
+          <tr>
+            <td width="35%">Preferred Job Category</td>
+            <td>: {{convertedArrayToString(resumeDetail.preferred_job_categories, 'title_en')}}</td>
+          </tr>
+          <tr>
+            <td width="35%">Looking For</td>
+            <td>: {{resumeDetail.profile?.job_level?.title}}</td>
+          </tr>
+          <tr>
+            <td width="35%">Available For</td>
+            <td>: {{resumeDetail.profile?.job_nature?.title}}</td>
+          </tr>
+          <tr *ngIf="resumeDetail.profile?.expected_salary">
+            <td width="35%">Expected Salary</td>
+            <td>: Tk. {{resumeDetail.profile?.expected_salary}}</td>
+          </tr>
+          <tr>
+            <td width="35%">Preferred District</td>
+            <td>: {{convertedArrayToString(resumeDetail.preferred_areas, 'title_en')}}</td>
+          </tr>
+          <tr>
+            <td width="35%">Preferred Country</td>
+            <td>: {{convertedArrayToString(resumeDetail.preferred_areas_outside_bd, 'title_en')}}</td>
+          </tr>
+          <tr>
+            <td width="35%">Preferred Organization Types</td>
+            <td>: {{convertedArrayToString(resumeDetail.preferred_organization_types, 'title_en')}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Specialization:</p>
+      </div>
+      <div class="cover-body">
+        <ul>
+          <li *ngFor="let item of resumeDetail.specializations">{{item.title}}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Language Proficiency:</p>
+      </div>
+      <div class="cover-body">
+        <table class="table table-bordered table-sm">
+          <thead>
+          <tr>
+            <th width="25%">Language</th>
+            <th width="25%">Reading</th>
+            <th width="25%">Writing</th>
+            <th width="25%">Speaking</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="text-center" *ngFor="let item of resumeDetail.language_proficiencies">
+            <td>{{item.title}}</td>
+            <td>{{item.reading_skill.title}}</td>
+            <td>{{item.writing_skill.title}}</td>
+            <td>{{item.speaking_skill.title}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Personal Details:</p>
+      </div>
+      <div class="cover-body">
+        <table class="table table-borderless table-sm">
+          <tbody>
+          <tr>
+            <td width="25%">Father's Name</td>
+            <td>: {{resumeDetail.profile?.father_name}}</td>
+          </tr>
+          <tr>
+            <td width="25%">Mother's Name</td>
+            <td>: {{resumeDetail.profile?.mother_name}}</td>
+          </tr>
+          <tr>
+            <td width="25%">Date of Birth</td>
+            <td>: {{resumeDetail.profile?.dob | date: 'mediumDate'}}</td>
+          </tr>
+          <tr>
+            <td width="25%">Gender</td>
+            <td>: {{resumeDetail.profile?.gender.title}}</td>
+          </tr>
+          <tr>
+            <td width="25%">Marital Status</td>
+            <td>: {{resumeDetail.profile?.marital_status.title}}</td>
+          </tr>
+          <tr>
+            <td width="25%">Nationality</td>
+            <td>: {{resumeDetail.profile?.country?.title}}</td>
+          </tr>
+          <tr>
+            <td width="25%">National Id No.</td>
+            <td>: {{resumeDetail.profile?.nid_no}}</td>
+          </tr>
+          <tr>
+            <td width="25%">Religion</td>
+            <td>: {{resumeDetail.profile?.religion?.title}}</td>
+          </tr>
+          <tr>
+            <td width="25%">Permanent Address</td>
+            <td>: {{resumeDetail.profile?.permanent_address}}</td>
+          </tr>
+          <tr>
+            <td width="25%">Current Location</td>
+            <td>: {{resumeDetail.profile?.present_area?.title_en}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="details-cover">
+      <div class="cover-header">
+        <p class="mb-0">Reference (s):</p>
+      </div>
+      <div class="cover-body">
+        <table class="table table-borderless table-sm" *ngIf="resumeDetail.references.length > 0">
+          <thead>
+          <tr>
+            <th class="text-left border-bottom-0"></th>
+            <th class="text-left border-bottom-0" *ngFor="let item of resumeDetail.references; let i = index;">
+              Reference: {{i + 1}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td width="20%">Name</td>
+            <td width="40%" *ngFor="let item of resumeDetail.references">: {{item.name}}</td>
+          </tr>
+          <tr>
+            <td width="20%">Organization</td>
+            <td width="40%" *ngFor="let item of resumeDetail.references">: {{item.organization}}</td>
+          </tr>
+          <tr>
+            <td width="20%">Designation</td>
+            <td width="40%" *ngFor="let item of resumeDetail.references">: {{item.designation}}</td>
+          </tr>
+          <tr>
+            <td width="20%">Address</td>
+            <td width="40%" *ngFor="let item of resumeDetail.references">: {{item.address}}</td>
+          </tr>
+          <tr>
+            <td width="20%">Mobile</td>
+            <td width="40%" *ngFor="let item of resumeDetail.references">: {{item.mobile}}</td>
+          </tr>
+          <tr>
+            <td width="20%">E-Mail</td>
+            <td width="40%" *ngFor="let item of resumeDetail.references">: {{item.email}}</td>
+          </tr>
+          <tr>
+            <td width="20%">Relation</td>
+            <td width="40%" *ngFor="let item of resumeDetail.references">: {{item.relation_type.title}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #shortView>
+    <div class="container-fluid p-0">
+      <div class="row" style="position: relative;margin: 15px 0;border: 1px solid #ddd;">
+        <div class="col-sm-6 col-md-4 sidebar">
+          <div class="img-fram-wrapper">
+            <img src="{{ resumeDetail.image ? apiUrl + resumeDetail.image : 'assets/images/avatar.png'}}" alt="">
+          </div>
+          <h2 class="name-plate"><span>{{resumeDetail.first_name}}</span> {{resumeDetail.last_name}}</h2>
+          <h3 class="designation"
+              *ngIf="resumeDetail.job_experiences.length > 0">{{resumeDetail.job_experiences[0].designation}}</h3>
+
+          <p style="margin-bottom: 0;"><i
+            class="fas fa-phone-square-alt"></i> {{convertedArrayToString(resumeDetail.contact_mobiles, 'title')}}
+          </p>
+          <p style="margin-bottom: 0;"><i
+            class="fas fa-envelope-square"></i> {{convertedArrayToString(resumeDetail.contact_emails, 'title')}}
+          </p>
+          <p style="margin-bottom: 0;"><i
+            class="fas fa-map-marker-alt"></i> {{resumeDetail.profile?.permanent_address}}</p>
+
+
+          <hr class="sidebar-hr">
+          <div class="profile-wrapper">
+            <h4><i class="fa fa-user" aria-hidden="true"></i> Personal Information</h4>
+            <p>
+              <label>Father's Name</label><br>
+              <strong>{{resumeDetail.profile?.father_name}}</strong>
+            </p>
+            <p>
+              <label>Mother's Name</label><br>
+              <strong>{{resumeDetail.profile?.mother_name}}</strong>
+            </p>
+            <p>
+              <label>Gender</label><br>
+              <strong>{{resumeDetail.profile?.gender.title}}</strong>
+            </p>
+            <p>
+              <label>Date of Birth</label><br>
+              <strong>{{resumeDetail.profile?.dob | date: 'mediumDate'}}</strong>
+            </p>
+            <p>
+              <label>Nationality</label><br>
+              <strong>{{resumeDetail.profile?.country?.title}}</strong>
+            </p>
+            <p>
+              <label>Permanent Address</label><br>
+              <strong>{{resumeDetail.profile?.permanent_area?.title_en}}</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-8 main-container">
+          <div class="academic-wrapper mt-0">
+            <h2><i class="fa fa-briefcase" aria-hidden="true"></i> Employment History</h2>
+            <div class="academic-item" *ngFor="let item of resumeDetail.job_experiences">
+              <div class="academic-title">
+                <h3>{{item.designation}}</h3>
+                <span><i>{{item.from}}
+                  - {{item.is_current ? 'Continuing' : (item.to | date:'mediumDate')}}</i></span>
+              </div>
+              <div class="academic-inside">
+                <p><b>{{item.company_name}}</b></p>
+                <p><i>{{item.address}}</i></p>
+                <p><i>Department : {{item.department}}</i></p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="master-hr">
+          <div class="academic-wrapper">
+            <h2><i class="fa fa-laptop" aria-hidden="true"></i> Profesional skills</h2>
+            <div class="academic-item">
+              <ul class="computer-skill">
+                <li *ngFor="let item of resumeDetail.specializations">
+                  <p>{{item.title}}</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <hr class="master-hr">
+          <div class="academic-wrapper">
+            <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i> Training Summary</h2>
+            <div class="academic-item" *ngFor="let item of resumeDetail.trainings">
+              <div class="academic-title">
+                <h3>{{item.title}}</h3>
+                <span><i>{{item.passing_year}}</i></span>
+              </div>
+              <div class="academic-inside">
+                <p><label>Topic: </label> <b>{{item.topic}}</b></p>
+                <p><label>Institute: </label> <b>{{item.institute_name}}</b></p>
+                <p class="certificate-detail">Duration - {{item.duration}}</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="master-hr">
+          <div class="academic-wrapper">
+            <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i> Academic Qualification</h2>
+            <div class="academic-item" *ngFor="let item of resumeDetail.educations">
+              <div class="academic-title">
+                <h3>{{item.education_level.title}}</h3>
+                <span><i>{{item.passing_year}}</i></span>
+              </div>
+              <div class="academic-inside">
+                <p><b>- {{item.degree.title}}</b></p>
+                <p><i>{{item.institute_name}}</i></p>
+              </div>
+            </div>
+          </div>
+          <hr class="master-hr">
+          <div class="academic-wrapper">
+            <h2><i class="fa fa-flag" aria-hidden="true"></i> Certificate & Awards</h2>
+            <div class="academic-item" *ngFor="let item of resumeDetail.certifications">
+              <div class="academic-title">
+                <h3>{{item.title}} <span
+                  class="certificate-date"><i>/ {{item.from | date: 'medium'}}
+                  - {{item.to | date: 'medium'}}</i></span></h3>
+              </div>
+              <div class="academic-inside">
+                <p class="certificate-detail">- {{item.institute_name}}</p>
+                <p><i>{{item.address}}</i></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+<app-spinner [name]="'view_resume_spinner'" #viewResume></app-spinner>
+
+

@@ -1,0 +1,54 @@
+<div class="" *ngIf="!isLoading">
+  <div class="modal-header">
+    <h6 class="mb-0">Company Information</h6>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-7">
+        <h6 class="text-primary">{{data.title_en}}</h6>
+        <p><b>Business : </b> 100% Export Oriented Composite Knit Garments</p>
+        <small class="d-block mb-2">Please click at the respective job title to view details</small>
+      </div>
+      <div class="col-sm-5">
+        <p class="alert alert-success" *ngIf="isFollowed"> You are following this employer.</p>
+        <small class="d-block mb-3">By following you can see all job circulars of this employer at your My Morejobs
+          Account.</small>
+        <small class="d-block mb-3">By following you can see all job circulars of this employer at your My Morejobs
+          Account.
+          Never miss an opportunity of your favorite employer!</small>
+        <div class="text-right">
+          <button type="button" class="btn btn-sm btn-danger" *ngIf="isFollowed; else followBtn" (click)="unfollow()">
+            Unfollow
+          </button>
+          <ng-template #followBtn>
+            <button type="button" class="btn btn-sm btn-success" (click)="follow()"> Follow</button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-sm table-striped online-app-table">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th width="70%">Job Title</th>
+          <th>Deadline</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of availableJobs; let i = index;">
+          <td>{{i + 1}}</td>
+          <td>
+            <p><a href="javascript:">{{item.title}}</a></p>
+          </td>
+          <td>{{item.deadline}} (6 days left)</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-light" (click)="closeModal()">Close</button>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+
+  <div class="modal-header">
+    <h6 class="mb-0">{{mode == 'create' ? 'Add New' : 'Update'}} Trainer</h6>
+  </div>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="first_name">First Name*</label>
+                <input type="text" class="form-control" id="first_name" formControlName="first_name">
+                <div appInvalidMessage="first_name">
+                  <small class="text-danger" *appInvalidType="'required'">First name is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="last_name">Last Name*</label>
+                <input type="text" class="form-control" id="last_name" formControlName="last_name">
+                <div appInvalidMessage="last_name">
+                  <small class="text-danger" *appInvalidType="'required'">Last name is required</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="designation">Designation*</label>
+              <input type="text" class="form-control" id="designation" formControlName="designation">
+              <div appInvalidMessage="designation">
+                <small class="text-danger" *appInvalidType="'required'">Designation is required</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="about">About*</label>
+              <textarea  class="form-control" id="about" rows="4" formControlName="about"></textarea>
+              <div appInvalidMessage="about">
+                <small class="text-danger" *appInvalidType="'required'">About is required</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success" [disabled]="submitAttempt">
+        <app-spinner [name]="'trainer_save_btn_spinner'" [type]="'btn'"></app-spinner>
+        {{mode == 'create' ? 'Create' : 'Update'}}
+      </button>
+      <a class="btn btn-light" (click)="closeModal()">Close</a>
+    </div>
+  </form>
+

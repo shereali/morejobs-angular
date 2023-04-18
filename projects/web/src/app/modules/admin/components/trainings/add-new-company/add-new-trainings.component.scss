@@ -1,0 +1,13 @@
+.cv-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+
+  .cv-body {
+    margin-bottom: 30px;
+    padding: 45px 45px 20px;
+    border: 2px dashed #ddd;
+  }
+}

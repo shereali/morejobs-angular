@@ -1,0 +1,33 @@
+<div class="header-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <nav class="navbar navbar-expand-lg">
+          <a class="navbar-brand" href="{{apiUrl}}">
+            <img src="assets/images/logo.png" width="96" alt="" loading="lazy">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar"
+                  aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="main-navbar">
+            <ul class="nav navbar-nav mobile-menu-navbar">
+              <li class="nav-item" ngbDropdown display="dynamic" placement="bottom-right">
+                <a class="nav-link" tabindex="0" ngbDropdownToggle id="navbarDropdown3" role="button"
+                   style="border-left: 1px solid #ebebeb;padding-left: 15px;">
+                  <img style="width: 32px;border-radius: 50%;" class="mr-1" src="assets/images/avatar.png" alt="avatar"/>
+                  <span class="user-menu"> Welcome Admin</span>
+                </a>
+                <div ngbDropdownMenu aria-labelledby="navbarDropdown3" class="dropdown-menu">
+                  <a ngbDropdownItem href="javascript:" routerLink="/change-password"><i class="fas fa-key"></i> Change Password</a>
+                  <a ngbDropdownItem (click)="logout()" href="javascript:"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

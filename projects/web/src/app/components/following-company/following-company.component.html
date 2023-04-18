@@ -1,0 +1,126 @@
+<h6 class="page-title"><i class="fas fa-hospital"></i> Following Employers</h6>
+<div class="card custom-card">
+  <div class="card-body" *ngIf="!isLoading">
+    <ng-container *ngIf="(followingCompanies.length === 0 && !isSearchMode); else followingCompanyList;">
+      <p class="mb-4" *ngFor="let alert of alerts">
+        <ngb-alert [type]="alert.type" (closed)="close(alert)">{{ alert.message }}</ngb-alert>
+      </p>
+      <div class="upload-resume-wrapper">
+        <h6>Follow your Employer:</h6>
+        <ul>
+          <li>Firstly, go to Employer list from menu</li>
+          <li>Type your company name in search option to find your desired company</li>
+          <li>Click on the company name</li>
+          <li>Then click on the <i class="fas fa-plus"></i> Follow button.</li>
+        </ul>
+      </div>
+      <ul class="list-group mt-4">
+        <li class="list-group-item list-group-item-info">Beside this, click on the <i class="fas fa-plus"></i> Follow
+          button in job detail and follow your desired employer.
+        </li>
+      </ul>
+      <div class="filter-wrapper text-center p-5 mt-4">
+        <div class="row">
+          <div class="col">
+            <p>Would you like to follow your favorite Employer?</p>
+            <a routerLink="/home/company-list" class="btn btn-success"><i class="fas fa-plus"></i> Follow Employer</a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #followingCompanyList>
+      <div class="upload-resume-wrapper">
+        <p>Here you will get the list of your following Employer and Available Jobs. Type the company name in search
+          option to find any company.</p>
+        <ul>
+          <li>You can follow your preferred employers by clicking on <strong>Follow</strong> from
+            <a routerLink="/home/company-list">Employer List</a> or Job Details page.
+          </li>
+          <li>Click on the number of Available Jobs to view current vacancies of those companies.</li>
+          <li>You can unfollow a followed employer by clicking on Unfollow.</li>
+          <li>You can change your SMS preferences from SMS settings.</li>
+        </ul>
+      </div>
+
+      <div class="filter-wrapper mt-2">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="form-group">
+              <label for="name">Company Name</label>
+              <input type="text" class="form-control form-control-sm" id="name" [formControl]="companyName">
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="form-group" style="display: flex;align-items: flex-end;height: 57px">
+              <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>
+              <button type="button" class="btn btn-outline-danger btn-sm ml-2"
+                      *ngIf="showSearchClearButton" (click)="reset()">clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="table-top">
+            <h6>Total number of following employers : <span class="badge badge-success">{{totalRecord || 0}}</span></h6>
+          </div>
+          <div class="table-responsive">
+            <table class="table online-app-table">
+              <thead class="table-active">
+              <tr>
+                <th>#</th>
+                <th>Company Name</th>
+                <th class="text-center">No. of Jobs</th>
+                <th class="text-center">Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of followingCompanies; let i = index;">
+                <td>{{i + 1}}</td>
+                <td>
+                  <p><a href="javascript:" (click)="show(item)">{{item.company.title_en}}</a></p>
+                </td>
+                <td class="text-center">{{item.company.jobs_count}}</td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-danger" style="padding: 2px 5px; font-size: 12px"
+                          (click)="unfollow(item, i)">
+                    <i class="fas fa-trash-alt"></i> Unfollow
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="pagination-wrapper">
+        <ngb-pagination
+          [rotate]="true"
+          [collectionSize]="pagination.total"
+          [(page)]="pagination.current_page"
+          (pageChange)="changePage($event)"
+          [pageSize]="pagination.per_page"
+          [maxSize]="5"
+          [boundaryLinks]="true">
+        </ngb-pagination>
+
+
+        <div class="form-inline ml-auto mbl-hidden">
+          <div class="filter-item">
+            <app-select
+              [value]="filterParams.value.per_page"
+              (whenSelect)="setPerPage($event)"
+              [options]="perPageOptions"
+              [title]="'Items per page'">
+            </app-select>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+

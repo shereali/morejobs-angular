@@ -1,0 +1,143 @@
+<h6 class="page-title"><i class="fas fa-book-open"></i> Job Applied</h6>
+<div class="card custom-card">
+  <div class="card-body">
+    <p class="notice-content mb-3">Here you can view the list of jobs you applied.</p>
+    <ul class="mb-4">
+      <li>To view job details click on the particular "Job Title".</li>
+      <li>In the list you can view Expected Salary and edit it untill the employer views your resume.</li>
+      <li>You can see which employer Viewed (by Employer) your resume and Employer's interaction too.</li>
+      <li>In the search option you can search applied jobs using date, company name and status.</li>
+      <li>To cancel your application from any post then click on the icon <i class="fas fa-trash-alt"></i> (beside the
+        expected salary).
+      </li>
+    </ul>
+    <div class="upload-resume-wrapper">
+      <div class="filter-wrapper">
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="fromDate">From Date</label>
+              <input type="date" class="form-control form-control-sm" id="fromDate" [formControl]="fromDate">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="toDate">To Date</label>
+              <input type="date" class="form-control form-control-sm" id="toDate" [formControl]="toDate">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="companyName">Company Name</label>
+              <input type="text" class="form-control form-control-sm" id="companyName" placeholder="Type company name"
+                     [formControl]="companyName">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select class="form-control form-control-sm" id="status" [formControl]="viewStatus">
+                <option *ngFor="let item of viewStatusOptions" [value]="item.id">{{item.title}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group text-right">
+              <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>
+
+              <a
+                *ngIf="showSearchClearButton"
+                (click)="reset()"
+                href="javascript:"
+                class="ml-3">
+                Clear
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="table-top">
+            <h6>Total Job Found : <span class="badge badge-success">{{totalRecord}}</span></h6>
+            <div class="table-top-inner">
+              <span><i class="fas fa-phone-slash icon bg-dark"></i> <span class="table-top-innto">Not contacted:</span> <b>0</b></span>
+              <span class="table-top-innto-wrapper"><i class="fas fa-user-check icon bg-success"></i> <span class="table-top-innto">Contacted:</span> <b>0</b></span>
+              <span><i class="fa fa-handshake icon bg-info"></i> <span class="table-top-innto">Hired:</span> <b>0</b></span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table online-app-table">
+              <thead>
+              <tr [class.disabled]="applicationTableSpinner['active']">
+                <th>#</th>
+                <th>Job Title</th>
+                <th>Expected Salary</th>
+                <th>Viewed (by Employer)</th>
+<!--                <th>Employer's interaction</th>-->
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of applications; let i=index">
+                <td>{{i + 1}}</td>
+                <td>
+                  <p><a href="{{apiUrl + '/job-list/'+ item.id +'/details'}}">{{item.title}}</a></p>
+                  <p>{{item.company.title_en}}</p>
+                  <small>Applied on: <i class="fas fa-calendar-day"></i> {{item.applied_at | date: 'mediumDate'}}
+                  </small>
+                </td>
+                <td>{{item.expected_salary}}</td>
+                <td class="text-center">
+                  <i class="far fa-times-circle text-danger" style="font-size: 20px "
+                     *ngIf="+item.is_viewed === 0; else notViewedIcon;">
+                  </i>
+                  <ng-template #notViewedIcon>
+                    <i class="far fa-check-circle text-success" style="font-size: 20px "></i>
+                  </ng-template>
+                </td>
+                <!--<td class="text-center">
+                  <div ngbDropdown container="body" display="dynamic">
+                    <div class="list-inline">
+                      <a href="javascript:">
+                        <i class="fas fa-phone-slash icon text-dark" style="width: 18px;height: 18px"></i></a>
+                      <a href="javascript:">
+                        <i class="fas fa-user-check text-success" style="width: 18px;height: 18px"></i></a>
+                      <a href="javascript:">
+                        <i class="fa fa-handshake text-info" style="width: 18px;height: 18px"></i></a>
+                    </div>
+                  </div>
+                </td>-->
+              </tr>
+              </tbody>
+            </table>
+            <app-spinner [name]="'application_table_spinner'" #applicationTableSpinner></app-spinner>
+          </div>
+          <div class="pagination-wrapper">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true">
+            </ngb-pagination>
+
+            <div class="mob-form form-inline mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

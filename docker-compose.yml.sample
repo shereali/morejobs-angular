@@ -1,0 +1,45 @@
+version: "3.7"
+services:
+  web:
+    user: "1000:root"
+    image: ackosoft/node:12
+    networks:
+      local-network:
+    container_name: morejobs-web
+    restart: always
+    ports:
+      - '8014:4200'
+    volumes:
+      - ./:/usr/src/app
+#     - /usr/src/app/node_modules
+    command: >
+      sh -c "npm install && ng serve --project=web --host 0.0.0.0 --watch --disable-host-check"
+  mobile:
+      user: "1000:root"
+      image: ackosoft/node:12
+      networks:
+        local-network:
+      container_name: morejobs-mobile
+      restart: always
+      ports:
+        - '8013:4200'
+      volumes:
+        - ./:/usr/src/app
+#     - /usr/src/app/node_modules
+      command: >
+        sh -c "npm install && ng serve --project=mobile --host 0.0.0.0 --watch --disable-host-check"
+networks:
+  local-network:
+    external: true
+
+
+
+#instructions
+#docker-compose build
+
+#Before `docker-compose up -d` add `npm i` in command before ng serve
+#docker-compose up -d
+
+
+#docker exec -it morejobs-web npm install
+#docker exec -it morejobs-operation-mobile npm install

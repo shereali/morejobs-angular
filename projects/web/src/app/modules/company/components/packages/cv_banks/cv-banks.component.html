@@ -1,0 +1,103 @@
+<div *ngIf="packageList.length>0 && !isLoading" [hidden]="cvBanksSpinner['active']">
+  <nav ngbNav #nav="ngbNav" [activeId]="defaultActiveTab" class="nav-tabs justify-content-center">
+    <ng-container [ngbNavItem]="pageGroup.id" *ngFor="let pageGroup of packageList;">
+      <a ngbNavLink>{{pageGroup.title}}</a>
+      <ng-template ngbNavContent>
+        <div class="row">
+          <div class="col-sm-7">
+            <form [formGroup]="orderForm">
+              <div class="pricing-wrapper">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th width="30%">Quantity</th>
+                    <th width="40%"></th>
+                    <th width="30%">Price</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="base-type" formArrayName="items" *ngFor="let packageDetails of pageGroup.packages;">
+                    <td>
+                      <h6 class="mb-0">{{packageDetails.title}}</h6>
+                    </td>
+                    <td>
+                      <div class="form-group w-75" [formGroupName]="getControlIndex(packageDetails.id)">
+                        <select class="form-control form-control-sm" formControlName="package_detail_id" (change)="updatePrice(packageDetails.id, $event, packageDetails)">
+                          <option value="0">Select Option</option>
+                          <option *ngFor="let item of packageDetails.filtered_details" [value]="item.id">{{item.quantity_to}}</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td>
+                      <h6>{{orderForm.get('items').value[getControlIndex(packageDetails.id)].sub_total}} BDT</h6>
+<!--                      <small>Per Unit {{packageDetails.details[0]?.price}} BDT</small>-->
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <h6 class="mb-0">Duration</h6>
+                    </td>
+                    <td></td>
+                    <td class="d-flex">
+                      <div class="form-group w-50">
+                        <select class="form-control form-control-sm" (change)="filterPackageDetailsBasedDuration($event)">
+                          <option *ngFor="let item of monthRange" [value]="item">{{item}}</option>
+                        </select>
+                      </div>
+                      <span class="ml-2 mt-1"> months</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <h6 class="mb-0">VAT</h6>
+                    </td>
+                    <td></td>
+                    <td>
+                      <h6>{{getVat(pageGroup.id)}} BDT</h6>
+                      <small>@ 5% VAT</small>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h6 class="mb-0">Amount to Pay</h6>
+                    </td>
+                    <td></td>
+                    <td>
+                      <h6> {{totalPayable(pageGroup.id) | number: '2.'}} BDT</h6>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" class="text-center">
+                      <button type="button" [disabled]="totalPayable(pageGroup.id) < 1 || submitAttempt"
+                              (click)="submit(pageGroup.id)" class="btn btn-success btn-lg mt-5">
+                        <app-spinner [name]="'place_order_btn_spinner'" [type]="'btn'"></app-spinner>
+                        Place Order
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </form>
+          </div>
+          <div class="col-sm-5">
+            <div class="mb-4" *ngFor="let package of pageGroup.packages;">
+              <h5 class="mb-3">{{package.title}} <a href="#" style="font-size: 14px">(View Sample)</a></h5>
+              <div [innerHTML]="package.features"></div>
+            </div>
+
+            <div>
+              <h5 class="mb-3">Why from us?</h5>
+              <div [innerHTML]="packageType.description"></div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </nav>
+
+  <div [ngbNavOutlet]="nav" class="mt-4"></div>
+</div>
+<app-spinner [name]="'cv_banks_spinner'" #cvBanksSpinner></app-spinner>

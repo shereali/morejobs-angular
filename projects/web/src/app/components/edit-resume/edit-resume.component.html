@@ -1,0 +1,1881 @@
+<h6 class="page-title"><i class="fas fa-pen-square"></i> Edit Resume</h6>
+<div class="card custom-card">
+  <div class="card-body">
+    <p class="notice-content">Here you can edit your resume in five different steps (Personal, Education/ Training,
+      Employment, Other Information
+      and Photograph). To enrich your resume provide authentic information.</p>
+
+    <div class="main-tab-wrapper">
+      <nav ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="editOption">
+        <ng-container [ngbNavItem]="'personal'">
+          <a ngbNavLink [class.active]="editOption === 'personal'"
+             (click)="resetEditOption('personal', 'personal_details')">
+            <i class="far fa-user"></i>
+            <p class="mb-0">Personal</p>
+          </a>
+          <ng-template ngbNavContent *ngIf="editOption === 'personal'">
+            <div class="document-info-wrapper">
+              <ngb-accordion [closeOthers]="true" activeIds="personal-details">
+                <ngb-panel id="personal-details">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditType( 'personal','personal_details')">Personal Details</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="personalDetailsForm" *ngIf="editType === 'personal_details'">
+                      <div class="row" [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="col-sm-12">
+                          <ng-container *ngIf="mode === 'view'">
+                            <a href="javascript:" class="btn-edit" (click)="switchMode()">
+                              <i class="far fa-edit"></i>Edit</a>
+                          </ng-container>
+                        </div>
+
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="firstName">First Name <sup class="text-danger">*</sup></label>
+                            <input type="text" formControlName="first_name"
+                                   class="form-control form-control-sm" [ngClass]="modeClass"
+                                   id="firstName" aria-describedby="firstNameHelp">
+                            <div appInvalidMessage="first_name" *ngIf="mode === 'edit'">
+                              <small class="text-danger" *appInvalidType="'required'">First name is required</small>
+                            </div>
+                            <small id="firstNameHelp" class="form-text text-muted">We'll never share your email with
+                              anyone else.</small>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="lastName">Last Name <sup class="text-danger">*</sup></label>
+                            <input type="text" formControlName="last_name" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="lastName">
+                            <div appInvalidMessage="last_name" *ngIf="mode === 'edit'">
+                              <small class="text-danger" *appInvalidType="'required'">Last name is required</small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="fatherName">Father's Name</label>
+                            <input type="text" formControlName="father_name" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="fatherName">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="motherName">Mother's Name</label>
+                            <input type="text" formControlName="mother_name" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="motherName">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="dateBirth">Date of Birth <sup class="text-danger">*</sup></label>
+                            <input type="date" formControlName="dob" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="dateBirth" aria-describedby="dateBirthHelp">
+                            <div appInvalidMessage="dob" *ngIf="mode === 'edit'">
+                              <small class="text-danger" *appInvalidType="'required'">Date of birth is required</small>
+                            </div>
+                            <small id="dateBirthHelp" class="form-text text-muted">We'll never share your email with
+                              anyone else.</small>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="gender">Gender <sup class="text-danger">*</sup></label>
+                            <select formControlName="gender_id" class="form-control form-control-sm"
+                                    [ngClass]="modeClass" id="gender" aria-describedby="genderHelp">
+                              <option *ngFor="let item of initialData.gender" [value]="item.id">{{item.title}}</option>
+                            </select>
+                            <div appInvalidMessage="gender_id" *ngIf="mode === 'edit'">
+                              <small class="text-danger" *appInvalidType="'required'">Gender is required</small>
+                            </div>
+                            <small id="genderHelp" class="form-text text-muted">We'll never share your email with anyone
+                              else.</small>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="religion">Religion</label>
+                            <select formControlName="religion_id" class="form-control form-control-sm"
+                                    [ngClass]="modeClass" id="religion">
+                              <option *ngFor="let item of initialData.religions"
+                                      [value]="item.id">{{item.title}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="maritalStatus">Marital Status <sup class="text-danger">*</sup></label>
+                            <select formControlName="marital_status_id" class="form-control form-control-sm"
+                                    [ngClass]="modeClass" id="maritalStatus" aria-describedby="maritalStatusHelp">
+                              <option *ngFor="let item of initialData.marital_status"
+                                      [value]="item.id">{{item.title}}</option>
+                            </select>
+                            <div appInvalidMessage="marital_status_id" *ngIf="mode === 'edit'">
+                              <small class="text-danger" *appInvalidType="'required'">Marital status is required</small>
+                            </div>
+                            <small id="maritalStatusHelp" class="form-text text-muted">We'll never share your email with
+                              anyone else.</small>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <div class="form-row">
+                              <div class="col-sm-8">
+                                <label for="nationality">Nationality <sup class="text-danger">*</sup></label>
+                              </div>
+                              <div class="col-sm-4">
+                                <div class="form-check">
+                                  <label class="form-check-label">
+                                    <input type="checkbox" value="Bangladeshi" (change)="resetNationality($event)"
+                                           formControlName="is_bd_nationality" #isBdNationalityRef> Bangladeshi
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <input type="text" class="form-control form-control-sm" formControlName="nationality"
+                                   [ngClass]="modeClass" id="nationality"
+                                   [class.text-muted]="isBdNationalityRef.checked"
+                                   [readonly]="isBdNationalityRef.checked"/>
+                            <div appInvalidMessage="nationality" *ngIf="mode === 'edit'">
+                              <small class="text-danger" *appInvalidType="'required'">Nationality is required</small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="nationalId">National Id No</label>
+                            <input formControlName="nid_no" type="text" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="nationalId">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="passportNumber">Passport Number</label>
+                            <input type="text" [ngClass]="modeClass" class="form-control form-control-sm"
+                                   formControlName="passport_no"
+                                   id="passportNumber">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="passportIssueDate">Passport Issue Date</label>
+                            <input type="date" [ngClass]="modeClass" class="form-control form-control-sm"
+                                   formControlName="passport_issue_date"
+                                   id="passportIssueDate">
+                          </div>
+                        </div>
+
+                        <div class="col-sm-6" formArrayName="contact_mobiles"
+                             *ngFor="let item of contactMobiles.controls; let i=index">
+                          <div class="form-group" [formGroupName]="i">
+                            <label for="mobileNo{{i}}">Mobile No <small *ngIf="i > 0">(Alternate)</small></label>
+                            <input type="text" formControlName="title" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="mobileNo{{i}}">
+                          </div>
+                        </div>
+                        <div class="col-sm-6" formArrayName="contact_emails"
+                             *ngFor="let item of contactEmails.controls; let i=index">
+                          <div class="form-group" [formGroupName]="i">
+                            <label for="email{{i}}">Email <small *ngIf="i > 0">(Alternate)</small></label>
+                            <input type="email" formControlName="title" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="email{{i}}">
+                          </div>
+                        </div>
+
+                        <div class="col-md-12" *ngIf="mode === 'edit'">
+                          <div class="float-left">
+                            <a href="javascript:" class="btn-delete"
+                               (click)="switchMode()">
+                              <i class="far fa-trash-alt"></i> Cancel</a>
+                            <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                    (click)="updateData(personalDetailsForm, 'personal_details', 'single')">
+                              <app-spinner [name]="'save_btn_spinner'" [type]="'btn'"></app-spinner>
+                              <i class="far fa-edit"></i>Update
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+                    </form>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="address-details">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditType( 'personal', 'address')">Address Details</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="addressForm" *ngIf="editType === 'address'" #addressNgForm='ngForm'>
+                      <div [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="address-wrapper">
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <ng-container *ngIf="mode === 'view'">
+                                <a href="javascript:" class="btn-edit" (click)="switchMode()"><i
+                                  class="far fa-edit"></i>Edit</a>
+                              </ng-container>
+                            </div>
+                          </div>
+
+                          <ng-container formGroupName="present_address">
+                            <div class="form-group">
+                              <label>Present Address <sup class="text-danger">*</sup></label>
+
+                              <div class="col-sm-12">
+                                <input type="text" formControlName="address_present"
+                                       class="form-control form-control-sm" [ngClass]="modeClass">
+                                <div *ngIf="mode === 'edit' && addressNgForm.submitted">
+                                  <small class="text-danger"
+                                         *ngIf="this.addressForm.get('present_address')?.get('address_present')?.invalid">
+                                    Present address is required</small>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="form-check form-check-inline">
+                                <input formControlName="is_present_address_inside" class="form-check-input" type="radio"
+                                       id="insideBangladeshPresent" [value]="1">
+                                <label class="form-check-label" for="insideBangladeshPresent">Inside Bangladesh</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input formControlName="is_present_address_inside" class="form-check-input" type="radio"
+                                       id="outsideBangladeshPresent" [value]="0">
+                                <label class="form-check-label" for="outsideBangladeshPresent">Outside
+                                  Bangladesh</label>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="row">
+                                <ng-container *ngIf="isPresentAddressInside.value; else outsideBdPresentAddress">
+                                  <div class="col">
+                                    <div class="form-group">
+                                      <label>District</label>
+                                      <select formControlName="district_present" class="form-control form-control-sm"
+                                              [ngClass]="modeClass" #presentDistrictRef>
+                                        <!--                                        <option value="">Select District</option>-->
+                                        <option [value]="item.id"
+                                                *ngFor="let item of districts">{{item.title_en}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="col">
+                                    <div class="form-group">
+                                      <label>Thana</label>
+                                      <select class="form-control form-control-sm" [ngClass]="modeClass"
+                                              formControlName="thana_present" #presentThanaRef>
+                                        <!--                                        <option value="">Select Thana</option>-->
+                                        <option *ngFor="let item of thanas(presentDistrictRef.value)" [value]="item.id">
+                                          {{item.title_en}}
+                                        </option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <!--                                  <div class="col">-->
+                                  <!--                                    <div class="form-group">-->
+                                  <!--                                      <label>P.O</label>-->
+                                  <!--                                      <select class="form-control form-control-sm"-->
+                                  <!--                                              [ngClass]="modeClass" formControlName="po_present">-->
+                                  <!--                                        &lt;!&ndash;                                        <option value="">Select P.O</option>&ndash;&gt;-->
+                                  <!--                                        <option [value]="item.id"-->
+                                  <!--                                                *ngFor="let item of po(presentThanaRef.value)">{{item.title_en}}</option>-->
+                                  <!--                                      </select>-->
+                                  <!--                                    </div>-->
+                                  <div class="col">
+                                    <div class="form-group">
+                                      <label for="po_present">P.O</label>
+                                      <input type="text" formControlName="po_present" id="po_present"
+                                             class="form-control form-control-sm" [ngClass]="modeClass">
+                                    </div>
+                                  </div>
+                                </ng-container>
+
+                                <ng-template #outsideBdPresentAddress>
+                                  <div class="col">
+                                    <div class="form-group">
+                                      <label>Country</label>
+                                      <select class="form-control form-control-sm" [ngClass]="modeClass"
+                                              formControlName="present_area_id_outside">
+                                        <option value="">Select Country</option>
+                                        <option *ngFor="let item of outsideAreas"
+                                                [value]="item.id">{{item.title_en}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                        <div class="address-wrapper">
+                          <ng-container formGroupName="permanent_address">
+                            <div class="form-group ">
+                              <div class="row d-flex align-items-center container">
+                                <label>Permanent Address</label>
+                                <div class="form-check" *ngIf="mode === 'edit'" style="margin-left: 27rem">
+                                  <input [formControl]="sameAsPresentAddress" (change)="setSameAsPresentAddress($event)"
+                                         class="form-check-input" type="checkbox" value="false" [ngClass]="modeClass"
+                                         id="SameAsPresentAddress">
+                                  <label class="form-check-label" for="SameAsPresentAddress">
+                                    Same as Present Address
+                                  </label>
+                                </div>
+                              </div>
+                              <div class="col-sm-12">
+                                <input type="text" formControlName="address_permanent"
+                                       class="form-control form-control-sm" [ngClass]="modeClass">
+                                <!--                                <div appInvalidMessage="address_permanent" *ngIf="mode === 'edit'">-->
+                                <!--                                  <small class="text-danger" *appInvalidType="'required'">Permanent address is-->
+                                <!--                                    required</small>-->
+                                <!--                                </div>-->
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="form-check form-check-inline">
+                                <input formControlName="is_permanent_address_inside" class="form-check-input"
+                                       [ngClass]="modeClass" type="radio" id="insideBangladeshPermanent" [value]="1">
+                                <label class="form-check-label" for="insideBangladeshPermanent">Inside
+                                  Bangladesh</label>
+                              </div>
+                              <div class="form-check form-check-inline">
+                                <input formControlName="is_permanent_address_inside" class="form-check-input"
+                                       [ngClass]="modeClass" type="radio" id="outsideBangladeshPermanent" [value]="0">
+                                <label class="form-check-label" for="outsideBangladeshPermanent">Outside
+                                  Bangladesh</label>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="row">
+                                <ng-container *ngIf="isPermanentAddressInside.value; else outsideBdPermanentAddress">
+                                  <div class="col">
+                                    <div class="form-group">
+                                      <label>District</label>
+                                      <select formControlName="district_permanent" class="form-control form-control-sm"
+                                              [ngClass]="modeClass" id="present-district" #permanentDistrictRef>
+                                        <!--                                        <option value="">Select District</option>-->
+                                        <option [value]="item.id"
+                                                *ngFor="let item of districts">{{item.title_en}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="col">
+                                    <div class="form-group">
+                                      <label>Thana</label>
+                                      <select class="form-control form-control-sm" id="present-thana"
+                                              formControlName="thana_permanent" #permanrntThanaRef
+                                              [ngClass]="modeClass">
+                                        <!--                                        <option value="">Select Thana</option>-->
+                                        <option [value]="item.id"
+                                                *ngFor="let item of thanas(permanentDistrictRef.value)">{{item.title_en}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="col">
+                                    <!--                                    <div class="form-group">-->
+                                    <!--                                      <label>P.O</label>-->
+                                    <!--                                      <select class="form-control form-control-sm" id="present-p-office"-->
+                                    <!--                                              formControlName="po_permanent" [ngClass]="modeClass">-->
+                                    <!--                                        &lt;!&ndash;                                        <option value="" selected>Select P.O</option>&ndash;&gt;-->
+                                    <!--                                        <option [value]="item.id"-->
+                                    <!--                                                *ngFor="let item of po(permanrntThanaRef.value)">{{item.title_en}}</option>-->
+                                    <!--                                      </select>-->
+                                    <!--                                    </div>-->
+
+                                    <div class="form-group">
+                                      <label for="po_permanent">P.O</label>
+                                      <input type="text" formControlName="po_permanent" id="po_permanent"
+                                             class="form-control form-control-sm" [ngClass]="modeClass">
+                                    </div>
+                                  </div>
+                                </ng-container>
+
+                                <ng-template #outsideBdPermanentAddress>
+                                  <div class="col">
+                                    <div class="form-group">
+                                      <label>Country</label>
+                                      <select class="form-control form-control-sm" [ngClass]="modeClass"
+                                              formControlName="permanent_area_id_outside">
+                                        <option value="">Select Country</option>
+                                        <option *ngFor="let item of outsideAreas"
+                                                [value]="item.id">{{item.title_en}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+
+                        <div class="col-md-12" *ngIf="mode === 'edit'">
+                          <div class="float-left">
+                            <a href="javascript:" class="btn-delete"
+                               (click)="switchMode()">
+                              <i class="far fa-trash-alt"></i> Cancel</a>
+                            <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                    (click)="updateData(addressForm, 'address', 'single')">
+                              <app-spinner [name]="'save_btn_spinner'" [type]="'btn'"></app-spinner>
+                              <i class="far fa-edit"></i>Update
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+                    </form>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="career-application-information">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditType( 'personal','career_objective')">Career and Application
+                      Information</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="careerInfoForm" *ngIf="editType === 'career_objective'">
+                      <div class="row" [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="col-sm-12">
+                          <ng-container *ngIf="mode === 'view'">
+                            <a href="javascript:" class="btn-edit" (click)="switchMode()"><i
+                              class="far fa-edit"></i>Edit</a>
+                          </ng-container>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="objective">Objective <sup class="text-danger">*</sup></label>
+                            <textarea formControlName="objective" class="form-control" [ngClass]="modeClass"
+                                      id="objective" rows="3"
+                                      aria-describedby="objectiveHelp"></textarea>
+                            <small id="objectiveHelp" class="form-text text-muted" *ngIf="mode==='edit'">You wrote <b>214</b>
+                              character(s)</small>
+                            <div appInvalidMessage="objective" *ngIf="mode === 'edit'">
+                              <small class="text-danger" *appInvalidType="'required'">Objective is required</small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="present-salary">Present Salary</label>
+                            <input formControlName="present_salary" type="text" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="present-salary"
+                                   aria-describedby="presentSalaryHelp">
+                            <small id="presentSalaryHelp" class="form-text text-muted">TK/ Month</small>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="expected-salary">Expected Salary</label>
+                            <input formControlName="expected_salary" type="text" class="form-control form-control-sm"
+                                   [ngClass]="modeClass" id="expected-salary"
+                                   aria-describedby="expectedSalaryHelp">
+                            <small id="expectedSalaryHelp" class="form-text text-muted">TK/ Month</small>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="d-block">Looking for (Job Level)</label>
+                            <ng-container *ngFor="let item of initialData.job_levels; let i = index;">
+                              <div class="form-check form-check-inline">
+                                <input formControlName="job_level_id" class="form-check-input" [ngClass]="modeClass"
+                                       type="radio" id="entryLevel{{i}}" [value]="item.id">
+                                <label class="form-check-label font-weight-normal"
+                                       for="entryLevel{{i}}">{{item.title}}</label>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label class="d-block">Available for (Job Nature)</label>
+                            <ng-container *ngFor="let item of initialData.job_natures; let i = index;">
+                              <div class="form-check form-check-inline">
+                                <input formControlName="job_nature_id" class="form-check-input" [ngClass]="modeClass"
+                                       type="radio" id="jobNature{{i}}" [value]="item.id">
+                                <label class="form-check-label font-weight-normal"
+                                       for="jobNature{{i}}">{{item.title}}</label>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </div>
+
+                        <div class="col-md-12" *ngIf="mode === 'edit'">
+                          <div class="float-left">
+                            <a href="javascript:" class="btn-delete"
+                               (click)="switchMode()">
+                              <i class="far fa-trash-alt"></i> Cancel</a>
+                            <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                    (click)="updateData(careerInfoForm, 'career_objective', 'single')">
+                              <app-spinner [name]="'save_btn_spinner'" [type]="'btn'"></app-spinner>
+                              <i class="far fa-edit"></i>Update
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="preferred-areas">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditType( 'personal','preferred_area')">Preferred Areas</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="preferredAreaForm" *ngIf="editType === 'preferred_area'">
+                      <div class="row" [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="col-sm-12">
+                          <ng-container *ngIf="mode === 'view'">
+                            <a href="javascript:" class="btn-edit" (click)="switchMode()"><i
+                              class="far fa-edit"></i>Edit</a>
+                          </ng-container>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Preferred Job Categories <sup class="text-danger">*</sup></label>
+                            <small class="d-block mb-3"><i>Preferred job categories represents your desired sector(s) to
+                              work <b>(at least 1 category any of section)</b></i></small>
+                          </div>
+                        </div>
+                        <div class="col-sm-12" style="height: 300px;overflow: auto;margin-bottom: 10px;">
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label>Functional (max {{limit.max_preferred_job_cat_fun}})</label>
+                                <div>
+                                  <div class="form-check" *ngFor="let item of initialData.job_categories_functional">
+                                    <input type="checkbox" [value]="item.id" id="fun_{{item.id}}"
+                                           [checked]="this.preferredJobCategoriesFunctional.value.includes(item.id)"
+                                           [disabled]="mode === 'view' || item.disabled"
+                                           (change)="onChangeFnJobCategories($event)"
+                                           class="form-check-input">
+                                    <label class="form-check-label" for="fun_{{item.id}}">{{item.title_en}}</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label>Special Skills (max {{limit.max_preferred_job_special_skill}})</label>
+                                <div>
+                                  <div class="form-check" *ngFor="let item of initialData.job_categories_special_skill">
+                                    <input type="checkbox" [value]="item.id" id="special_{{item.id}}"
+                                           [checked]="this.preferredJobCategoriesSpecialSkill.value.includes(item.id)"
+                                           [disabled]="mode === 'view' || item.disabled"
+                                           (change)="onChangeSpecialSkillJobCategories($event)"
+                                           class="form-check-input">
+                                    <label class="form-check-label" for="special_{{item.id}}">{{item.title_en}}</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Preferred Job Location <sup class="text-danger">*</sup></label>
+                            <small class="d-block mb-3"><i>Preferred Job Location defines the <b>geographical place</b>
+                              where you prefer to work.</i></small>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Inside Bangladesh: Districts (max {{limit.max_preferred_job_loc_in}})</label>
+                            <ng-multiselect-dropdown
+                              [ngClass]="modeClass"
+                              formControlName="preferred_areas"
+                              [placeholder]="'Add district'"
+                              [settings]=" {
+                                singleSelection: false,
+                                idField: 'id',
+                                textField: 'title',
+                                selectAllText: 'Select All',
+                                unSelectAllText: 'UnSelect All',
+                                itemsShowLimit: limit.max_preferred_job_loc_in,
+                                limitSelection: limit.max_preferred_job_loc_in,
+                                allowSearchFilter: true
+                              }"
+                              [data]="this.initialData.districts">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Outside Bangladesh: Countries (max {{limit.max_preferred_job_loc_out}})</label>
+                            <ng-multiselect-dropdown
+                              [ngClass]="modeClass"
+                              formControlName="preferred_countries"
+                              [placeholder]="'Add country'"
+                              [settings]=" {
+                                singleSelection: false,
+                                idField: 'id',
+                                textField: 'title_en',
+                                enableCheckAll: false,
+                                itemsShowLimit: limit.max_preferred_job_loc_out,
+                                limitSelection: limit.max_preferred_job_loc_out,
+                                allowSearchFilter: true
+                              }"
+                              [data]="this.initialData.areas_outside_bd"
+                            >
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label>Add your preferred organization type (max {{limit.max_preferred_org_types}})</label>
+                            <ng-multiselect-dropdown
+                              [ngClass]="modeClass"
+                              formControlName="preferred_org_types"
+                              [placeholder]="'Add Organization'"
+                              [settings]="{
+                                singleSelection: false,
+                                idField: 'id',
+                                textField: 'title_en',
+                                enableCheckAll: false,
+                                itemsShowLimit: limit.max_preferred_org_types,
+                                limitSelection: limit.max_preferred_org_types,
+                                allowSearchFilter: true
+                              }"
+                              [data]="this.initialData.industry_types"
+                            >
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+
+                        <div class="col-md-12" *ngIf="mode === 'edit'">
+                          <div class="float-left">
+                            <a href="javascript:" class="btn-delete"
+                               (click)="switchMode()">
+                              <i class="far fa-trash-alt"></i> Cancel</a>
+                            <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                    (click)="updateData(preferredAreaForm, 'preferred_area', 'single')">
+                              <app-spinner [name]="'save_btn_spinner'" [type]="'btn'"></app-spinner>
+                              <i class="far fa-edit"></i>Update
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+                    </form>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="other-relevant-information">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditType( 'personal','other')">Other Relevant Information</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="otherInfoForm" *ngIf="editType === 'other'">
+                      <div class="row" [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="col-sm-12">
+                          <ng-container *ngIf="mode === 'view'">
+                            <a href="javascript:" class="btn-edit" (click)="switchMode()"><i
+                              class="far fa-edit"></i>Edit</a>
+                          </ng-container>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="careerSummary">Career Summary</label>
+                            <textarea formControlName="career_summary" class="form-control" [ngClass]="modeClass"
+                                      id="careerSummary" rows="3"
+                                      aria-describedby="objectiveHelp"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="specialQualification">Special Qualification</label>
+                            <textarea formControlName="specialization" class="form-control" [ngClass]="modeClass"
+                                      id="specialQualification" rows="3" aria-describedby="objectiveHelp"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="specialQualification">Keywords <sup class="text-danger">*</sup></label>
+                            <input formControlName="keywords" class="form-control form-control-sm" [ngClass]="modeClass"
+                                   type="text">
+                            <div appInvalidMessage="keywords" *ngIf="mode === 'edit'">
+                              <small class="text-danger" *appInvalidType="'required'">Keywords is required</small>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-12" *ngIf="mode === 'edit'">
+                          <div class="float-left">
+                            <a href="javascript:" class="btn-delete"
+                               (click)="switchMode()">
+                              <i class="far fa-trash-alt"></i> Cancel</a>
+                            <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                    (click)="updateData(otherInfoForm, 'other', 'single')">
+                              <app-spinner [name]="'save_btn_spinner'" [type]="'btn'"></app-spinner>
+                              <i class="far fa-edit"></i>Update
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+                    </form>
+                  </ng-template>
+                </ngb-panel>
+                <!--                <ngb-panel id="disability-information">-->
+                <!--                  <ng-template ngbPanelTitle>-->
+                <!--                    <h6 class="m-0">Disability Information (Under development)</h6>-->
+                <!--                  </ng-template>-->
+                <!--                  <ng-template ngbPanelContent>-->
+                <!--                    <form>-->
+                <!--                      <div class="row">-->
+                <!--                        <div class="col-sm-12">-->
+                <!--                          <a href="javascript:" class="btn-edit"><i class="far fa-edit"></i> Edit</a>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-6">-->
+                <!--                          <div class="form-group">-->
+                <!--                            <label for="difficultyToSee">Difficulty to See</label>-->
+                <!--                            <select class="form-control form-control-sm" id="difficultyToSee">-->
+                <!--                              <option value="-1" selected="selected">Select</option>-->
+                <!--                              <option value="Can not do at all">Can not do at all</option>-->
+                <!--                              <option value="Yes - a lot of difficulty">Yes - a lot of difficulty</option>-->
+                <!--                              <option value="Yes - some difficulty">Yes - some difficulty</option>-->
+                <!--                            </select>-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-6">-->
+                <!--                          <div class="form-group">-->
+                <!--                            <label for="difficultyToHear">Difficulty to Hear</label>-->
+                <!--                            <select class="form-control form-control-sm" id="difficultyToHear">-->
+                <!--                              <option value="-1" selected="">Select</option>-->
+                <!--                              <option value="Can not do at all">Can not do at all</option>-->
+                <!--                              <option value="Yes - a lot of difficulty">Yes - a lot of difficulty</option>-->
+                <!--                              <option value="Yes - some difficulty">Yes - some difficulty</option>-->
+                <!--                            </select>-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-6">-->
+                <!--                          <div class="form-group">-->
+                <!--                            <label for="difficultyToConcentrate">Difficulty to Concentrate or remember</label>-->
+                <!--                            <select class="form-control form-control-sm" id="difficultyToConcentrate">-->
+                <!--                              <option value="-1" selected="">Select</option>-->
+                <!--                              <option value="Can not do at all">Can not do at all</option>-->
+                <!--                              <option value="Yes - a lot of difficulty">Yes - a lot of difficulty</option>-->
+                <!--                              <option value="Yes - some difficulty">Yes - some difficulty</option>-->
+                <!--                            </select>-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-6">-->
+                <!--                          <div class="form-group">-->
+                <!--                            <label for="difficultyToSitStandWalkClimb">Difficulty to Sit, Stand, Walk or Climb-->
+                <!--                              Stairs</label>-->
+                <!--                            <select class="form-control form-control-sm" id="difficultyToSitStandWalkClimb">-->
+                <!--                              <option value="-1" selected="">Select</option>-->
+                <!--                              <option value="Can not do at all">Can not do at all</option>-->
+                <!--                              <option value="Yes - a lot of difficulty">Yes - a lot of difficulty</option>-->
+                <!--                              <option value="Yes - some difficulty">Yes - some difficulty</option>-->
+                <!--                            </select>-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-6">-->
+                <!--                          <div class="form-group">-->
+                <!--                            <label for="difficultyToCommunicate">Difficulty to Communicate</label>-->
+                <!--                            <select class="form-control form-control-sm" id="difficultyToCommunicate">-->
+                <!--                              <option value="-1" selected="">Select</option>-->
+                <!--                              <option value="Can not do at all">Can not do at all</option>-->
+                <!--                              <option value="Yes - a lot of difficulty">Yes - a lot of difficulty</option>-->
+                <!--                              <option value="Yes - some difficulty">Yes - some difficulty</option>-->
+                <!--                            </select>-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-6">-->
+                <!--                          <div class="form-group">-->
+                <!--                            <label for="difficultyOfTakingCare">Difficulty of Taking Care (example: shower, wearing-->
+                <!--                              clothes)</label>-->
+                <!--                            <select class="form-control form-control-sm" id="difficultyOfTakingCare">-->
+                <!--                              <option value="-1" selected="">Select</option>-->
+                <!--                              <option value="Can not do at all">Can not do at all</option>-->
+                <!--                              <option value="Yes - a lot of difficulty">Yes - a lot of difficulty</option>-->
+                <!--                              <option value="Yes - some difficulty">Yes - some difficulty</option>-->
+                <!--                            </select>-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-6">-->
+                <!--                          <div class="form-group">-->
+                <!--                            <label for="disabilityID">Disability ID</label>-->
+                <!--                            <input class="form-control form-control-sm" type="text" id="disabilityID">-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-6">-->
+                <!--                          <div class="form-group">-->
+                <!--                            <label>Show on Resume</label>-->
+                <!--                            <div class="custom-control custom-switch">-->
+                <!--                              <input type="checkbox" class="custom-control-input" id="customSwitch1">-->
+                <!--                              <label class="custom-control-label" for="customSwitch1">Yes or No</label>-->
+                <!--                            </div>-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                        <div class="col-sm-12">-->
+                <!--                          <div class="text-right">-->
+                <!--                            <button type="button" class="btn btn-success mr-3">Save</button>-->
+                <!--                            <button type="button" class="btn btn-light">Close</button>-->
+                <!--                          </div>-->
+                <!--                        </div>-->
+                <!--                      </div>-->
+                <!--                    </form>-->
+                <!--                  </ng-template>-->
+                <!--                </ngb-panel>-->
+              </ngb-accordion>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-container [ngbNavItem]="'education_training'">
+          <a ngbNavLink [class.active]="editOption === 'education_training'"
+             (click)="resetEditOption('education_training', 'academic')">
+            <i class="fas fa-graduation-cap"></i>
+            <p class="mb-0">Education/Training</p>
+          </a>
+          <ng-template ngbNavContent *ngIf="editOption === 'education_training'">
+            <div class="document-info-wrapper">
+              <ngb-accordion [closeOthers]="true" activeIds="educationTraining">
+                <ngb-panel id="educationTraining">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditOption('education_training', 'academic')">Education/Training</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="educationForm" *ngIf="editType === 'academic'" #educationNgForm="ngForm">
+                      <div [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="row mb-3" formArrayName="educations"
+                             *ngFor="let item of educations.controls; let i=index">
+
+                          <ng-container [formGroupName]="i">
+                            <div class="col-sm-12">
+                              <ng-container *ngIf="item.get('mode')?.value === 'view';">
+                                <a href="javascript:" class="btn-delete" (click)="deleteEducation(item, i)"><i
+                                  class="far fa-trash-alt"></i> Delete</a>
+                                <a href="javascript:" class="btn-edit"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-edit"></i>Edit</a>
+                              </ng-container>
+                            </div>
+
+                            <div class="col-sm-12">
+                              <h6 class="mb-3">Academic {{i + 1}}</h6>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <div class="form-group mb-0">
+                                <label for="edu_level{{i}}">Level of Education <sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="edu_level{{i}}"
+                                        formControlName="education_level_id" [ngClass]="item.get('mode_class')?.value">
+                                  <option value="">Select Option</option>
+                                  <option *ngFor="let item of initialData.education_levels"
+                                          [value]="item.id">{{item.title}}</option>
+                                </select>
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('education_level_id')?.errors?.required && educationNgForm.submitted">
+                                  Education level is required</small></p>
+                              </div>
+                              <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="hide_mark{{i}}"
+                                       formControlName="hide_mark" [ngClass]="item.get('mode_class')?.value">
+                                <label class="form-check-label" for="hide_mark{{i}}">Show this degree in summary view at
+                                  employer's end</label>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <div class="row">
+                                <div class="w50 rm-group">
+                                  <label for="result{{i}}">Result <sup class="text-danger">*</sup></label>
+                                  <select class="form-control form-control-sm" id="result{{i}}"
+                                          formControlName="result_type_id" [ngClass]="item.get('mode_class')?.value">
+                                    <option value="">Select</option>
+                                    <option *ngFor="let item of initialData.result_types"
+                                            [value]="item.id">{{item.title}}</option>
+                                  </select>
+                                  <p><small class="text-danger"
+                                            *ngIf="item.get('result_type_id')?.errors?.required && educationNgForm.submitted">
+                                    Result type is required</small></p>
+                                </div>
+
+                                <div class="w50 form-group ml-3">
+                                  <label for="cgpa{{i}}">CGPA <sup class="text-danger">*</sup></label>
+                                  <input type="number" class="form-control form-control-sm" id="cgpa{{i}}"
+                                         formControlName="cgpa" [ngClass]="item.get('mode_class')?.value"/>
+
+                                  <p><small class="text-danger"
+                                            *ngIf="item.get('cgpa')?.errors?.required && educationNgForm.submitted">
+                                    CGPA is required</small></p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="degreeTitle{{i}}">Exam/Degree Title <sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="degreeTitle{{i}}"
+                                        formControlName="degree_id" [ngClass]="item.get('mode_class')?.value">
+                                  <option value="">Select Option</option>
+                                  <option *ngFor="let item of initialData.degrees"
+                                          [value]="item.id">{{item.title}}</option>
+                                </select>
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('degree_id')?.errors?.required && educationNgForm.submitted">
+                                  Degree is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="yearOfPassing{{i}}">Year of Passing <sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="yearOfPassing{{i}}"
+                                        formControlName="passing_year" [ngClass]="item.get('mode_class')?.value">
+                                  <option value="">Select</option>
+                                  <option [value]="item.id"
+                                          *ngFor="let item of initialData.passing_years">{{item.title}}</option>
+                                </select>
+
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('passing_year')?.errors?.required && educationNgForm.submitted">
+                                  Passing year is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="major{{i}}">Concentration/ Major/Group</label>
+                                <input class="form-control form-control-sm" type="text" id="major{{i}}"
+                                       formControlName="major" placeholder="Business Studies"
+                                       [ngClass]="item.get('mode_class')?.value">
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="duration{{i}}">Duration <small>(Years)</small></label>
+                                <input class="form-control form-control-sm" type="number" id="duration{{i}}"
+                                       formControlName="duration" placeholder="4"
+                                       [ngClass]="item.get('mode_class')?.value">
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group mb-0">
+                                <label for="instituteName{{i}}">Institute Name <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="instituteName{{i}}"
+                                       formControlName="institute_name" placeholder="Govt. Bangla collage"
+                                       [ngClass]="item.get('mode_class')?.value">
+
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('institute_name')?.errors?.required && educationNgForm.submitted">
+                                  Institute name required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                <label for="achievement{{i}}">Achievement</label>
+                                <input class="form-control form-control-sm" type="text" id="achievement{{i}}"
+                                       formControlName="achievement" [ngClass]="item.get('mode_class')?.value">
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <div class="col-md-12" *ngIf="item.get('mode')?.value !== 'view';">
+                            <div class="float-left">
+                              <ng-container *ngIf="item.get('mode')?.value === 'store'; else elseBlock">
+                                <a href="javascript:" class="btn-delete" (click)="removeEducation(i)"><i
+                                  class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Save
+                                </button>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                <a href="javascript:" class="btn-delete"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Update
+                                </button>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+                    </form>
+
+                    <button type="button" class="btn btn-outline-secondary mt-3" (click)="addNewEducation()">
+                      <i class="fas fa-plus"></i> Add Education (If Required)
+                    </button>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="trainingSummary">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditOption('education_training', 'training')">Training Summary</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="trainingForm" *ngIf="editType === 'training'" #trainingNgForm="ngForm">
+                      <div [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="row mb-3" formArrayName="trainings"
+                             *ngFor="let item of trainings.controls; let i=index">
+
+                          <ng-container [formGroupName]="i">
+                            <div class="col-sm-12">
+                              <ng-container *ngIf="item.get('mode')?.value === 'view'">
+                                <a href="javascript:" class="btn-delete" (click)="deleteTraining(item, i)"><i
+                                  class="far fa-trash-alt"></i> Delete</a>
+                                <a href="javascript:" class="btn-edit"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-edit"></i>Edit</a>
+                              </ng-container>
+                            </div>
+
+                            <div class="col-sm-12">
+                              <h6 class="mb-3">Training {{i + 1}}</h6>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group mb-0">
+                                <label for="title{{i}}">Training Title <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="title{{i}}"
+                                       formControlName="title" [ngClass]="item.get('mode_class')?.value"
+                                       placeholder="Certified User Experience Designer (CUXD)">
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('title')?.errors?.required && trainingNgForm.submitted">
+                                  Training title required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="country_id{{i}}">Country <sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="country_id{{i}}"
+                                        [ngClass]="item.get('mode_class')?.value" formControlName="country_id">
+                                  <option value="">Select Category</option>
+                                  <option [value]="item.id"
+                                          *ngFor="let item of initialData.countries">{{item.title}}</option>
+                                </select>
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('country_id')?.errors?.required && trainingNgForm.submitted">
+                                  Country is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="topic{{i}}">Topics Covered <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="topic{{i}}"
+                                       formControlName="topic" [ngClass]="item.get('mode_class')?.value"
+                                       placeholder="I successfully did 4 months Certified User Experience Designer (CUXD) course from user hub Institute.">
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('topic')?.errors?.required && trainingNgForm.submitted">
+                                  Topic is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="training_year{{i}}">Training Year <sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="training_year{{i}}"
+                                        [ngClass]="item.get('mode_class')?.value" formControlName="year">
+                                  <option value="">Select Year</option>
+                                  <option [value]="item.id"
+                                          *ngFor="let item of initialData.passing_years">{{item.title}}</option>
+                                </select>
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('year')?.errors?.required && trainingNgForm.submitted">
+                                  Year is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="institute{{i}}">Institute <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="institute{{i}}"
+                                       [ngClass]="item.get('mode_class')?.value"
+                                       placeholder="User hub" formControlName="institute_name">
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('institute_name')?.errors?.required && trainingNgForm.submitted">
+                                  Institute name is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="durationTraining{{i}}">Duration <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="durationTraining{{i}}"
+                                       placeholder="6 months" formControlName="duration"
+                                       [ngClass]="item.get('mode_class')?.value">
+
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('duration')?.errors?.required && trainingNgForm.submitted">
+                                  Duration is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="address{{i}}">Location <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="address{{i}}"
+                                       placeholder="72/A, Tejkunipara, Tejgaon, Dhaka 1215, Bangladesh"
+                                       formControlName="address" [ngClass]="item.get('mode_class')?.value">
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('address')?.errors?.required && trainingNgForm.submitted">
+                                  Location is required</small></p>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <div class="col-md-12" *ngIf="item.get('mode')?.value !== 'view';">
+                            <div class="float-left">
+                              <ng-container *ngIf="item.get('mode')?.value === 'store'; else elseBlock">
+                                <a href="javascript:" class="btn-delete" (click)="removeTraining(i)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Save
+                                </button>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                <a href="javascript:" class="btn-delete"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Update
+                                </button>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+
+                    <button type="button" class="btn btn-outline-secondary mt-3" (click)="addNewTraining()">
+                      <i class="fas fa-plus"></i> Add Training (If Required)
+                    </button>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="professionalCertificationSummary">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditOption('education_training', 'certification')">Professional
+                      Certification Summary</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="certificateForm" *ngIf="editType === 'certification'"
+                          #certificateNgForm="ngForm">
+                      <div [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="row mb-3" formArrayName="certificates"
+                             *ngFor="let item of certificates.controls; let i=index">
+                          <ng-container [formGroupName]="i">
+                            <div class="col-sm-12">
+                              <ng-container *ngIf="item.get('mode')?.value === 'view';">
+                                <a href="javascript:" class="btn-delete" (click)="deleteCertificate(item, i)"><i
+                                  class="far fa-trash-alt"></i> Delete</a>
+                                <a href="javascript:" class="btn-edit"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-edit"></i>Edit</a>
+                              </ng-container>
+                            </div>
+                            <div class="col-sm-12">
+                              <h6 class="mb-3">Professional Qualification {{i + 1}}</h6>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group mb-0">
+                                <label for="c_title">Certification <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="c_title"
+                                       formControlName="title" [ngClass]="item.get('mode_class')?.value">
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('title')?.errors?.required && certificateNgForm.submitted">
+                                  Certificate title is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="c_address">Location</label>
+                                <input class="form-control form-control-sm" type="text" id="c_address"
+                                       formControlName="address" [ngClass]="item.get('mode_class')?.value">
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="c_institute">Institute <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="c_institute"
+                                       formControlName="institute_name" [ngClass]="item.get('mode_class')?.value">
+                                <p><small class="text-danger"
+                                          *ngIf="item.get('institute_name')?.errors?.required && certificateNgForm.submitted">
+                                  Institute name is required</small></p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label>Duration <sup class="text-danger">*</sup></label>
+                                <div class="d-flex align-items-center justify-content-between">
+                                  <input class="form-control form-control-sm" style="width: 45%" type="date"
+                                         formControlName="from" [ngClass]="item.get('mode_class')?.value">
+                                  <p><small class="text-danger"
+                                            *ngIf="item.get('from')?.errors?.required && certificateNgForm.submitted">
+                                    From date is required</small></p>
+                                  <span> TO </span>
+                                  <input class="form-control form-control-sm" style="width: 45%" type="date"
+                                         formControlName="to" [ngClass]="item.get('mode_class')?.value">
+                                  <p><small class="text-danger"
+                                            *ngIf="item.get('to')?.errors?.required && certificateNgForm.submitted">
+                                    To date is required</small></p>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <div class="col-md-12" *ngIf="item.get('mode')?.value !== 'view';">
+                            <div class="float-left">
+                              <ng-container *ngIf="item.get('mode')?.value === 'store'; else elseBlock">
+                                <a href="javascript:" class="btn-delete" (click)="removeCertificate(i)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Save
+                                </button>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                <a href="javascript:" class="btn-delete"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Update
+                                </button>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+                    </form>
+
+                    <div class="text-center">
+                      <button type="button" class="btn btn-outline-secondary mt-3" (click)="addNewCertificate()">
+                        <i class="fas fa-plus"></i> Add Professional Qualification
+                      </button>
+                    </div>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-container [ngbNavItem]="'employment'">
+          <a ngbNavLink [class.active]="editOption === 'employment'"
+             (click)="resetEditOption('employment', 'employment_history')">
+            <i class="fas fa-briefcase"></i>
+            <p class="mb-0">Employment</p>
+          </a>
+          <ng-template ngbNavContent *ngIf="editOption === 'employment'">
+            <div class="document-info-wrapper">
+              <ngb-accordion [closeOthers]="true" activeIds="employmentHistory">
+                <ngb-panel id="employmentHistory">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0">Employment History</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="employmentForm" *ngIf="editType === 'employment_history'"
+                          #employmentNgForm="ngForm">
+                      <div class="row mb-3" formArrayName="experiences"
+                           *ngFor="let item of experiences.controls; let i=index">
+                        <ng-container [formGroupName]="i">
+                          <div class="col-sm-12">
+                            <ng-container *ngIf="item.get('mode')?.value === 'view'">
+                              <a href="javascript:" class="btn-delete" (click)="deleteExperience(item, i)"><i
+                                class="far fa-trash-alt"></i> Delete</a>
+                              <a href="javascript:" class="btn-edit"
+                                 (click)="switchArrayMode(item)">
+                                <i class="far fa-edit"></i>Edit</a>
+                            </ng-container>
+                          </div>
+
+                          <div class="col-sm-12">
+                            <h6 class="mb-3">Experience {{i + 1}}</h6>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="companyName">Company Name <sup class="text-danger">*</sup></label>
+                              <input formControlName="company_name" class="form-control form-control-sm"
+                                     [ngClass]="item.get('mode_class')?.value" type="text" id="companyName">
+                              <p *ngIf="employmentNgForm.submitted">
+                                <small class="text-danger" *ngIf="item.get('company_name')?.errors?.required">
+                                  Company name is required
+                                </small>
+                              </p>
+                            </div>
+                            <div class="form-group">
+                              <label>Company Business <sup class="text-danger">*</sup></label>
+                              <select formControlName="industry_type_id" class="form-control form-control-sm"
+                                      [ngClass]="item.get('mode_class')?.value">
+                                <option value="">Select Option</option>
+                                <option [value]="item.id"
+                                        *ngFor="let item of initialData.industry_types">{{item.title_en}}</option>
+                              </select>
+                              <p *ngIf="employmentNgForm.submitted">
+                                <small class="text-danger" *ngIf="item.get('industry_type_id')?.errors?.required">
+                                  Business type is required
+                                </small>
+                              </p>
+                            </div>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="responsibilities">Responsibilities</label>
+                              <textarea formControlName="responsibilities" class="form-control"
+                                        [ngClass]="item.get('mode_class')?.value" id="responsibilities"
+                                        rows="3"></textarea>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="designation_{{i}}">Designation <sup class="text-danger">*</sup></label>
+                              <input formControlName="designation" class="form-control form-control-sm"
+                                     [ngClass]="item.get('mode_class')?.value" type="text" id="designation_{{i}}">
+                              <p *ngIf="employmentNgForm.submitted">
+                                <small class="text-danger" *ngIf="item.get('designation')?.errors?.required">
+                                  Designation is required
+                                </small>
+                              </p>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="companyLocation{{i}}">Company Location</label>
+                              <input formControlName="address" class="form-control form-control-sm"
+                                     [ngClass]="item.get('mode_class')?.value" type="text"
+                                     id="companyLocation{{i}}">
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="department{{i}}">Department</label>
+                              <input formControlName="department" class="form-control form-control-sm"
+                                     [ngClass]="item.get('mode_class')?.value" type="text"
+                                     id="department{{i}}">
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group mb-0">
+                              <label>Employment Period <sup class="text-danger">*</sup></label>
+                              <div class="d-flex align-items-center justify-content-between">
+                                <input formControlName="from" class="form-control form-control-sm"
+                                       [ngClass]="item.get('mode_class')?.value" style="width: 45%"
+                                       type="date">
+                                <span> TO </span>
+                                <input formControlName="to" class="form-control form-control-sm"
+                                       [ngClass]="item.get('mode_class')?.value" style="width: 45%" type="date">
+                              </div>
+                              <p *ngIf="employmentNgForm.submitted">
+                                <small class="text-danger" *ngIf="item.get('from')?.errors?.required">
+                                  From date is required
+                                </small>
+                              </p>
+                            </div>
+                            <div class="form-group form-check mb-0">
+                              <input formControlName="is_current" type="checkbox" class="form-check-input"
+                                     [ngClass]="item.get('mode_class')?.value"
+                                     id="currentlyWorking{{i}}">
+                              <label class="form-check-label" for="currentlyWorking{{i}}">Currently Working</label>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <label>
+                                Area of Experiences <sup class="text-danger">*</sup>
+                                <small class="d-block">Add your expertise skill (max 3)</small>
+                              </label>
+                              <ng-multiselect-dropdown
+                                formControlName="experience_skills"
+                                [ngClass]="item.get('mode_class')?.value"
+                                [placeholder]="'expertise skill...'"
+                                [settings]="dropdownSettings"
+                                [data]="initialData.skills">
+                              </ng-multiselect-dropdown>
+
+                              <p *ngIf="employmentNgForm.submitted">
+                                <small class="text-danger" *ngIf="item.get('experience_skills')?.errors?.required">
+                                  Area of experience is required
+                                </small>
+                              </p>
+                            </div>
+                          </div>
+                        </ng-container>
+
+                        <div class="col-md-12" *ngIf="item.get('mode')?.value !== 'view'">
+                          <div class="float-left">
+                            <ng-container *ngIf="item.get('mode')?.value === 'store'; else elseBlock">
+                              <a href="javascript:" class="btn-delete" (click)="removeExperience(i)">
+                                <i class="far fa-trash-alt"></i> Cancel</a>
+                              <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                      (click)="updateData(item)">
+                                <i class="far fa-edit"></i>Save
+                              </button>
+                            </ng-container>
+                            <ng-template #elseBlock>
+                              <a href="javascript:" class="btn-delete"
+                                 (click)="switchArrayMode(item)">
+                                <i class="far fa-trash-alt"></i> Cancel</a>
+                              <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                      (click)="updateData(item)">
+                                <i class="far fa-edit"></i>Update
+                              </button>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+
+                    <button type="button" class="btn btn-outline-secondary mt-3" (click)="addNewExperience()">
+                      <i class="fas fa-plus"></i> Add Experience (If Required)
+                    </button>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-container [ngbNavItem]="'specialization'">
+          <a ngbNavLink [class.active]="editOption === 'specialization'"
+             (click)="resetEditOption('specialization', 'specialization')">
+            <i class="fas fa-info-circle"></i>
+            <p class="mb-0">Other Information</p>
+          </a>
+          <ng-template ngbNavContent *ngIf="editOption === 'specialization'">
+            <div class="document-info-wrapper">
+              <ngb-accordion [closeOthers]="true" activeIds="specialization">
+                <ngb-panel id="specialization">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditOption('specialization', 'specialization')">Specialization</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="specializationForm" *ngIf="editType === 'specialization'"
+                          #specializationNgForm="ngForm">
+                      <div [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="row mb-3" formArrayName="skills" *ngFor="let item of skills.controls; let i=index">
+                          <ng-container [formGroupName]="i">
+                            <div class="col-sm-12">
+                              <ng-container *ngIf="item.get('mode')?.value === 'view'; else elseBlock">
+                                <a href="javascript:" class="btn-delete" (click)="deleteSkill(i)">
+                                  <i class="far fa-trash-alt"></i> Delete</a>
+                                <a href="javascript:" class="btn-edit"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-edit"></i>Edit</a>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                <ng-container *ngIf="item.get('mode')?.value === 'store'; else elseBlock">
+                                  <a href="javascript:" class="btn-delete" (click)="removeSkill(i)">
+                                    <i class="far fa-trash-alt"></i> Cancel</a>
+                                  <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                          (click)="updateData(item)">
+                                    <i class="far fa-edit"></i>Save
+                                  </button>
+                                </ng-container>
+                                <ng-template #elseBlock>
+                                  <a href="javascript:" class="btn-delete"
+                                     (click)="switchArrayMode(item)">
+                                    <i class="far fa-trash-alt"></i> Cancel</a>
+                                  <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                          (click)="updateData(item)">
+                                    <i class="far fa-edit"></i>Update
+                                  </button>
+                                </ng-template>
+                              </ng-template>
+                            </div>
+
+                            <div class="col-sm-12">
+                              <h6 class="mb-3">Skill</h6>
+                            </div>
+
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                <label>
+                                  Area of Experiences <sup class="text-danger">*</sup>
+                                  <small class="d-block">Add your expertise skill</small>
+                                </label>
+                                <ng-multiselect-dropdown
+                                  [ngClass]="item.get('mode_class')?.value"
+                                  formControlName="skill_id"
+                                  [placeholder]="'Add skill'"
+                                  [settings]="dropdownSettings"
+                                  [data]="initialData.skills"
+                                >
+                                </ng-multiselect-dropdown>
+
+                                <p *ngIf="specializationNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('skill_id')?.errors?.required">Skill is
+                                    required</small>
+                                </p>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary mt-3"
+                                (click)="addNewSkill()"
+                                *ngIf="skills.controls.length === 0">
+                          <i class="fas fa-plus"></i> Add Skill
+                        </button>
+                      </div>
+                      <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+                    </form>
+
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="languageProficiency">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditOption('specialization', 'language')">Language Proficiency</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="languageForm" [hidden]="viewForm['active']" *ngIf="editType === 'language'"
+                          #languageNgForm="ngForm">
+                      <div [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="row mb-3" formArrayName="languages"
+                             *ngFor="let item of languages.controls; let i=index">
+                          <ng-container [formGroupName]="i">
+                            <div class="col-sm-12">
+                              <ng-container *ngIf="item.get('mode')?.value === 'view';">
+                                <a href="javascript:" class="btn-delete" (click)="deleteLanguage(item, i)">
+                                  <i class="far fa-trash-alt"></i> Delete</a>
+                                <a href="javascript:" class="btn-edit"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-edit"></i>Edit</a>
+                              </ng-container>
+                            </div>
+
+                            <div class="col-sm-12">
+                              <h6 class="mb-3">Language {{i + 1}}</h6>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="language{{i}}">Language <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" [ngClass]="item.get('mode_class')?.value"
+                                       formControlName="title" type="text" id="language{{i}}">
+                                <p *ngIf="languageNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('title')?.errors?.required">Language name
+                                    is required</small>
+                                </p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="reading{{i}}">Reading <sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="reading{{i}}"
+                                        formControlName="reading_skill" [ngClass]="item.get('mode_class')?.value">
+                                  <option value="">Select</option>
+                                  <option *ngFor="let item of initialData.language_skill_rates"
+                                          [value]="item.id">{{item.title}}</option>
+                                </select>
+                                <p *ngIf="languageNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('reading_skill')?.errors?.required">Reading
+                                    skill is required</small>
+                                </p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="writing{{i}}">Writing <sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="writing{{i}}"
+                                        formControlName="writing_skill" [ngClass]="item.get('mode_class')?.value">
+                                  <option value="">Select</option>
+                                  <option *ngFor="let item of initialData.language_skill_rates"
+                                          [value]="item.id">{{item.title}}</option>
+                                </select>
+                                <p *ngIf="languageNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('writing_skill')?.errors?.required">Writing
+                                    skill is required</small>
+                                </p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="speaking{{i}}">Speaking <sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="speaking{{i}}"
+                                        formControlName="speaking_skill" [ngClass]="item.get('mode_class')?.value">
+                                  <option value="">Select</option>
+                                  <option *ngFor="let item of initialData.language_skill_rates"
+                                          [value]="item.id">{{item.title}}</option>
+                                </select>
+                                <p *ngIf="languageNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('speaking_skill')?.errors?.required">Speaking
+                                    skill is required</small>
+                                </p>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <div class="col-md-12" *ngIf="item.get('mode')?.value !== 'view';">
+                            <div class="float-left">
+                              <ng-container *ngIf="item.get('mode')?.value === 'store'; else elseBlock">
+                                <a href="javascript:" class="btn-delete" (click)="removeSkill(i)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Save
+                                </button>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                <a href="javascript:" class="btn-delete"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Update
+                                </button>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+
+                    <button type="button" class="btn btn-outline-secondary mt-3" (click)="addNewLanguage()">
+                      <i class="fas fa-plus"></i> Add Language
+                    </button>
+                  </ng-template>
+                </ngb-panel>
+                <ngb-panel id="references">
+                  <ng-template ngbPanelTitle>
+                    <h6 class="m-0" (click)="resetEditOption('specialization', 'references')">References</h6>
+                  </ng-template>
+                  <ng-template ngbPanelContent>
+                    <form [formGroup]="referenceForm" *ngIf="editType === 'references'" #referenceNgForm="ngForm">
+                      <div [hidden]="viewForm['active']" *ngIf="!isLoading">
+                        <div class="row mb-3" formArrayName="references"
+                             *ngFor="let item of references.controls; let i=index">
+                          <ng-container [formGroupName]="i">
+                            <div class="col-sm-12">
+                              <ng-container *ngIf="item.get('mode')?.value === 'view';">
+                                <a href="javascript:" class="btn-delete" (click)="deleteReference(item, i)">
+                                  <i class="far fa-trash-alt"></i> Delete</a>
+                                <a href="javascript:" class="btn-edit"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-edit"></i>Edit</a>
+                              </ng-container>
+                            </div>
+
+                            <div class="col-sm-12">
+                              <h6 class="mb-3">Reference {{i + 1}}</h6>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="name">Name <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" [ngClass]="item.get('mode_class')?.value"
+                                       type="text" id="name" formControlName="name">
+                                <p *ngIf="referenceNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('name')?.errors?.required">Name is
+                                    required</small>
+                                </p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="designation">Designation <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="designation"
+                                       [ngClass]="item.get('mode_class')?.value" formControlName="designation">
+                                <p *ngIf="referenceNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('designation')?.errors?.required">Designation
+                                    is required</small>
+                                </p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="organization">Organization <sup class="text-danger">*</sup></label>
+                                <input class="form-control form-control-sm" type="text" id="organization"
+                                       [ngClass]="item.get('mode_class')?.value" formControlName="organization">
+                                <p *ngIf="referenceNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('organization')?.errors?.required">Organization
+                                    is required</small>
+                                </p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="email">Email</label>
+                                <input class="form-control form-control-sm" type="email" id="email"
+                                       [ngClass]="item.get('mode_class')?.value" formControlName="email">
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="relation">Relation<sup class="text-danger">*</sup></label>
+                                <select class="form-control form-control-sm" id="relation"
+                                        [ngClass]="item.get('mode_class')?.value" formControlName="relation_type">
+                                  <option [value]="null">Select</option>
+                                  <option *ngFor="let item of initialData.relation_types"
+                                          [value]="item.id">{{item.title}}</option>
+                                </select>
+                                <p *ngIf="referenceNgForm.submitted">
+                                  <small class="text-danger" *ngIf="item.get('relation_type')?.errors?.required">Relation
+                                    is required</small>
+                                </p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="mobile">Mobile</label>
+                                <input class="form-control form-control-sm" type="tel" id="mobile"
+                                       [ngClass]="item.get('mode_class')?.value" formControlName="mobile">
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="phoneRes">Phone</label>
+                                <input class="form-control form-control-sm" type="tel" id="phoneRes"
+                                       [ngClass]="item.get('mode_class')?.value" formControlName="phone">
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea class="form-control" id="address" rows="3"
+                                          [ngClass]="item.get('mode_class')?.value"
+                                          formControlName="address"></textarea>
+                              </div>
+                            </div>
+
+                            <!--                            <div class="col-sm-6">-->
+                            <!--                              <div class="form-group">-->
+                            <!--                                <label for="language{{i}}">Language <sup class="text-danger">*</sup></label>-->
+                            <!--                                <input class="form-control form-control-sm" [ngClass]="item.get('mode_class')?.value"-->
+                            <!--                                       formControlName="title"-->
+                            <!--                                       type="text" id="language{{i}}">-->
+                            <!--                              </div>-->
+                            <!--                            </div>-->
+                            <!--                            <div class="col-sm-6">-->
+                            <!--                              <div class="form-group">-->
+                            <!--                                <label for="reading{{i}}">Reading <sup class="text-danger">*</sup></label>-->
+                            <!--                                <select class="form-control form-control-sm" id="reading{{i}}"-->
+                            <!--                                        formControlName="reading_skill" [ngClass]="item.get('mode_class')?.value">-->
+                            <!--                                  <option value="">Select</option>-->
+                            <!--                                  <option *ngFor="let item of initialData.language_skill_rates"-->
+                            <!--                                          [value]="item.id">{{item.title}}</option>-->
+                            <!--                                </select>-->
+                            <!--                              </div>-->
+                            <!--                            </div>-->
+                            <!--                            <div class="col-sm-6">-->
+                            <!--                              <div class="form-group">-->
+                            <!--                                <label for="writing{{i}}">Writing <sup class="text-danger">*</sup></label>-->
+                            <!--                                <select class="form-control form-control-sm" id="writing{{i}}"-->
+                            <!--                                        formControlName="writing_skill" [ngClass]="item.get('mode_class')?.value">-->
+                            <!--                                  <option value="">Select</option>-->
+                            <!--                                  <option *ngFor="let item of initialData.language_skill_rates"-->
+                            <!--                                          [value]="item.id">{{item.title}}</option>-->
+                            <!--                                </select>-->
+                            <!--                              </div>-->
+                            <!--                            </div>-->
+                            <!--                            <div class="col-sm-6">-->
+                            <!--                              <div class="form-group">-->
+                            <!--                                <label for="speaking{{i}}">Speaking <sup class="text-danger">*</sup></label>-->
+                            <!--                                <select class="form-control form-control-sm" id="speaking{{i}}"-->
+                            <!--                                        formControlName="speaking_skill" [ngClass]="item.get('mode_class')?.value">-->
+                            <!--                                  <option value="">Select</option>-->
+                            <!--                                  <option *ngFor="let item of initialData.language_skill_rates"-->
+                            <!--                                          [value]="item.id">{{item.title}}</option>-->
+                            <!--                                </select>-->
+                            <!--                              </div>-->
+                            <!--                            </div>-->
+                          </ng-container>
+
+                          <div class="col-md-12" *ngIf="item.get('mode')?.value !== 'view';">
+                            <div class="float-left">
+                              <ng-container *ngIf="item.get('mode')?.value === 'store'; else elseBlock">
+                                <a href="javascript:" class="btn-delete" (click)="removeReference(i)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Save
+                                </button>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                <a href="javascript:" class="btn-delete"
+                                   (click)="switchArrayMode(item)">
+                                  <i class="far fa-trash-alt"></i> Cancel</a>
+                                <button type="submit" class="btn-edit" [disabled]="submitAttempt"
+                                        (click)="updateData(item)">
+                                  <i class="far fa-edit"></i>Update
+                                </button>
+                              </ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                    <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+
+                    <button type="button" class="btn btn-outline-secondary mt-3" (click)="addNewReference()">
+                      <i class="fas fa-plus"></i> Add Reference
+                    </button>
+                  </ng-template>
+                </ngb-panel>
+              </ngb-accordion>
+            </div>
+          </ng-template>
+        </ng-container>
+
+        <ng-container [ngbNavItem]="'profile_image'">
+          <a ngbNavLink [class.active]="editOption === 'profile_image'"
+             (click)="resetEditOption('profile_image', 'avatar_upload')">
+            <i class="fas fa-camera"></i>
+            <p class="mb-0">Photograph</p>
+          </a>
+
+          <ng-template ngbNavContent *ngIf="editOption === 'profile_image'">
+            <div [hidden]="viewForm['active']" *ngIf="!isLoading">
+              <div class="text-center" style="background: #f7f7f7;padding: 40px" *ngIf="!isLoading">
+                <div *ngIf="resumeData.image; else defaultImageBlock">
+                  <img src="{{ apiUrl + resumeData.image}}" width="152" alt="Avatar">
+
+                  <div class="d-flex align-items-center justify-content-center mt-5">
+                    <button type="button" class="btn btn-success mr-3" (click)="resumeData.image = ''">
+                      <i class="far fa-save"></i> Change Photo
+                    </button>
+                    <button type="button" class="btn btn-danger" (click)="uploadAvatar('', 'remove')">
+                      <i class="far fa-trash-alt"></i> Delete Photo
+                    </button>
+                  </div>
+                </div>
+
+                <ng-template #defaultImageBlock>
+                  <img src="assets/images/avatar.png" width="152" alt="Avatar">
+
+                  <div class="d-flex align-items-center justify-content-center mt-5">
+                    <input #imageInput type="file" accept="image/*">
+
+                    <button type="button" class="btn btn-success" (click)="uploadAvatar(imageInput, 'upload')">
+                      <i class="far fa-save"></i> Upload Photo
+                    </button>
+
+                    <button type="button" class="btn btn-default mr-3" (click)="restoreImage()">
+                      <i class="far fa-refresh"></i> Cancel
+                    </button>
+                  </div>
+                </ng-template>
+
+                <!--              <img src="{{resumeData?.image ? apiUrl + resumeData.image : 'assets/images/avatar.png'}}" width="152"-->
+                <!--                   alt="Avatar">-->
+                <!--              <div class="d-flex align-items-center justify-content-center mt-5">-->
+                <!--                <ng-container *ngIf="avatarActionMode === 'view'">-->
+                <!--                  <button type="button" class="btn btn-success mr-3" (click)="avatarActionMode = 'edit'">-->
+                <!--                    <i class="far fa-save"></i> Change Photo-->
+                <!--                  </button>-->
+                <!--                  <button type="button" class="btn btn-danger" (click)="uploadAvatar('')">-->
+                <!--                    <i class="far fa-trash-alt"></i> Delete Photo-->
+                <!--                  </button>-->
+                <!--                </ng-container>-->
+
+
+                <!--                <ng-container *ngIf="avatarActionMode === 'edit'">-->
+                <!--                  <div style="display: block">-->
+                <!--                    <input #imageInput type="file" accept="image/*">-->
+                <!--                  </div>-->
+
+                <!--                  <button type="button" class="btn btn-success mr-3" (click)="uploadAvatar(imageInput)">-->
+                <!--                    <i class="far fa-save"></i> Upload Photo-->
+                <!--                  </button>-->
+                <!--                  <button type="button" class="btn btn-danger" (click)="avatarActionMode = 'view'"><i-->
+                <!--                    class="far fa-trash-alt"></i> Cancel-->
+                <!--                  </button>-->
+                <!--                </ng-container>-->
+                <!--              </div>-->
+              </div>
+            </div>
+            <app-spinner [name]="'view_form_spinner'" #viewForm></app-spinner>
+          </ng-template>
+        </ng-container>
+      </nav>
+
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,151 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="page-title mb-0"><i class="fas fa-fill-drip"></i> Applicant Process</h6>
+</div>
+
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="upload-resume-wrapper">
+      <div [hidden]="summaryRef['active']" *ngIf="!isLoading">
+        <div class="row">
+          <div class="col-sm-6">
+            <h5 class="mb-4">{{post.title}}</h5>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                <tr>
+                  <th class="text-left">Job status</th>
+                  <th class="text-left">Job type</th>
+                  <th class="text-left">Posted on</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td><p class="badge badge-info">{{post.status.title}}</p></td>
+                  <td>{{post.type?.title}}</td>
+                  <td>{{post.created_at | date: 'mediumDate'}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="applicant-share-wrapper">
+              <ul class="list-group list-group-horizontal-xl">
+                <li class="list-group-item">
+                  <a href="javascript:" class="text-black-50" routerLink="/company/job-posting-board"
+                     [queryParams]="{step: 'primary_job_info', id: post.id, action_type: 'edit'}">
+                    <i class="far fa-edit"></i>Edit
+                  </a>
+                </li>
+                <li class="list-group-item">
+                  <a href="javascript:" class="text-black-50" (click)="repost(post)">
+                    <app-spinner [name]="'repost_action_spinner'" [type]="'btn'"></app-spinner>
+                    <i class="far fa-share-square"></i> Repost</a>
+                </li>
+
+                <li class="list-group-item" ngbDropdown display="dynamic">
+                  <a href="javascript:" class="text-black-50" tabindex="0" ngbDropdownToggle id="quick-link"
+                     role="button">
+                    <i class="fas fa-share-alt"></i> Share
+                  </a>
+                  <div ngbDropdownMenu aria-labelledby="quick-link" class="dropdown-menu">
+                    <div ngbDropdownItem>
+                      <input type="text" readonly [value]="apiUrl + '/job-list/' + post.id + '/details'"
+                             #inputTarget/>
+                      <button [ngxClipboard]="inputTarget" (click)="copy(inputTarget.value)">Copy!</button>
+                    </div>
+                    <!--                  <a ngbDropdownItem href="javascript:">Deadline Tomorrow</a>-->
+                    <!--                  <a ngbDropdownItem href="javascript:">Part Time</a>-->
+                    <!--                  <a ngbDropdownItem href="javascript:">Contractual</a>-->
+                    <!--                  <a ngbDropdownItem href="javascript:">Government</a>-->
+                    <!--                  <a ngbDropdownItem href="javascript:">Location Wise</a>-->
+                  </div>
+                </li>
+              </ul>
+              <div class="table-responsive">
+                <table class="table table-sm text-center">
+                  <thead>
+                  <tr>
+                    <th><i class="fas fa-search"></i></th>
+                    <th><i class="fas fa-vote-yea"></i></th>
+                    <th><i class="fas fa-copy"></i></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>
+                      <small>SEARCH VIEW</small>
+                      <h5>{{post.search_view_count}}</h5>
+                    </td>
+                    <td>
+                      <small>DETAILED VIEW</small>
+                      <h5>{{post.detail_view_count}}</h5>
+                    </td>
+                    <td>
+                      <small>APPLICATION</small>
+                      <h5>{{post.total_applicants}}</h5>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-spinner [name]="'job_summary_spinner'" #summaryRef [height]="165"></app-spinner>
+
+      <div class="row">
+        <div class="col">
+          <nav ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="selectedOption">
+            <ng-container [ngbNavItem]="'preview'">
+              <a ngbNavLink [class.active]="selectedOption === 'preview'" (click)="onChangeOption('preview')">
+                <i class="far fa-file-pdf"></i> Job Preview
+              </a>
+              <ng-template ngbNavContent *ngIf="selectedOption === 'preview'">
+                <div class="" [hidden]="contentSpinnerRef['active']" *ngIf="selectedOption === 'preview' && !isLoading">
+                  <app-job-preview [data]="previewData"></app-job-preview>
+                </div>
+                <app-spinner [name]="'content_spinner'" #contentSpinnerRef></app-spinner>
+              </ng-template>
+            </ng-container>
+
+            <ng-container [ngbNavItem]="'applicants'">
+              <a ngbNavLink [class.active]="selectedOption === 'applicants'" (click)="onChangeOption('applicants')">
+                <i class="fas fa-users"></i> Applicants
+                <span *ngIf="!isLoading">({{post.total_applicants}})</span>
+              </a>
+              <ng-template ngbNavContent *ngIf="selectedOption === 'applicants'">
+                <div class="" [hidden]="contentSpinnerRef['active']" *ngIf="selectedOption === 'applicants'">
+                  <app-applicants></app-applicants>
+                </div>
+                <app-spinner [name]="'content_spinner'" #contentSpinnerRef></app-spinner>
+              </ng-template>
+            </ng-container>
+
+            <!--            <ng-container ngbNavItem>-->
+            <!--              <a ngbNavLink><i class="fas fa-clipboard-list"></i> Job Summary</a>-->
+            <!--              <ng-template ngbNavContent>-->
+            <!--                <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko-->
+            <!--                  farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip-->
+            <!--                  jean shorts-->
+            <!--                  ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.-->
+            <!--                  Keytar-->
+            <!--                  helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes-->
+            <!--                  anderson-->
+            <!--                  8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party-->
+            <!--                  scenester-->
+            <!--                  stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>-->
+            <!--              </ng-template>-->
+            <!--            </ng-container>-->
+          </nav>
+
+          <div [ngbNavOutlet]="nav"></div>
+
+          <!--          <app-spinner [name]="'content_spinner'" #contentRef></app-spinner>-->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

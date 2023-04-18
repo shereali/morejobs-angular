@@ -1,0 +1,146 @@
+<h6 class="page-title"><i class="fas fa-clipboard-list"></i> Company List</h6>
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="upload-resume-wrapper">
+      <div class="row">
+        <div class="col">
+          <div class="table-top mt-0">
+            <div>
+              <h6><span class="badge badge-success">{{totalRecord}}</span> employers offer jobs </h6>
+              <small>Please click at the company name to view offering jobs</small>
+            </div>
+            <div class="pagination-wrapper mt-0">
+              <!--              <ngb-pagination [collectionSize]="120" [(page)]="page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"-->
+              <!--                              size="sm"></ngb-pagination>-->
+            </div>
+          </div>
+          <div class="filter-wrapper">
+            <div class="row">
+              <div class="col">
+                <ul class="employer-offer-filter">
+                  <li><a href="javascript:" class="active">A</a></li>
+                  <li><a href="javascript:">B</a></li>
+                  <li><a href="javascript:">C</a></li>
+                  <li><a href="javascript:">D</a></li>
+                  <li><a href="javascript:">E</a></li>
+                  <li><a href="javascript:">F</a></li>
+                  <li><a href="javascript:">G</a></li>
+                  <li><a href="javascript:">H</a></li>
+                  <li><a href="javascript:">I</a></li>
+                  <li><a href="javascript:">J</a></li>
+                  <li><a href="javascript:">K</a></li>
+                  <li><a href="javascript:">L</a></li>
+                  <li><a href="javascript:">M</a></li>
+                  <li><a href="javascript:">N</a></li>
+                  <li><a href="javascript:">O</a></li>
+                  <li><a href="javascript:">P</a></li>
+                  <li><a href="javascript:">Q</a></li>
+                  <li><a href="javascript:">R</a></li>
+                  <li><a href="javascript:">S</a></li>
+                  <li><a href="javascript:">T</a></li>
+                  <li><a href="javascript:">U</a></li>
+                  <li><a href="javascript:">V</a></li>
+                  <li><a href="javascript:">W</a></li>
+                  <li><a href="javascript:">X</a></li>
+                  <li><a href="javascript:">Y</a></li>
+                  <li><a href="javascript:">Z</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="type">Type</label>
+                  <select class="form-control form-control-sm" id="type" [formControl]="industryType">
+                    <option *ngFor="let item of industryTypes" [value]="item.id">{{item.title_en}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="name">Company Name</label>
+                  <input type="text" class="form-control form-control-sm" id="name" [formControl]="companyName">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group" style="display: flex;align-items: flex-end;height: 57px">
+                  <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>
+                  <button type="button" class="btn btn-outline-danger btn-sm ml-2"
+                          *ngIf="showSearchClearButton"
+                          (click)="reset()">clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pagination-wrapper mb-2">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true"
+              size="sm">
+            </ngb-pagination>
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm online-app-table">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Company Name</th>
+                <th class="text-center">No. of Jobs</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of unfollowedCompanies; let i = index;">
+                <td>{{i + 1}}</td>
+                <td>
+                  <p><a href="javascript:" (click)="show(item)">{{item.title_en}}</a></p>
+                </td>
+                <td class="text-center">{{item.jobs_count}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-wrapper">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true"
+              size="sm">
+            </ngb-pagination>
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

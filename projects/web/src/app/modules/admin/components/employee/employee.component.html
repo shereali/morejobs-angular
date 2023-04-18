@@ -1,0 +1,110 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="page-title mb-0"><i class="fas fa-users"></i> Employees ({{totalRecord}})</h6>
+</div>
+
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="upload-resume-wrapper">
+      <div class="filter-wrapper">
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="search_value">Name</label>
+              <input type="text" class="form-control form-control-sm" id="search_value"
+                     placeholder="Search employer name" [formControl]="searchValueControl">
+            </div>
+          </div>
+          <!--          <div class="col-sm-3">-->
+          <!--            <div class="form-group">-->
+          <!--              <label for="fromDate">From Date</label>-->
+          <!--              <input type="date" class="form-control form-control-sm" id="fromDate">-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <!--          <div class="col-sm-3">-->
+          <!--            <div class="form-group">-->
+          <!--              <label for="toDate">To Date</label>-->
+          <!--              <input type="date" class="form-control form-control-sm" id="toDate">-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <!--          <div class="col-sm-3">-->
+          <!--            <div class="form-group">-->
+          <!--              <label for="Categorytype">Category Types</label>-->
+          <!--              <select class="form-control form-control-sm" id="Categorytype">-->
+          <!--                <option value="">All Category</option>-->
+          <!--              </select>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <div class="col-sm-3">
+            <div class="form-group mt-4">
+              <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>
+              <a *ngIf="showSearchClearButton" (click)="reset()" href="javascript:" class="ml-3">Clear</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="table-responsive mb-0" style="padding: 3px">
+            <table class="table text-center employer-table">
+              <thead>
+              <tr [class.disabled]="employeeTableSpinner['active']">
+                <th class="text-left">Employee Name</th>
+                <th class="text-left">Status</th>
+                <th class="text-left">Joining Date</th>
+                <!--                <th></th>-->
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of employees">
+                <td class="text-left">
+                  <a href="JAvascript:void(0)" (click)="openDetailModel(item)">{{item.first_name}} {{item.last_name}}</a>
+                </td>
+                <td class="text-left">{{item.status.title}}</td>
+                <td class="text-left">{{item.created_at | date:'mediumDate'}}</td>
+                <!--                <td class="text-center">-->
+                <!--                  <div ngbDropdown container="body" display="dynamic" placement="bottom-right">-->
+                <!--&lt;!&ndash;                    <a tabindex="0" ngbDropdownToggle id="action" class="btn btn-sm btn-light" role="button">&ndash;&gt;-->
+                <!--&lt;!&ndash;                      Action&ndash;&gt;-->
+                <!--&lt;!&ndash;                    </a>&ndash;&gt;-->
+                <!--&lt;!&ndash;                    <div ngbDropdownMenu aria-labelledby="action" class="dropdown-menu">&ndash;&gt;-->
+                <!--&lt;!&ndash;                      <a href="Javascript:void(0)" ngbDropdownItem><i class="fas fa-edit"></i> Edit&ndash;&gt;-->
+                <!--&lt;!&ndash;                      </a>&ndash;&gt;-->
+                <!--&lt;!&ndash;                      <a href="javascript:" ngbDropdownItem><i class="fas fa-share" style="width: 18px;height: 18px"></i> Delete</a>&ndash;&gt;-->
+                <!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+                <!--                  </div>-->
+                <!--                </td>-->
+              </tr>
+              </tbody>
+            </table>
+            <app-spinner [name]="'employee_table_spinner'" #employeeTableSpinner></app-spinner>
+          </div>
+
+          <div class="pagination-wrapper">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true">
+            </ngb-pagination>
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

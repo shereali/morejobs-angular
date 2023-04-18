@@ -1,0 +1,13 @@
+<div class="sidebar-wrapper mb-3">
+  <ul class="company-menu-wrapper">
+    <li><a [class.active]="isLinkActive('/company')" routerLink="/company" [queryParams]="{status: 'posted'}">
+      <i class="fas fa-home"></i> Employer's Panel</a></li>
+        <li><a routerLink="/company/cv-bank" routerLinkActive="active"><i class="fas fa-street-view"></i> CV Bank</a></li>
+    <!--      <li><a routerLink="/home/edit-resume" routerLinkActive="active"><i class="far fa-edit"></i> Candidate-->
+    <!--        Communication</a></li>-->
+    <!--      <li><a routerLink="/home/upload-resume" routerLinkActive="active"><i class="fas fa-upload"></i> Analytics</a>-->
+    <!--      </li>-->
+    <li><a routerLink="/company/packages/jobs" routerLinkActive="active"><i class="fas fa-book-open"></i>
+      Services for Employers</a></li>
+  </ul>
+</div>

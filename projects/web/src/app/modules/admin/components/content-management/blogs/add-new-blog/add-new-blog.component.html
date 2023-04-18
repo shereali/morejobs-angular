@@ -1,0 +1,67 @@
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+  <div class="modal-header">
+    <h6 class="mb-0">{{mode == 'create' ? 'Add New' : 'Update'}} {{data.blog_type | titlecase}}</h6>
+  </div>
+
+  <div class="modal-body" style="overflow: auto; max-height: 500px">
+      <div class="form-row">
+        <div class="col-6">
+          <label for="title"><b>Title{{applyAsteriskSymbol('title')}}</b></label>
+          <input type="text" class="form-control form-control-sm" formControlName="title" id="title">
+          <div appInvalidMessage="title">
+            <small class="text-danger" *appInvalidType="'required'">Title is required</small>
+          </div>
+        </div>
+        <div class="col-6">
+          <label for="subtitle"><b>Sub Title{{applyAsteriskSymbol('subtitle')}}</b></label>
+          <input type="text" class="form-control form-control-sm" formControlName="subtitle" id="subtitle">
+          <div appInvalidMessage="subtitle">
+            <small class="text-danger" *appInvalidType="'required'">Sub-Title is required</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <label><b>Description{{applyAsteriskSymbol('description')}}</b></label>
+        <div class="NgxEditor__Wrapper">
+          <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+          <ngx-editor
+            [editor]="editor"
+            formControlName="description"
+            [placeholder]="'Type here...'"
+          ></ngx-editor>
+        </div>
+        <div appInvalidMessage="description">
+          <small class="text-danger" *appInvalidType="'required'">Description is required</small>
+        </div>
+      </div>
+
+      <div class="row my-2">
+        <div class="col-6">
+          <ng-container *ngIf="newImageTake; else elseBlock">
+            <label for="file"><b>File{{applyAsteriskSymbol('file')}}</b></label>
+            <input type="file" class="form-control form-control-sm" formControlName="file" id="file"
+                   (change)="onFileChange($event)">
+
+            <div appInvalidMessage="file">
+              <small class="text-danger" *appInvalidType="'required'">File is required</small>
+              <small class="text-danger" *appInvalidType="'requiredFileType'">Type must be(jpg, png, jpeg)</small>
+            </div>
+          </ng-container>
+          <ng-template #elseBlock>
+            <img [src]="data.data.cover_image" width="100" height="100" alt="">
+            <a href="Javascript:void(0)" class="text-danger ml-2" (click)="onClickImageChange()">
+              <i class="fa fa-times"></i></a>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-success" [disabled]="submitAttempt">
+      <app-spinner [name]="'blog_save_btn_spinner'" [type]="'btn'"></app-spinner>
+      {{mode == 'create' ? 'Create' : 'Update'}}
+    </button>
+    <a class="btn btn-light" (click)="closeModal()">Close</a>
+  </div>
+</form>

@@ -1,0 +1,30 @@
+<div class="sidebar-wrapper card custom-card">
+  <div class="card-body" style="padding: 1rem">
+    <ul>
+      <li><a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+        <i class="fas fa-home"></i> Home</a>
+      </li>
+      <li><a href="javascript:" class="title">RESUME</a></li>
+      <li><a routerLink="/home/view-resume" routerLinkActive="active" [queryParams]="{view_mode: 'details'}">
+        <i class="fas fa-street-view"></i> View Resume</a>
+      </li>
+      <li><a routerLink="/home/edit-resume" routerLinkActive="active"><i class="far fa-edit"></i> Edit Resume</a></li>
+      <li><a routerLink="/home/upload-resume" routerLinkActive="active"><i class="fas fa-upload"></i> Upload Resume</a>
+      </li>
+      <li><a routerLink="/home/email-resume" routerLinkActive="active"><i class="fas fa-paper-plane"></i> Email
+        Resume</a></li>
+      <li><a href="javascript:" class="title">MY ACTIVITIES</a></li>
+      <li><a routerLink="/home/online-application" routerLinkActive="active"><i class="fas fa-book-open"></i> Online
+        Applications</a></li>
+      <li><a routerLink="/home/favorite-jobs" routerLinkActive="active"><i class="fas fa-star"></i> Favorite Jobs</a>
+      </li>
+      <li><a routerLink="/home/following-company" routerLinkActive="active"><i class="fas fa-hospital"></i> Following
+        Company</a></li>
+      <li><a href="javascript:" class="title">COMPANY ACTIVITIES</a></li>
+      <li><a routerLink="/home/resume-viewed" routerLinkActive="active"><i class="fas fa-file-signature"></i> Resume
+        Viewed</a></li>
+      <!--      <li><a routerLink="/home/employer-message" routerLinkActive="active"><i class="fas fa-envelope-open-text"></i>-->
+      <!--        Messages</a></li>-->
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<h6 class="page-title"><i class="fas fa-upload"></i> Upload Resume</h6>
+<div class="card custom-card">
+  <div class="card-body">
+    <p class="notice-content">In this section you can upload your resume. Here you can take help from the video attached
+      in the right corner of CV attachment bar. Also you can get help from instructions given below.</p>
+    <div class="upload-resume-wrapper">
+      <form [formGroup]="myForm" [hidden]="uploadResume['active']" *ngIf="!loading">
+        <div class="cv-wrapper" *ngIf="resumeCompleted; else resumeNotCompleteBlock">
+          <div class="cv-body">
+            <img src="assets/images/cv-icon.png" class="mb-3" alt="" *ngIf="!fileExtension; else elseBlock">
+            <ng-template #elseBlock>
+              <img
+                [src]="fileExtension === 'pdf' ? 'assets/images/pdf_.png' : (fileExtension === 'doc' ? 'assets/images/doc.png' : 'assets/images/docx.png')"
+                class="mb-3" alt="">
+            </ng-template>
+            <p class="mb-0"><b>{{resumeFileName}}</b></p>
+          </div>
+
+          <ng-container *ngIf="!fileExtension; else delDwnAct">
+            <div class="form-group">
+              <input type="file" style="margin: 0 0 25px 95px;" formControlName="file" #fileInput>
+
+              <div appInvalidMessage="file">
+                <small class="text-danger" *appInvalidType="'required'">File is required</small>
+                <small class="text-danger" *appInvalidType="'requiredFileType'">Type must be( .pdf, .doc or
+                  .docx)</small>
+              </div>
+            </div>
+
+            <div>
+              <button type="submit" class="btn btn-success d-inline-block ml-3"
+                      (click)="uploadResumeFile(fileInput)"
+                      [disabled]="submitAttempt">
+                <app-spinner [name]="'resume_file_upload_btn_spinner'" [type]="'btn'"></app-spinner>
+                <i class="fas fa-upload"></i> Upload File
+              </button>
+            </div>
+          </ng-container>
+
+          <ng-template #delDwnAct>
+            <div>
+              <a [href]="resumeFileLink"  class="btn btn-success d-inline-block" target="_blank">
+                <app-spinner [name]="'resume_file_download_btn_spinner'" [type]="'btn'"></app-spinner>
+                <i class="fas fa-cloud-upload-alt"></i>Download
+              </a>
+
+              <button type="button" class="btn btn-danger d-inline-block ml-3"
+                      (click)="deleteResumeFile()"
+                      [disabled]="deleteAttempt">
+                <app-spinner [name]="'resume_file_delete_btn_spinner'" [type]="'btn'"></app-spinner>
+                <i class="fas fa-trash-alt"></i> Delete
+              </button>
+            </div>
+          </ng-template>
+        </div>
+
+        <ng-template #resumeNotCompleteBlock>
+          <div class="cv-wrapper">
+            <div class="cv-body">
+              <img src="assets/images/cv-icon-0.png" class="mb-3">
+              <p class="mb-0"><b>You have to complete resume to attach file</b></p>
+            </div>
+
+            <button class="btn btn-success" routerLink="/home/edit-resume">
+              <i class="far fa-edit"></i> Post Resume
+            </button>
+          </div>
+        </ng-template>
+      </form>
+      <app-spinner [name]="'upload_resume_spinner'" #uploadResume></app-spinner>
+
+      <h6 class="mt-5">Standard file uploading guideline.</h6>
+      <ul>
+        <li>File must be less than 2MB.</li>
+        <li>File format should be .pdf, .doc or .docx.</li>
+      </ul>
+      <ul class="list-group mt-4">
+        <li class="list-group-item list-group-item-info">CV attachment is the best way to stand out from the other
+          candidates. Show your skills on your own way.
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+

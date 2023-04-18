@@ -1,0 +1,33 @@
+<!--<div class="d-flex align-items-center justify-content-between mb-3">-->
+<!--  <h6 class="page-title mb-0"><i class="fas fa-box-open"></i> Packages</h6>-->
+<!--</div>-->
+
+<div class="card custom-card packages-wrapper">
+  <div class="card-body p-2 text-center" style="min-height: 45px">
+    <ul class="nav packages-nav justify-content-center" [hidden]="packageTypeSpinner['active']" *ngIf="!isLoading">
+      <li class="nav-item mr-5 ml-5" *ngFor="let type of packageTypes">
+        <a class="nav-link h6 mb-0 p-1" [class.active]="isLinkActive(type.frontend_url)"
+           routerLink="{{type.frontend_url}}" [queryParams]="{package_type_id: type.id}">{{type.title}}</a>
+      </li>
+      <!--   <li class="nav-item">
+           <a class="nav-link h6 mb-0 disabled" href="#">CV Bank</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link h6 mb-0 disabled" href="#">Bulk Subscription</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link h6 mb-0 disabled" href="#">SMS</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link h6 mb-0 disabled" href="#">Others</a>
+         </li>-->
+    </ul>
+    <app-spinner [name]="'package_type_spinner'" [type]="'btn'" #packageTypeSpinner></app-spinner>
+  </div>
+</div>
+
+<div class="card custom-card">
+  <div class="card-body">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,0 +1,168 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h6 class="page-title mb-0"><i class="fas fa-clipboard-list"></i> Job List</h6>
+  <div>
+    <!--    <a href="javascript:" class="btn btn-primary btn-sm mr-2"><i class="fas fa-search"></i> Search CV Bank</a>-->
+    <a routerLink="/company/job-posting-board" class="btn btn-success btn-sm"
+       [queryParams]="{step: 'primary_job_info'}"><i class="fas fa-plus"></i> Post a New Job
+    </a>
+  </div>
+</div>
+<div class="card custom-card">
+  <div class="card-body">
+    <div class="upload-resume-wrapper">
+      <div class="filter-wrapper">
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="companyName">Job Title</label>
+              <input type="text" class="form-control form-control-sm" id="companyName"
+                     placeholder="Search job by title" [formControl]="title">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="fromDate">From Date</label>
+              <input type="date" class="form-control form-control-sm" id="fromDate" [formControl]="fromDate">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="toDate">To Date</label>
+              <input type="date" class="form-control form-control-sm" id="toDate" [formControl]="toDate">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group mt-4">
+              <button type="button" class="btn btn-success btn-sm" (click)="search()">Search</button>
+
+              <a *ngIf="showSearchClearButton" (click)="reset()" href="javascript:" class="ml-3">Clear</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <nav ngbNav #nav="ngbNav" class="nav-tabs mt-4">
+            <ng-container ngbNavItem>
+              <a ngbNavLink (click)="onChangeStatus('posted')" [class.active]="status.value === 'posted'">Posted
+                ({{summary.posted}})</a>
+              <a ngbNavLink (click)="onChangeStatus('drafted')" [class.active]="status.value === 'drafted'">Drafted
+                ({{summary.drafted}})</a>
+              <a ngbNavLink (click)="onChangeStatus('archived')" [class.active]="status.value === 'archived'">Archived
+                ({{summary.archived}})</a>
+
+              <ng-template ngbNavContent>
+                <div class="table-responsive mb-0" style="padding: 3px">
+                  <table class="table text-center employer-table" *ngIf="!isLoading"
+                         [class.disabled]="jobPostTableSpinner['active']">
+                    <thead>
+                    <tr>
+                      <th>#</th>
+                      <th class="text-left">Job Title</th>
+                      <th>Applications</th>
+                      <th>Matched</th>
+                      <th>Short-listed</th>
+                      <th>View Status</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of posts; let i=index;">
+                      <td>{{i + 1}}</td>
+                      <td class="text-left" style="width: 30%">
+                        <h6 class="mb-2">
+                          <a routerLink="/company/{{item.id}}/applicant-process"
+                             [queryParams]="{key: 'preview'}">{{item.title}}</a>
+                        </h6>
+                        <small class="d-block"><b>Posted: </b> {{item.created_at | date: 'mediumDate'}}</small>
+                        <small class="d-block"><b>Deadline: </b> {{item.deadline | date: 'mediumDate'}}
+                          <a href="javascript:" (click)="changeDeadline(item)"><span
+                            class="badge badge-danger">Change</span></a>
+                        </small>
+                        <small class="d-block"><b>Job Status: </b> <span
+                          class="badge badge-info">{{item.status.title}}</span></small>
+                        <!--                        <small class="d-block"><b>Video Interview: </b> <a href="javascript:"><span-->
+                        <!--                          class="badge badge-light">-->
+                        <!--                          <i class="fas fa-plus" style="font-size: 10px"></i> Add</span></a> (static)-->
+                        <!--                        </small>-->
+                      </td>
+                      <td>{{item.applicants_count}}</td>
+                      <td class="text-center">0 (static)</td>
+                      <td class="text-center">{{item.short_listed_count}}</td>
+                      <td class="text-center">
+                        <span ngbTooltip="Viewed">{{item.viewed_applicants_count}}</span> |
+                        <span ngbTooltip="Not Viewed">{{item.not_viewed_applicants_count}}</span>
+                      </td>
+                      <td class="text-center">
+                        <app-spinner [name]="'action_spinner' + item.id" [type]="'btn'"></app-spinner>
+
+                        <div ngbDropdown container="body" display="dynamic" placement="bottom-right">
+                          <a tabindex="0" ngbDropdownToggle id="action" class="btn btn-sm btn-light" role="button">
+                            Action
+                          </a>
+                          <div ngbDropdownMenu aria-labelledby="action" class="dropdown-menu">
+                            <a routerLink="/company/job-posting-board"
+                               *ngIf="item.job_listing_type_id === 1; else disabledEditLink"
+                               ngbDropdownItem title="Edit post"
+                               [queryParams]="{step: 'primary_job_info', id: item.id, action_type: 'edit'}">
+                              <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <ng-template #disabledEditLink>
+                              <a ngbDropdownItem title="Edit Not allowed" class="text-muted"><i class="fas fa-edit"></i>
+                                Edit</a>
+                            </ng-template>
+
+
+                            <a href="javascript:" ngbDropdownItem (click)="goToPost(item)"
+                               [ngClass]="item.status.id !== 2 ? 'text-muted' : ''"
+                               [title]="item.status.id === 1 ? 'link activated after publish' : 'job expired/archived'">
+                              <i class="fas fa-eye" style="width: 18px;height: 18px"></i> Live view</a>
+
+                            <a href="javascript:" ngbDropdownItem (click)="repost(item)">
+                              <i class="fas fa-share" style="width: 18px;height: 18px"></i> Repost</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="totalRecord === 0">
+                      <td colspan="6">
+                        <p>No records found!</p>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <app-spinner [name]="'job_post_table_spinner'" #jobPostTableSpinner></app-spinner>
+                </div>
+              </ng-template>
+            </ng-container>
+          </nav>
+          <div [ngbNavOutlet]="nav"></div>
+
+          <div class="pagination-wrapper" *ngIf="totalRecord > 0">
+            <ngb-pagination
+              [rotate]="true"
+              [collectionSize]="pagination.total"
+              [(page)]="pagination.current_page"
+              (pageChange)="changePage($event)"
+              [pageSize]="pagination.per_page"
+              [maxSize]="5"
+              [boundaryLinks]="true">
+            </ngb-pagination>
+
+            <div class="form-inline ml-auto mbl-hidden">
+              <div class="filter-item">
+                <app-select
+                  [value]="filterParams.value.per_page"
+                  (whenSelect)="setPerPage($event)"
+                  [options]="perPageOptions"
+                  [title]="'Items per page'">
+                </app-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

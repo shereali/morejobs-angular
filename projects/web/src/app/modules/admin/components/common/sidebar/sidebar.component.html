@@ -1,0 +1,45 @@
+<div class="sidebar-wrapper mt-2 mb-5">
+  <ul class="admin-menu-wrapper">
+    <li class="nav-item" routerLinkActive="active">
+      <a routerLink="/admin/home" routerLinkActive="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    </li>
+
+    <li class="nav-item" routerLinkActive="active">
+      <a routerLink="/admin/companies" [queryParams]="{status: 'approved'}" [class.active]="rlac.isActive">
+        <i class="fas fa-people-arrows"></i> Companies</a>
+      <a routerLink="/admin/companies" routerLinkActive="active" #rlac="routerLinkActive" hidden></a>
+    </li>
+
+    <li class="nav-item" routerLinkActive="active">
+      <a routerLink="/admin/subscriptions" [queryParams]="{status: 'all'}" [class.active]="rlas.isActive">
+        <i class="fas fa-people-arrows"></i> Subscriptions</a>
+      <a routerLink="/admin/subscriptions" routerLinkActive="active" #rlas="routerLinkActive" hidden></a>
+    </li>
+
+    <li class="nav-item" routerLinkActive="active">
+      <a routerLink="/admin/posts" [queryParams]="{status: 'pending'}" [class.active]="rlap.isActive">
+        <i class="fas fa-user-tie"></i> Job Posts</a>
+      <a routerLink="/admin/posts" routerLinkActive="active" #rlap="routerLinkActive" hidden></a>
+    </li>
+
+    <li class="nav-item" routerLinkActive="active">
+      <a routerLink="/admin/employee" routerLinkActive="active"><i class="fas fa-users"></i> Employees</a>
+    </li>
+
+    <li class="nav-item" routerLinkActive="active">
+      <a routerLink="/admin/trainers" routerLinkActive="active"><i class="fas fa-users"></i> Trainers</a>
+    </li>
+
+<!--    <li class="nav-item" routerLinkActive="active">-->
+<!--      <a routerLink="/admin/trainings" routerLinkActive="active"><i class="fas fa-home"></i> Trainings</a>-->
+<!--    </li>-->
+
+    <li class="nav-item">
+      <a routerLink="/admin/settings" routerLinkActive="active"><i class="fas fa-cogs"></i> Settings</a>
+    </li>
+
+    <li class="nav-item">
+      <a routerLink="/admin/content-management" routerLinkActive="active"><i class="fas fa-cogs"></i> Content Management</a>
+    </li>
+  </ul>
+</div>
